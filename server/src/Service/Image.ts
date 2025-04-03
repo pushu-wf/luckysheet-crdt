@@ -1,5 +1,5 @@
-import { logger } from "../Utils/Logger";
-import { ImageModel, ImageModelType } from "../Sequelize/Models/Image";
+import { logger } from '../Utils/Logger';
+import { ImageModel, ImageModelType } from '../Sequelize/Models/Image';
 
 /**
  * 先删除当前 sheet 的所有图片
@@ -26,11 +26,11 @@ async function createImage(data: ImageModelType) {
 /**
  * 查询当前 workersheetid 的图片
  */
-async function findAll(worker_sheet_id: string) {
+async function findAllImage(worker_sheet_id: string) {
 	try {
 		return await ImageModel.findAll({ where: { worker_sheet_id } });
 	} catch (error) {
 		logger.error(error);
 	}
 }
-export const ImageService = { deleteImage, createImage, findAll };
+export const ImageService = { deleteImage, createImage, findAllImage };

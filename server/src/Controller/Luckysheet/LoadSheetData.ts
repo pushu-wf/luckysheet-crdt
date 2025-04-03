@@ -239,7 +239,7 @@ async function parseMerge(
 	try {
 		const result: MergeType = {};
 
-		const merges = await MergeService.findAll(worker_sheet_id);
+		const merges = await MergeService.findAllMerge(worker_sheet_id);
 
 		merges?.forEach((merge) => {
 			// 拼接 r_c 格式
@@ -274,7 +274,7 @@ async function parseConfigBorder(
 	try {
 		const result = <BorderInfoType[]>[];
 
-		const borders = await BorderInfoService.findAll(worker_sheet_id);
+		const borders = await BorderInfoService.findAllBorder(worker_sheet_id);
 
 		borders?.forEach((border) => {
 			const data = border.dataValues;
@@ -356,7 +356,7 @@ async function parseImages(
 	try {
 		const result = <ImagesType[]>[];
 
-		const images = await ImageService.findAll(worker_sheet_id);
+		const images = await ImageService.findAllImage(worker_sheet_id);
 
 		images?.forEach((image) => {
 			const data = image.dataValues;

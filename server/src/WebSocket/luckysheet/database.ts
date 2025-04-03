@@ -902,7 +902,7 @@ async function copySheetData(copyIndex: string, newSheetIndex: string) {
 	// ==> newSheetIndex Sheet_5330eTr735lz_1743664108612
 	// 处理思路：先 查询当前被复制 sheet 的所有数据，然后批量插入到新 sheet 中
 	// borders
-	const copySheetBorder = await BorderInfoService.findAll(copyIndex);
+	const copySheetBorder = await BorderInfoService.findAllBorder(copyIndex);
 	if (copySheetBorder?.length) {
 		for (let i = 0; i < copySheetBorder.length; i++) {
 			const item = copySheetBorder[i].dataValues;
@@ -932,7 +932,7 @@ async function copySheetData(copyIndex: string, newSheetIndex: string) {
 	// charts  hidneandlens  images 暂不处理 原理类似哈
 
 	// merges
-	const copySheetMerge = await MergeService.findAll(copyIndex);
+	const copySheetMerge = await MergeService.findAllMerge(copyIndex);
 	if (copySheetMerge?.length) {
 		for (let i = 0; i < copySheetMerge.length; i++) {
 			const item = copySheetMerge[i].dataValues;
