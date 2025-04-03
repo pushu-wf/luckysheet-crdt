@@ -176,64 +176,6 @@ build: {
 | 表格信息更改          | ✅️ 修改工作簿名称                                                          |                                                                                      |
 | 图表                  | ✅️ 新增图表 ✅️ 移动图表位置 ✅️ 缩放图表 ✅️ 修改图表配置                       |                                                                                      |
 
-<!-- - 文件导入、导出
-  - ✅️ 导入文件
-  - ✅️ 导出文件(导出不需要协同)
-
-- 单元格操作
-  - ✅️ 单个单元格操作
-  - ✅️ 范围单元格操作
-
-- config操作
-  - ✅️ 行隐藏
-  - ✅️ 列隐藏
-  - ✅️ 修改行高
-  - ✅️ 修改列宽
-
-- 通用保存
-  - ❌️ 冻结行列
-  - ✅️ 修改工作表名称
-  - ✅️ 修改工作表颜色
-  - ✅️ 合并单元格
-  - ❌️ 筛选范围
-  - ❌️ 筛选的具体设置
-  - ❌️ 交替颜色
-  - ❌️ 条件格式
-  - ❌️ 数据透视表
-  - ❌️ 动态数组
-
-- 函数链操作
-  - ❌️ 函数链操作
-
-- 行列操作
-  - ✅️ 删除行或列
-  - ✅️ 增加行或列
-
-- 筛选操作
-  - ❌️ 清除筛选
-  - ❌️ 恢复筛选
-
-- sheet操作
-  - ✅️ 新建sheet
-  - ✅️ 复制sheet
-  - ✅️ 删除sheet
-  - ✅️ 删除sheet后恢复操作
-  - ✅️ 调整sheet位置
-  - 切换到指定sheet - 可不实现(开启演示功能时，可以实现该功能，但是仅存在于协同层面即可)
-
-
-- sheet属性(隐藏或显示)
-  - ✅️ 隐藏或显示
-
-- 表格信息更改
-  - ✅️ 修改工作簿名称
-
-- 图表
-  - ✅️ 新增图表
-  - ✅️ 移动图表位置
-  - ✅️ 缩放图表
-  - ✅️ 修改图表配置
- -->
 
 ## 服务端口说明
 1. 前台服务端口：`5000`
@@ -305,61 +247,6 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
   <img src='/public/result/picture-new.gif' />
 </p>
 
-<!-- ### 4️⃣ 文档加密解密 -->
-<!-- <span style="font-weight:900">文档加密功能</span>
-<p align="center">
-  <img src='/public/result/file-encrypt.png' />
-</p>
-<span style="font-weight:900">文档解密功能</span>
-<p align="center">
-  <img src='/public/result/file-decrypt.png' />
-</p>
-
-<span style="font-weight:900">打开文档需要密码</span>
-<p align="center">
-  <img src='/public/result/encryption.gif' />
-</p>
-<span style="font-weight:900">配置方法：</span> -->
-<!-- 
-```js
-/**
- * 这里涉及三个方法及其校验，均交由用户自行处理：
- *  1. 加密
- *  2. 解密
- *  3. 打开文件校验
- */
-const options = {
-  // ...other config
-  menuHandler:{
-      exit() {
-      	console.log("==> 点击了退出按钮");
-      },
-      shear() {
-      	console.log("==> 点击了分享按钮");
-      },
-
-      // 菜单解密 返回值为 Boolean
-      decrypt(password) {
-      	// 执行后续 server 操作
-      	console.log("==> 解密文档：", password);
-      	// 解密过程需要校验密码，因此需要提供返回值
-      	return password === "123456";
-      },
-
-      // 菜单加密
-      encryption: (password) => {
-      	// 拿到password可执行后续 server操作
-      	console.log("==> 文档已加密:", password);
-      },
-
-      // 打开文档输入密码 标记文档是否加密 返回值为 Boolean
-      openDocumentPassword: (password) => {
-      	console.log("==> 用户输入密码:", password);
-      	return password === "123456";
-      },
-  }
-}
-``` -->
 
 
 ### 4️⃣ 文件导入
@@ -413,42 +300,47 @@ luckysheet.create(options)
   <img src='/public/result/menu.png' />
 </p>
 
-```js
+```ts
 const options = {
    lang: "zh",
    title: "Luckysheet",
    // ...other config
-   menuHandler: {
-      // 新建
-      newFile() {},
-      // 另存为
-      saveAs() {},
-      // 分享发送
-      fileShear(){},
-      // 退出功能
-      exit() {},
-      // 菜单解密 返回值为 Boolean
-      decrypt(password) {
-      	// 执行后续 server 操作
-      	console.log("==> 解密文档：", password);
-      	// 解密过程需要校验密码，因此需要提供返回值
-      	return password === "123456";
-      },
 
-      // 菜单加密
-      encryption: (password) => {
-      	// 拿到password可执行后续 server操作
-      	console.log("==> 文档已加密:", password);
-      },
-
-      // 打开文档输入密码 标记文档是否加密 返回值为 Boolean
-      openDocumentPassword: (password) => {
-      	console.log("==> 用户输入密码:", password);
-      	return password === "123456";
-      },
+   // 传入 menuHandler 配置项
+   menuHandler:{
+       hideDefaultMenu: string[], // 目前默认菜单为 导入导出 importFile | exportFile
+       customs: MenuHandlerCustomsItem[]
    }
 }
+
+type MenuHandlerCustomsItem = {
+  label: string
+  value: string
+  callback: () => void
+  order?: string // 菜单排序，小的在上面，默认的菜单 order = 10 在默认菜单上面，需要比10小，不传默认放置在下面
+  icon?: string
+} | 
+// 分割线配置对象
+{
+  value: 'divider'
+}
 ```
+
+**example**
+```ts
+menuHandler: {
+   customs: [
+      	{
+      		label: '保存',
+      		value: 'saveFile',
+      		order: 1
+      	},
+      	{ value: 'divider', order: 2 }
+   ]
+}
+```
+
+
 
 ## 常见问题
 1. **导入文件时，提示 `文件格式错误`**：

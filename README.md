@@ -154,100 +154,21 @@ build: {
 4. Start Server：`npm run serve`
 Wait for compilation to complete, start the service, and access the `http://${ip}:9000` after deployment is complete
 
-<!-- ## Project Structure Description
-
-```js
-// srource code
-- 🗂️Luckysheet-source 
-- 🗂️Luckysheet-source-private // Unopened source portion
-
-// back-up services
-- 🗂️server 
-    + 📂public // Static resources 
-    + 📂src 
-        + 📂Config // Project configuration file：Port、SQL、LOG etc.
-        + 📂Controller // Controller
-        + 📂Interface // Interface
-        + 📂Meddleware // Meddleware
-        + 📂Router // Routers
-        + 📂Sequelize // Database service
-            + 📂Models // Models
-            + 🗒️index.ts // Database connection
-            + 🗒️synchronization.ts // Database table synchronization script
-        + 📂Service // Service
-        + 📂Utils // Utils
-        + 📂WebSocket // websocket
-            + 🗒️broadcast.ts // broadcast
-            + 🗒️database.ts // database
-            + 🗒️index.ts // websocket server entry file.
-        + 🗒️main.ts // Server entry file.
-
-// Front desk service
-- 🗂️src 
-    + 📂axios // axios 
-    + 📂config // Config
-    + 📂style // Style
-    + 🗒️main.ts // Entry file.
-``` -->
 
 ## Collaborative Function Plan Table
-**Implemented  ✅️ Unrealized  ❌️**
-- File operation
-  - ✅️ import file
-  - ✅️ export file(Not implemented)
-
-- Cell operation
-  - ✅️ Single cell operation
-  - ✅️ Range cell operation
-
-- Config operation
-  - ✅️ Line hidden
-  - ✅️ Column hidden
-  - ✅️ Modify row height
-  - ✅️ Modify column width
-
-- Universal save
-  - ❌️ Freeze rows and columns
-  - ✅️ Change worksheet name
-  - ✅️ Change worksheet color
-  - ✅️ Merge cell
-  - ❌️ Filter scope
-  - ❌️ Specific settings for filtering
-  - ❌️ Alternating colors
-  - ❌️ Conditional formatting
-  - ❌️ PivotTable
-  - ❌️ Dynamic array
-
-- Function chain operation
-  - ❌️ Function chain operation
-
-- Row and column operation
-  - ❌️ Delete rows or columns
-  - ❌️ Add rows or columns
-
-- Filter operations
-  - ✅️ Clear filter
-  - ✅️ Restore filter
-
-- Sheet operations
-  - ✅️ Add sheet
-  - ✅️ Copy sheet
-  - ✅️ Delete sheet
-  - ✅️ Restore sheet
-  - ✅️ Adjust the position of the sheet
-  - Switch to the specified sheet 
-
-- Sheet attribute 
-  - ✅️ Hidden or displayed
-
-- Table information change
-  - ✅️ Change workbook name
-
-- Chart operation
-  - ✅️ Add chart
-  - ✅️ Move chart
-  - ✅️ Zoom chart
-  - ✅️ Update chart options
+| functional module        | Implemented                                                  | Unrealized                                                   |
+| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| File operation           | ✅️ import file ✅️ export file(Not implemented)                 |                                                              |
+| Cell operation           | ✅️ Single cell operation ✅️ Range cell operation               |                                                              |
+| Config operation         | ✅️ Line hidden ✅️ Column hidden ✅️ Modify row height ✅️ Modify column width |                                                              |
+| Universal save           | ✅️ Change worksheet name ✅️ Change worksheet color ✅️ Merge cell | ❌️ Freeze rows and columns  ❌️ Filter scope ❌️ Specific settings for filtering ❌️ Alternating colors ❌️ Conditional formatting ❌️ PivotTable ❌️ Dynamic array |
+| Function chain operation |                                                              | ❌️ Function chain operation                                   |
+| Row and column operation | ✅️ Delete rows or columns ✅️ Add rows or columns               |                                                              |
+| Filter operations        |                                                              | ❌️ Clear filter ❌️ Restore filter                              |
+| Sheet operations         | ✅️ Add sheet ✅️ Copy sheet ✅️ Delete sheet ✅️ Restore sheet ✅️ Adjust the position of the sheet Switch to the specified sheet |                                                              |
+| Sheet attribute          | ✅️ Hidden or displayed                                        |                                                              |
+| Table information change | ✅️ Change workbook name                                       |                                                              |
+| Chart operation          | ✅️ Add chart ✅️ Move chart ✅️ Zoom chart ✅️ Update chart options |                                                              |
 
 
 ## Service Port Description
@@ -322,62 +243,6 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 </p>
 
 
-<!-- ### 4️⃣ Document encryption and decryption
-<span style="font-weight:900">encryption</span>
-<p align="center">
-  <img src='/public/result/file-encrypt.png' />
-</p>
-<span style="font-weight:900">decryption</span>
-<p align="center">
-  <img src='/public/result/file-decrypt.png' />
-</p>
-
-<span style="font-weight:900">Opening a document requires a password</span>
-<p align="center">
-  <img src='/public/result/encryption.gif' />
-</p>
-
-<span style="font-weight:900">Configuration method:</span>
-
-```js
-/**
- * There are three methods and their verification involved here, all of which are handled by the user themselves:
- *  1. encryption
- *  2. decryption
- *  3. Open file verification
- */
-const options = {
-  // ...other config
-  menuHandler:{
-      exit() {
-      	console.log("==> exit handler");
-      },
-      shear() {
-      	console.log("==> shear handler");
-      },
-
-      //  Return Boolean
-      decrypt(password) {
-      	// 执行后续 server 操作
-      	console.log("==> 解密文档：", password);
-      	// 解密过程需要校验密码，因此需要提供返回值
-      	return password === "123456";
-      },
-
-      // 菜单加密
-      encryption: (password) => {
-      	// 拿到password可执行后续 server操作
-      	console.log("==> 文档已加密:", password);
-      },
-
-      // 打开文档输入密码 标记文档是否加密 返回值为 Boolean
-      openDocumentPassword: (password) => {
-      	console.log("==> 用户输入密码:", password);
-      	return password === "123456";
-      },
-  }
-}
-``` -->
 
 ### 4️⃣ File Import
 <span style="font-weight:900">Support collaboration~</span>
@@ -430,40 +295,44 @@ luckysheet.create(options)
   <img src='/public/result/menu.png' />
 </p>
 
-```js
+
+```ts
 const options = {
    lang: "zh",
    title: "Luckysheet",
    // ...other config
-   menuHandler: {
-      // new file
-      newFile() {},
-      // save as
-      saveAs() {},
-      // shear
-      fileShear(){},
-      // exit
-      exit() {},
-      //  Return Boolean
-      decrypt(password) {
-      	// 执行后续 server 操作
-      	console.log("==> 解密文档：", password);
-      	// 解密过程需要校验密码，因此需要提供返回值
-      	return password === "123456";
-      },
 
-      // 菜单加密
-      encryption: (password) => {
-      	// 拿到password可执行后续 server操作
-      	console.log("==> 文档已加密:", password);
-      },
-
-      // 打开文档输入密码 标记文档是否加密 返回值为 Boolean
-      openDocumentPassword: (password) => {
-      	console.log("==> 用户输入密码:", password);
-      	return password === "123456";
-      },
+   //  menuHandler config
+   menuHandler:{
+       hideDefaultMenu: string[], // importFile | exportFile
+       customs: MenuHandlerCustomsItem[]
    }
+}
+
+type MenuHandlerCustomsItem = {
+  label: string
+  value: string
+  callback: () => void
+  order?: string // Menu sorting, the smaller one is on top, the default menu order=10 is on top of the default menu, it needs to be smaller than 10, and it will not be transferred. It will be placed below by default
+  icon?: string
+} | 
+// Partition line configuration object
+{
+  value: 'divider'
+}
+```
+
+**example**
+```ts
+menuHandler: {
+   customs: [
+      	{
+      		label: '保存',
+      		value: 'saveFile',
+      		order: 1
+      	},
+      	{ value: 'divider', order: 2 }
+   ]
 }
 ```
 

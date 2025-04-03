@@ -6,14 +6,14 @@
  * @time 2024年12月05日
  */
 
-import "./style/index.css";
-import { API_getWorkerBook } from "./axios";
-import { defaultSheetData, WS_SERVER_URL } from "./config";
-import { uploadImage, imageUrlHandle, getRandom, getLoadUrl } from "./utils";
+import './style/index.css';
+import { API_getWorkerBook } from './axios';
+import { defaultSheetData, WS_SERVER_URL } from './config';
+import { uploadImage, imageUrlHandle, getRandom, getLoadUrl } from './utils';
 
 window.onload = initLuckysheet;
 
-const luckysheet = Reflect.get(window, "luckysheet");
+const luckysheet = Reflect.get(window, 'luckysheet');
 
 /**
  * 需要监听刷新、退出浏览器事件，关闭socket 连接，避免协同异常
@@ -28,17 +28,27 @@ window.onbeforeunload = () => luckysheet && luckysheet.closeWebSocket();
 async function initLuckysheet() {
 	const id = getRandom();
 	const username = `user_${id}`;
-	const gridKey = "gridkey_demo"; // 请注意大小写哈~
+	const gridKey = 'gridkey_demo'; // 请注意大小写哈~
 
 	const options = {
-		lang: "zh",
-		title: "Luckysheet",
-		container: "luckysheetContainer",
+		lang: 'zh',
+		title: 'Luckysheet',
+		container: 'luckysheetContainer',
 		// showinfobar: false, // 隐藏顶部的信息栏
 		allowUpdate: false, // 配置协同功能
-		loadUrl: "",
-		updateUrl: "", // 协同服务转发服务
-		plugins: ["chart", "vchart", "fileImport", "fileExport"],
+		loadUrl: '',
+		updateUrl: '', // 协同服务转发服务
+		plugins: ['chart', 'vchart', 'fileImport', 'fileExport'],
+		menuHandler: {
+			customs: [
+				{
+					label: '保存',
+					value: 'saveFile',
+					order: 1
+				},
+				{ value: 'divider', order: 2 }
+			]
+		}
 	};
 
 	try {
@@ -53,21 +63,21 @@ async function initLuckysheet() {
 		 *  1. 如果请求成功，则使用数据库配置的 workerbook 数据
 		 *  2. 如果请求失败，则使用默认配置的 workerbook 数据
 		 */
-		options.lang = isSuccess ? data.data.lang : "zh";
-		options.title = isSuccess ? data.data.title : "未命名工作簿";
+		options.lang = isSuccess ? data.data.lang : 'zh';
+		options.title = isSuccess ? data.data.title : '未命名工作簿';
 
 		// 协同场景下，才进行图片优化
-		Reflect.set(options, "uploadImage", uploadImage);
-		Reflect.set(options, "imageUrlHandle", imageUrlHandle);
+		Reflect.set(options, 'uploadImage', uploadImage);
+		Reflect.set(options, 'imageUrlHandle', imageUrlHandle);
 
 		options.allowUpdate = true;
 		options.loadUrl = getLoadUrl(gridKey);
 		options.updateUrl = `${WS_SERVER_URL}?type=luckysheet&userid=${id}&username=${username}&gridkey=${gridKey}`;
 		luckysheet.create(options);
 	} catch (error) {
-		console.error("==> 协同服务异常", error);
+		console.error('==> 协同服务异常', error);
 		// 不然初始化普通模式，避免页面空白
-		Reflect.set(options, "data", defaultSheetData);
+		Reflect.set(options, 'data', defaultSheetData);
 		luckysheet.create(options);
 	}
 }

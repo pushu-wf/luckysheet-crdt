@@ -19,7 +19,7 @@ export default defineConfig({
 		outDir: "./server/public/dist",
 		rollupOptions: {
 			input: {
-				main: "./entry.html",
+				main: "./public/entry.html",
 			},
 		},
 	},

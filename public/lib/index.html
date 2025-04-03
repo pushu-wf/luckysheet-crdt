@@ -4,10 +4,7 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="renderer" content="webkit" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1,user-scalable=0"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0" />
 		<title>Luckysheet</title>
 		<link rel="stylesheet" href="./plugins/css/pluginsCss.css" />
 		<link rel="stylesheet" href="./plugins/plugins.css" />
@@ -24,10 +21,7 @@
 	</head>
 
 	<body>
-		<div
-			id="luckysheet"
-			style="margin: 0px;padding: 0px;position: absolute;width: 100%;height: 100%;left: 0px;top: 0px;"
-		></div>
+		<div id="luckysheet" style="margin: 0px;padding: 0px;position: absolute;width: 100%;height: 100%;left: 0px;top: 0px;"></div>
 
 		<script>
 			$(function() {
@@ -37,8 +31,8 @@
 				const username = `user_${id}`;
 
 				const options = {
-					container: "luckysheet",
-					lang: "zh",
+					container: 'luckysheet',
+					lang: 'zh',
 					// showinfobar: false,
 					plugins: [],
 					data: [sheetCell],
@@ -51,39 +45,31 @@
 					// 		messageMode: "chat", // chat or stream
 					// 	},
 					// ],
-					allowUpdate: true, // 配置协同功能
-					loadUrl:
-						"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
-					updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
+					// allowUpdate: true, // 配置协同功能
+					// loadUrl:
+					// 	"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
+					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
 
 					menuHandler: {
-						exit() {
-							console.log("==> 点击了退出按钮");
-						},
-						shear() {
-							console.log("==> 点击了分享按钮");
-						},
+						// 隐藏内置菜单
+						// hideDefaultMenu: ['exportFile', 'importFile'],
 
-						// 菜单解密
-						decrypt(password) {
-							// 执行后续 server 操作
-							console.log("==> 解密文档：", password);
-							// 解密过程需要校验密码，因此需要提供返回值
-							return password === "123456";
-						},
-
-						// 菜单加密
-						encryption: (password) => {
-							// 拿到password可执行后续 server操作
-							console.log("==> 文档已加密:", password);
-						},
-
-						// 打开文档输入密码 标记文档是否加密
-						// openDocumentPassword: (password) => {
-						// 	console.log("==> 用户输入密码:", password);
-						// 	return password === "123456";
-						// },
-					},
+						// 自定义
+						customs: [
+							// 分割线
+							{
+								value: 'divider'
+							},
+							{
+								order: 0,
+								label: '新建文件',
+								value: 'newFile',
+								callback: () => {
+									console.log('==> 回调测试');
+								}
+							}
+						]
+					}
 				};
 				options.loading = {
 					image: () => {
@@ -91,7 +77,7 @@
 					<circle cx="50" cy="50" r="20" fill="none"></circle>
 					</svg>`;
 					},
-					imageClass: "loadingAnimation",
+					imageClass: 'loadingAnimation'
 				};
 				luckysheet.create(options);
 			});
