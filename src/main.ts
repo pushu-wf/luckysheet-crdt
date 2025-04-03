@@ -39,16 +39,6 @@ async function initLuckysheet() {
 		loadUrl: '',
 		updateUrl: '', // 协同服务转发服务
 		plugins: ['chart', 'vchart', 'fileImport', 'fileExport'],
-		menuHandler: {
-			customs: [
-				{
-					label: '保存',
-					value: 'saveFile',
-					order: 1
-				},
-				{ value: 'divider', order: 2 }
-			]
-		}
 	};
 
 	try {

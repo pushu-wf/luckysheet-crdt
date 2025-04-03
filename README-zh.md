@@ -124,41 +124,6 @@ build: {
 4. 启动服务：`npm run serve`
 等待编译完成，启动服务，部署完成后访问 `http://${ip}:9000` 即可
 
-<!-- ## 项目结构说明
-
-```js
-// 源码
-- 🗂️Luckysheet-source 
-- 🗂️Luckysheet-source-private // 未开源部分
-
-// 后台服务
-- 🗂️server 
-    + 📂public // 静态资源 
-    + 📂src 
-        + 📂Config // 项目配置文件：端口、SQL、LOG 等配置
-        + 📂Controller // 控制层
-        + 📂Interface // 接口类型文件
-        + 📂Meddleware // 中间件
-        + 📂Router // 路由文件
-        + 📂Sequelize // 数据库服务
-            + 📂Models // 数据模型
-            + 🗒️index.ts // 数据库连接
-            + 🗒️synchronization.ts // 数据库表同步脚本
-        + 📂Service // 业务逻辑
-        + 📂Utils // 工具类
-        + 📂WebSocket // websocket服务
-            + 🗒️broadcast.ts // 处理广播消息
-            + 🗒️database.ts // 数据库操作
-            + 🗒️index.ts // websocket服务入口文件
-        + 🗒️main.ts // 项目入口文件
-
-// 前台服务
-- 🗂️src 
-    + 📂axios // axios 网络请求
-    + 📂config // 前台项目配置文件
-    + 📂style // 前台项目样式文件
-    + 🗒️main.ts // 前台项目主程序
-``` -->
 
 ## 协同功能计划表
 <!-- **已实现功能 ✅️，未实现功能 ❌️** -->

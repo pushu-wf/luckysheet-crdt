@@ -36,19 +36,11 @@
 					// showinfobar: false,
 					plugins: [],
 					data: [sheetCell],
-					// 配置AI功能
-					// aiconfig: [
-					// 	{
-					// 		name: "deepseek",
-					// 		model: "deepseek-r1",
-					// 		url: `ws://localhost:9000?userid=${id}`,
-					// 		messageMode: "chat", // chat or stream
-					// 	},
-					// ],
-					// allowUpdate: true, // 配置协同功能
-					// loadUrl:
-					// 	"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
-					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
+				
+					allowUpdate: true, // 配置协同功能
+					loadUrl:
+						"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
+					updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
 
 					menuHandler: {
 						// 隐藏内置菜单
