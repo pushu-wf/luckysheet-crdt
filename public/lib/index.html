@@ -34,13 +34,13 @@
 					container: 'luckysheet',
 					lang: 'zh',
 					// showinfobar: false,
-					plugins: [],
-					data: [sheetCell],
-				
-					allowUpdate: true, // 配置协同功能
-					loadUrl:
-						"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
-					updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
+					plugins: ['fileImport', 'vchart', 'chart'],
+					data: [sheetChart],
+
+					// allowUpdate: true, // 配置协同功能
+					// loadUrl:
+					// 	"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
+					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
 
 					menuHandler: {
 						// 隐藏内置菜单
@@ -49,16 +49,18 @@
 						// 自定义
 						customs: [
 							// 分割线
+
 							{
-								value: 'divider'
+								order: 0,
+								label: '自定义菜单',
+								value: 'newFile',
+								callback: () => {
+									console.log('==> 自定义菜单');
+								}
 							},
 							{
 								order: 0,
-								label: '新建文件',
-								value: 'newFile',
-								callback: () => {
-									console.log('==> 回调测试');
-								}
+								value: 'divider'
 							}
 						]
 					}
