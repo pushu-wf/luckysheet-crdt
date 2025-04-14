@@ -40,8 +40,8 @@
    1. Fee standard:**`￥ 99`**
    2. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
 6. **Contact Author**：
-   1. qq群: 522121825 (已满)
-   2. qq群: 605844508 (推荐)
+   1. qq群: 522121825 (at full strength)
+   2. qq群: 605844508 (recommend)
 
 
 <!-- ## [DeepSeek AI model](https://gitee.com/wfeng0/luckysheet-crdt/blob/master-deepseek-alpha/server/src/DeepSeek/README.md) (still under debugging...)
