@@ -37,7 +37,8 @@
    2. 收费标准：**`99 元`**
    3. 提供服务：仅提供源码包(不提供持续的功能升级、BUG修复，更不是买产品！)
 6. **联系作者**：
-   1. qq群: 522121825 (推荐)
+   1. qq群: 522121825 (已满)
+   2. qq群: 605844508 (推荐)
 
 
 ## 项目启动
@@ -408,5 +409,5 @@ const dependScripts = [
 2. fork 本项目，提交 PR
 3. 加入交流群：
 <p align="center">
-  <img src='/public/result/qq-group.png' />
+  <img src='/public/result/qrcode.jpg' />
 </p>

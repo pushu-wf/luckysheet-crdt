@@ -441,5 +441,5 @@ Solution Review: Abnormal Reference to Front end Resources`
 2. Fork this project and submit a PR
 3. Join the communication group:
 <p align="center">
-  <img src='/public/result/qq-group.png' />
+  <img src='/public/result/qrcode.jpg' />
 </p>
