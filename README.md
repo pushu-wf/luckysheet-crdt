@@ -28,15 +28,15 @@
 ## Fee Statement
 
 1. Please note that there is no Luckymeet source code available for the startup, operation, deployment, and other stages of this project, which does not affect the actual collaborative functionality。
-2. In order to better drive open source, starting from the git head of `bf75470121f0f52737e604233add82ad2502218d`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
+2. In order to better drive open source, starting from the git head of `e12d2f4850127f53292a5161445fc500593176b9`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
 3. **The lack of Luckysheet source code does not affect the actual functionality, and all collaborative features are open source**。
 4. **The impact of no source code:**
     1. The source code is only used for functional expansion in binary scenarios;
     2. If there is no requirement for secondary opening, you do not need to use the source code. If there is a requirement for secondary opening, please contact the author for payment first；
 5. **Please note that:**
-   1.Luckysheet source will be retained, but will not be continuously updated. Subsequent feature upgrades will only provide lib plugin packages；
-    1. Fee standard:**`￥ 99`**
-    2. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
+    1. The enhanced front-end code and server-side code are both open source, and the lack of source code does not affect the functionality and usage；
+    2. Fee standard:**`￥ 99`**
+    3. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
 6. **Contact Author**：
     1. qq 群: 522121825 (recommend)
 
@@ -218,23 +218,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 #### 2️⃣ Chart Collaboration
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
-<span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
+   <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
     <p align="center">
-      <img src='/public/result/chartmix-vchart.png' />
+    <img src='/public/result/chartmix-vchart.png' />
     </p>
     <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
     <p align="center">
-      <img src='/public/result/vchart.gif' />
+    <img src='/public/result/vchart.gif' />
     </p>
     <span style="font-weight:900">vchart setting</span>
     <p align="center">
-      <img src='/public/result/vchart-setting.gif' />
+    <img src='/public/result/vchart-setting.gif' />
     </p>
 
 2. Expand the implementation of chart data update linkage:
-<span style="font-weight:900">chartmix </span>
+   <span style="font-weight:900">chartmix </span>
     <p align="center">
-      <img src='/public/result/chartmix-update-data-crdt.gif' />
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
     </p>
 
 <span style="font-weight:900">vchart </span>
