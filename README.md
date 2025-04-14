@@ -40,8 +40,8 @@
    1. Fee standard:**`￥ 99`**
    2. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
 6. **Contact Author**：
-   <!-- 1. V: 18276861941 -->
-   1. qq group: 522121825 (recommend)
+   1. qq群: 522121825 (已满)
+   2. qq群: 605844508 (推荐)
 
 
 <!-- ## [DeepSeek AI model](https://gitee.com/wfeng0/luckysheet-crdt/blob/master-deepseek-alpha/server/src/DeepSeek/README.md) (still under debugging...)
@@ -441,5 +441,5 @@ Solution Review: Abnormal Reference to Front end Resources`
 2. Fork this project and submit a PR
 3. Join the communication group:
 <p align="center">
-  <img src='/public/result/qq-group.png' />
+  <img src='/public/result/qrcode.jpg' />
 </p>
