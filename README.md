@@ -12,8 +12,8 @@
   <img src='/public/result/result.gif' alt='result' />
 </p>
 
-
 ## DESCRIPTION
+
 1. This project is based on the [Luckysheet source code](https://github.com/mengshukeji/Luckysheet) modification. Please follow the original author's open source agreement, and do not delete or modify the source code header copyright statement。
 2. This project is open sourced under the **Apache 2.0 protocol**, so please feel free to use it. At the same time, this project will also contribute to the Luksysheet community, enriching the community ecosystem. Thank you again to the @[Luckysheet](https://github.com/mengshukeji/Luckysheet) team ❤️
 3. The project is **Luckysheet Collaborative Enhanced Edition (fully functional implementation)**, aiming to provide collaborative implementation ideas, data storage services, collaborative demonstrations, etc. The project is based on [Luckysheet](https://github.com/mengshukeji/Luckysheet) Implemented, thank you to the original author for open-source.
@@ -25,24 +25,20 @@
 9. My personal energy is limited, and there are bugs and incomplete functions. Please submit an [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) and I will handle it promptly;
 10. Welcome everyone to fork the project, submit PR, and work together to improve the project.
 
-
-
-
 ## Fee Statement
+
 1. Please note that there is no Luckymeet source code available for the startup, operation, deployment, and other stages of this project, which does not affect the actual collaborative functionality。
 2. In order to better drive open source, starting from the git head of `bf75470121f0f52737e604233add82ad2502218d`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
 3. **The lack of Luckysheet source code does not affect the actual functionality, and all collaborative features are open source**。
 4. **The impact of no source code:**
-   1. The source code is only used for functional expansion in binary scenarios;
-   2. If there is no requirement for secondary opening, you do not need to use the source code. If there is a requirement for secondary opening, please contact the author for payment first；
+    1. The source code is only used for functional expansion in binary scenarios;
+    2. If there is no requirement for secondary opening, you do not need to use the source code. If there is a requirement for secondary opening, please contact the author for payment first；
 5. **Please note that:**
    1.Luckysheet source will be retained, but will not be continuously updated. Subsequent feature upgrades will only provide lib plugin packages；
-   1. Fee standard:**`￥ 99`**
-   2. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
+    1. Fee standard:**`￥ 99`**
+    2. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
 6. **Contact Author**：
-   1. qq群: 522121825 (at full strength)
-   2. qq群: 605844508 (recommend)
-
+    1. qq 群: 522121825 (recommend)
 
 <!-- ## [DeepSeek AI model](https://gitee.com/wfeng0/luckysheet-crdt/blob/master-deepseek-alpha/server/src/DeepSeek/README.md) (still under debugging...)
 
@@ -67,14 +63,16 @@ aiconfig: [
   <img src='/public/result/ai.gif' />
 </p> -->
 
-
 ## START
+
 1. Clone project：
+
 ```bash
 git clone https://gitee.com/wfeng0/luckysheet-crdt
 ```
 
-2. Download dependencies: 
+2. Download dependencies:
+
 ```bash
 ## "dep": "npm install --s && cd server && npm install --s"
 npm run dep
@@ -94,35 +92,41 @@ npm run dep
 ```
 
 3. 🚫<span style="color:red;font-weight:900">~~If there is no database service, please skip this step~~</span>🚫 Configure database parameters：
+
 ```ts
 // server/src/Config/index.ts
 export const SQL_CONFIG = {
-  port: 3306,
-  host: "127.0.0.1", // localhost or 127.0.0.1
-  database: "luckysheet_crdt",
-  user: "root",
-  password: "root",
+	port: 3306,
+	host: "127.0.0.1", // localhost or 127.0.0.1
+	database: "luckysheet_crdt",
+	user: "root",
+	password: "root",
 };
 ```
+
 4. 🚫<span style="color:red;font-weight:900">~~If there is no database service, please skip this step~~</span>🚫 Synchronize database tables：
+
 ```bash
 npm run db
 ```
 
 **⛔️ Tips：**
+
 ```ts
 1.  Please ensure that the database configuration is correct and available
 2.  Please ensure that the project executes synchronized database commands `npm run db`
 3.  The project cycle only needs to be executed once to ensure the existence of table structures in the database。
 ```
-1. Start Service: 
+
+1. Start Service:
     - Front-desk service：`npm run dev`
     - Back-up services：`npm run server`
 2. Open the URL：`http://localhost:5000` | `http://localhost:9000`, You can experience the collaborative function.
 
-
 ## Project Deployment
+
 1. Pack the front-end project first: `npm run build`
+
 ```js
 build: {
   // Package output directory - will automatically package to the server directory
@@ -135,7 +139,9 @@ build: {
    },
 },
 ```
+
 2. Deployment server
+
 ```js
 // 1. When the server is running, it will automatically build a build directory containing JS files. Please deploy the following folder to the server:
 - 🗂️wwwroot
@@ -146,32 +152,34 @@ build: {
 ```
 
 3. Install node on the server
+
 ```js
 // Related tutorials can be searched online by oneself, and this example provides：
 ```
+
 [Install node on the centos](https://blog.csdn.net/weixin_61367575/article/details/138012405)
 
 4. Start Server：`npm run serve`
-Wait for compilation to complete, start the service, and access the `http://${ip}:9000` after deployment is complete
-
+   Wait for compilation to complete, start the service, and access the `http://${ip}:9000` after deployment is complete
 
 ## Collaborative Function Plan Table
-| functional module        | Implemented                                                  | Unrealized                                                   |
-| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| File operation           | ✅️ import file ✅️ export file(Not implemented)                 |                                                              |
-| Cell operation           | ✅️ Single cell operation ✅️ Range cell operation               |                                                              |
-| Config operation         | ✅️ Line hidden ✅️ Column hidden ✅️ Modify row height ✅️ Modify column width |                                                              |
-| Universal save           | ✅️ Change worksheet name ✅️ Change worksheet color ✅️ Merge cell | ❌️ Freeze rows and columns  ❌️ Filter scope ❌️ Specific settings for filtering ❌️ Alternating colors ❌️ Conditional formatting ❌️ PivotTable ❌️ Dynamic array |
-| Function chain operation |                                                              | ❌️ Function chain operation                                   |
-| Row and column operation | ✅️ Delete rows or columns ✅️ Add rows or columns               |                                                              |
-| Filter operations        |                                                              | ❌️ Clear filter ❌️ Restore filter                              |
-| Sheet operations         | ✅️ Add sheet ✅️ Copy sheet ✅️ Delete sheet ✅️ Restore sheet ✅️ Adjust the position of the sheet Switch to the specified sheet |                                                              |
-| Sheet attribute          | ✅️ Hidden or displayed                                        |                                                              |
-| Table information change | ✅️ Change workbook name                                       |                                                              |
-| Chart operation          | ✅️ Add chart ✅️ Move chart ✅️ Zoom chart ✅️ Update chart options |                                                              |
 
+| functional module        | Implemented                                                                                                                        | Unrealized                                                                                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| File operation           | ✅️ import file ✅️ export file(Not implemented)                                                                                   |                                                                                                                                                                     |
+| Cell operation           | ✅️ Single cell operation ✅️ Range cell operation                                                                                 |                                                                                                                                                                     |
+| Config operation         | ✅️ Line hidden ✅️ Column hidden ✅️ Modify row height ✅️ Modify column width                                                    |                                                                                                                                                                     |
+| Universal save           | ✅️ Change worksheet name ✅️ Change worksheet color ✅️ Merge cell                                                                | ❌️ Freeze rows and columns ❌️ Filter scope ❌️ Specific settings for filtering ❌️ Alternating colors ❌️ Conditional formatting ❌️ PivotTable ❌️ Dynamic array |
+| Function chain operation |                                                                                                                                    | ❌️ Function chain operation                                                                                                                                        |
+| Row and column operation | ✅️ Delete rows or columns ✅️ Add rows or columns                                                                                 |                                                                                                                                                                     |
+| Filter operations        |                                                                                                                                    | ❌️ Clear filter ❌️ Restore filter                                                                                                                                 |
+| Sheet operations         | ✅️ Add sheet ✅️ Copy sheet ✅️ Delete sheet ✅️ Restore sheet ✅️ Adjust the position of the sheet Switch to the specified sheet |                                                                                                                                                                     |
+| Sheet attribute          | ✅️ Hidden or displayed                                                                                                            |                                                                                                                                                                     |
+| Table information change | ✅️ Change workbook name                                                                                                           |                                                                                                                                                                     |
+| Chart operation          | ✅️ Add chart ✅️ Move chart ✅️ Zoom chart ✅️ Update chart options                                                               |                                                                                                                                                                     |
 
 ## Service Port Description
+
 1. Front desk service port：`5000`
 2. Back up service port：`9000`
 3. Database service port：`3306`
@@ -180,14 +188,15 @@ Wait for compilation to complete, start the service, and access the `http://${ip
 // 1️⃣ Backend service port configuration：server/src/Config/index.ts
 export const SERVER_PORT = 9000;
 ```
+
 ```js
 // 2️⃣ Database service port configuration：server/src/Config/index.ts
 export const SQL_CONFIG = {
-  port: 3306,
-  // ... other config
+	port: 3306,
+	// ... other config
 };
-
 ```
+
 ```js
 // 3️⃣ Front desk service port configuration：src/config/index.ts
 // Export backend service address
@@ -198,54 +207,60 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 ```
 
 ## Source project optimization
+
 #### 1️⃣ Page UI Refactoring
+
 1. Source code UI refactoring, please refer to [Luckysheet-source-recover-style](/Luckysheet-source/src/css/recover.css)
-<p align="center">
-  <img src='/public/result/ui.gif' />
-</p>
+ <p align="center">
+   <img src='/public/result/ui.gif' />
+ </p>
 
 #### 2️⃣ Chart Collaboration
+
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
 <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-<p align="center">
-  <img src='/public/result/chartmix-vchart.png' />
-</p>
-<span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-<p align="center">
-  <img src='/public/result/vchart.gif' />
-</p>
-<span style="font-weight:900">vchart setting</span>
-<p align="center">
-  <img src='/public/result/vchart-setting.gif' />
-</p>
-
+    <p align="center">
+      <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+    <p align="center">
+      <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart setting</span>
+    <p align="center">
+      <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. Expand the implementation of chart data update linkage:
 <span style="font-weight:900">chartmix </span>
-<p align="center">
-  <img src='/public/result/chartmix-update-data-crdt.gif' />
-</p>
+    <p align="center">
+      <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart </span>
+
 <p align="center">
   <img src='/public/result/vchart-update-data-crdt.gif' />
 </p>
 
 ### 3️⃣ Optimization of image mobility performance
+
 <span style="font-weight:900">Original effect:</span>
+
 <p align="center">
   <img src='/public/result/picture-old.gif' />
 </p>
 
 <span style="font-weight:900">After optimization:</span>
+
 <p align="center">
   <img src='/public/result/picture-new.gif' />
 </p>
 
-
-
 ### 4️⃣ File Import
+
 <span style="font-weight:900">Support collaboration~</span>
+
 <p align="center">
   <img src='/public/result/file-import.gif' />
 </p>
@@ -254,20 +269,21 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 ```js
 // 1. Configure import plugin
 const options = {
-  // ...other config
-  plugins: ["fileImport"],
-}
+	// ...other config
+	plugins: ["fileImport"],
+};
 
-luckysheet.create(options)
+luckysheet.create(options);
 ```
 
 <span style="font-weight:900">matters needing attention:</span>
+
 1. File import depends on the `luckyuexcel` plugin；
 2. Therefore, some functions are limited by plugins. If you need to expand them, please implement them yourself!
 3. Please configure plugins correctly Use the import function after `fileImport`.
 
-
 ### 5️⃣ File Export
+
 <p align="center">
   <img src='/public/result/file-export.gif' />
 </p>
@@ -276,25 +292,26 @@ luckysheet.create(options)
 ```js
 // 1. Configure export plugin
 const options = {
-  // ...other config
-  plugins: ["fileExport"],
-}
+	// ...other config
+	plugins: ["fileExport"],
+};
 
-luckysheet.create(options)
+luckysheet.create(options);
 ```
 
 <span style="font-weight:900">matters needing attention:</span>
+
 1. File import depends on the `exceljs | file-saver` plugin；
 2. Therefore, some functions are limited by plugins. If you need to expand them, please implement them yourself!
 3. Please configure plugins correctly Use the import function after `fileExport`.
 
-
 ### 6️⃣ Expand menu functionality
+
 <span style="font-weight:900">Configuration:</span>
+
 <p align="center">
   <img src='/public/result/menu.png' />
 </p>
-
 
 ```ts
 const options = {
@@ -315,7 +332,7 @@ type MenuHandlerCustomsItem = {
   callback: () => void
   order?: string // Menu sorting, the smaller one is on top, the default menu order=10 is on top of the default menu, it needs to be smaller than 10, and it will not be transferred. It will be placed below by default
   icon?: string
-} | 
+} |
 // Partition line configuration object
 {
   value: 'divider'
@@ -323,28 +340,31 @@ type MenuHandlerCustomsItem = {
 ```
 
 **example**
+
 ```ts
 menuHandler: {
-   customs: [
-      	{
-      		label: '保存',
-      		value: 'saveFile',
-      		order: 1
-      	},
-      	{ value: 'divider', order: 2 }
-   ]
+	customs: [
+		{
+			label: "保存",
+			value: "saveFile",
+			order: 1,
+		},
+		{ value: "divider", order: 2 },
+	];
 }
 ```
 
-
 ## frequently asked questions
+
 1. **When importing files, prompt `file format error`：**
+
 ```ts
-At present, only xlsx format is supported. 
+At present, only xlsx format is supported.
 Please check if the file format is correct.
 ```
 
 2. **The page displays `Collaboration service unavailable, currently in normal mode`：**
+
 ```ts
 try {
   const { data } = await fetch({
@@ -362,7 +382,9 @@ Please check if the service is functioning properly. There are generally the fol
 2. Database exception
 3. Abnormal database table structure
 ```
+
 3. **Chaotic database data:**
+
 ```ts
 The only possible reason for this is that the application does not have a relevant delete statement,
 It's not that I don't write, but rather that everyone expands based on their actual business needs.
@@ -378,6 +400,7 @@ be careful! If there are records in the workersheets table, but deleteFlag is tr
 ```
 
 4. **Forefront resource reference exception**
+
 ```ts
 Note: Currently, all plugin dependencies in the source code are derived from absolute paths
 // Dynamically load dependent scripts and styles
@@ -391,6 +414,7 @@ const dependScripts = [
 
 So, it will cause a problem that the actual project in the front-end is probably not the path of public/appendplugins/ * *. Please ensure that the expenndplugins directory is correctly placed and recognized.
 ```
+
 **Handling method:**
 
 ```ts
@@ -407,12 +431,8 @@ So, it will cause a problem that the actual project in the front-end is probably
   <img src='/public/result/extendplugins.png' />
 </p>
 
- 
-
-
 5. **Customize the creation of chart types**
-  At present, creating charts in vchart is a random 'pie chart' | 'line chart'. If you want to implement custom chart type transfer, you need to modify the chartmix related source code. The specific steps can be referred to as follows：
-
+   At present, creating charts in vchart is a random 'pie chart' | 'line chart'. If you want to implement custom chart type transfer, you need to modify the chartmix related source code. The specific steps can be referred to as follows：
 
 <p align="center">
   <img src='/public/result/changeChartType.png' />
@@ -425,21 +445,19 @@ So, it will cause a problem that the actual project in the front-end is probably
 ```
 
 6. **Registration plugin error**
-<p align="center">
-  <img src='/public/result/register-plugin-error.png' />
-</p>
+ <p align="center">
+   <img src='/public/result/register-plugin-error.png' />
+ </p>
 
 ```ts
 Solution Review: Abnormal Reference to Front end Resources`
 ```
 
-
-
-
 ## Open source contribution
+
 1. Submit an [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new)
 2. Fork this project and submit a PR
 3. Join the communication group:
-<p align="center">
-  <img src='/public/result/qrcode.jpg' />
-</p>
+ <p align="center">
+   <img src='/public/result/qq-group.png' />
+ </p>
