@@ -28,8 +28,9 @@ server/logs
 server/public/uploads/*
 server/public/dist
 
-Luckysheet-source/dist
-Luckysheet-source/node_modules
+# Luckysheet-source 二开源码不开源
+Luckysheet-source
+Luckysheet-source-private
 
 *.xlsx
 *.zip
@@ -39,5 +40,4 @@ Luckysheet-source/node_modules
 *.tar.bz2
 *.tar.xz
 
-# Luckysheet-source 二开源码不开源
-Luckysheet-source-private
+
