@@ -48,6 +48,7 @@ import { createWebSocketServer } from "./WebSocket/index"; // 导入 ws
 	 *  service 中已经做了兼容处理，不会重复添加 workerbook
 	 *  **下列代码仅作演示使用**
 	 */
+
 	try {
 		if (!DB.getConnectState()) return;
 		await WorkerBookService.create(WORKER_BOOK_INFO);
