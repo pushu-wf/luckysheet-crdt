@@ -11,7 +11,8 @@
     "server:dev": "cd server && npm run dev",
     "lint": "eslint --fix",
     "db": "cd server && npm run db",
-    "dep": "npm install --s && cd server && npm install --s"
+    "dep-npm": "npm install --s && cd server && npm install --s",
+    "dep-pnpm": "pnpm install --s && cd server && pnpm install --s"
   },
   "description": "A CRDT library for Luckysheet",
   "keywords": [

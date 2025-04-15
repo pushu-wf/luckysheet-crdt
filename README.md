@@ -40,29 +40,6 @@
 6. **Contact Author**：
     1. qq 群: 522121825 (recommend)
 
-<!-- ## [DeepSeek AI model](https://gitee.com/wfeng0/luckysheet-crdt/blob/master-deepseek-alpha/server/src/DeepSeek/README.md) (still under debugging...)
-
-**only master-deepseek-alpha branch is available** -->
-
-<!-- 1. At present, the AI model is still undergoing integration testing. Please be patient and wait;
-2. Need to start AI service on the server first：`npm run ai-server`
-3. Add AI configuration to the front desk ：
-```js
-// 配置AI功能
-aiconfig: [
-   {
-      	name: "deepseek",
-      	model: "deepseek-r1",
-      	url: `ws://localhost:9000?userid=${id}`,
-      	messageMode: "stream", // chat or stream
-   },
-],
-```
-4. 初步效果展示:
-<p align="center">
-  <img src='/public/result/ai.gif' />
-</p> -->
-
 ## START
 
 1. Clone project：
@@ -74,8 +51,10 @@ git clone https://gitee.com/wfeng0/luckysheet-crdt
 2. Download dependencies:
 
 ```bash
-## "dep": "npm install --s && cd server && npm install --s"
-npm run dep
+# "dep-npm": "npm install --s && cd server && npm install --s",
+# "dep-pnpm": "pnpm install --s && cd server && pnpm install --s"
+npm run dep-npm | npm run dep-pnpm
+# Recommend using pnpm for dependency installation to avoid version conflicts
 ```
 
 **⛔️ Tips：**
@@ -219,23 +198,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-     <p align="center">
-     <img src='/public/result/chartmix-vchart.png' />
-     </p>
-     <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-     <p align="center">
-     <img src='/public/result/vchart.gif' />
-     </p>
-     <span style="font-weight:900">vchart setting</span>
-     <p align="center">
-     <img src='/public/result/vchart-setting.gif' />
-     </p>
+    <p align="center">
+    <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+    <p align="center">
+    <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart setting</span>
+    <p align="center">
+    <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-     <p align="center">
-     <img src='/public/result/chartmix-update-data-crdt.gif' />
-     </p>
+    <p align="center">
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart </span>
 
