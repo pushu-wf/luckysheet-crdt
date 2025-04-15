@@ -1,7 +1,7 @@
-import fs from 'fs';
-import multer from 'multer';
-import { Request, Response } from 'express';
-import { MULTER_CONFIG } from '../../Config';
+import fs from "fs";
+import multer from "multer";
+import { Request, Response } from "express";
+import { MULTER_CONFIG } from "../../Config";
 
 // 配置 Multer
 const { dest, single } = MULTER_CONFIG;
@@ -15,7 +15,10 @@ export async function uploadImage(req: Request, res: Response) {
 		const { file } = req;
 
 		// 如果没有解析到 file 对象，则直接返回 400
-		if (!file) res.status(400).json({ code: 400, msg: '请选择文件' });
+		if (!file) {
+			res.status(400).json({ code: 400, msg: "请选择文件" });
+			return;
+		}
 
 		const { filename, originalname } = <Express.Multer.File>file;
 
@@ -25,7 +28,7 @@ export async function uploadImage(req: Request, res: Response) {
 		 *  转换成 85d6d8c593b7239406ce2c13099c6110.png
 		 *  保留后缀，方便用户以静态资源访问
 		 */
-		const suffix = originalname.split('.').pop();
+		const suffix = originalname.split(".").pop();
 		const oldpath = `${MULTER_CONFIG.dest}/${filename}`;
 		const newpath = `${MULTER_CONFIG.dest}/${filename}.${suffix}`;
 
@@ -34,8 +37,8 @@ export async function uploadImage(req: Request, res: Response) {
 
 		res.json({
 			code: 200,
-			msg: 'Success to upload.',
-			url: `/uploads/${filename}.${suffix}`
+			msg: "Success to upload.",
+			url: `/uploads/${filename}.${suffix}`,
 		});
 	});
 }

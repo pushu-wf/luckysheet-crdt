@@ -28,7 +28,7 @@
 ## Fee Statement
 
 1. Please note that there is no Luckymeet source code available for the startup, operation, deployment, and other stages of this project, which does not affect the actual collaborative functionality。
-2. In order to better drive open source, starting from the git head of `e12d2f4850127f53292a5161445fc500593176b9`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
+2. In order to better drive open source, starting from `2025-04-15` the git head of `e12d2f4850127f53292a5161445fc500593176b9`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
 3. **The lack of Luckysheet source code does not affect the actual functionality, and all collaborative features are open source**。
 4. **The impact of no source code:**
     1. The source code is only used for functional expansion in binary scenarios;
@@ -39,29 +39,6 @@
     3. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
 6. **Contact Author**：
     1. qq 群: 522121825 (recommend)
-
-<!-- ## [DeepSeek AI model](https://gitee.com/wfeng0/luckysheet-crdt/blob/master-deepseek-alpha/server/src/DeepSeek/README.md) (still under debugging...)
-
-**only master-deepseek-alpha branch is available** -->
-
-<!-- 1. At present, the AI model is still undergoing integration testing. Please be patient and wait;
-2. Need to start AI service on the server first：`npm run ai-server`
-3. Add AI configuration to the front desk ：
-```js
-// 配置AI功能
-aiconfig: [
-   {
-      	name: "deepseek",
-      	model: "deepseek-r1",
-      	url: `ws://localhost:9000?userid=${id}`,
-      	messageMode: "stream", // chat or stream
-   },
-],
-```
-4. 初步效果展示:
-<p align="center">
-  <img src='/public/result/ai.gif' />
-</p> -->
 
 ## START
 
@@ -74,8 +51,10 @@ git clone https://gitee.com/wfeng0/luckysheet-crdt
 2. Download dependencies:
 
 ```bash
-## "dep": "npm install --s && cd server && npm install --s"
-npm run dep
+# "dep-npm": "npm install --s && cd server && npm install --s",
+# "dep-pnpm": "pnpm install --s && cd server && pnpm install --s"
+npm run dep-npm | npm run dep-pnpm
+# Recommend using pnpm for dependency installation to avoid version conflicts
 ```
 
 **⛔️ Tips：**

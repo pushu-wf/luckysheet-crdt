@@ -28,7 +28,7 @@
 ## 收费声明
 
 1. 请注意，本项目启动、运行、部署等环节，**没有 Luckysheet-source 源码，不影响实际协同功能**。
-2. 为了更好驱动开源，本项目至 `e12d2f4850127f53292a5161445fc500593176b9` git head 起，**不再提供源码修改部分，如有需要，请联系作者收费获取**。
+2. 为了更好驱动开源，本项目至 `2025-04-15` `e12d2f4850127f53292a5161445fc500593176b9` git head 起，**不再提供源码修改部分，如有需要，请联系作者收费获取**。
 3. **没有 Luckysheet-source 源码不影响实际功能，协同部分全部功能均开源**。
 4. **没有源码的影响：**
     1. 源码仅用于二开场景下，做功能拓展使用；
@@ -51,8 +51,10 @@ git clone https://gitee.com/wfeng0/luckysheet-crdt
 2. **下载依赖:**
 
 ```bash
-## "dep": "npm install --s && cd server && npm install --s"
-npm run dep
+# "dep-npm": "npm install --s && cd server && npm install --s",
+# "dep-pnpm": "pnpm install --s && cd server && pnpm install --s"
+npm run dep-npm | npm run dep-pnpm
+# 推荐使用 pnpm 进行依赖的安装，避免出现版本冲突问题
 ```
 
 **⛔️ 温馨提示：**
