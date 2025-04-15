@@ -28,7 +28,7 @@
 ## 收费声明
 
 1. 请注意，本项目启动、运行、部署等环节，**没有 Luckysheet-source 源码，不影响实际协同功能**。
-2. 为了更好驱动开源，本项目至 `e12d2f4850127f53292a5161445fc500593176b9` git head 起，**不再提供源码修改部分，如有需要，请联系作者收费获取**。
+2. 为了更好驱动开源，本项目至 `2025-04-15` `e12d2f4850127f53292a5161445fc500593176b9` git head 起，**不再提供源码修改部分，如有需要，请联系作者收费获取**。
 3. **没有 Luckysheet-source 源码不影响实际功能，协同部分全部功能均开源**。
 4. **没有源码的影响：**
     1. 源码仅用于二开场景下，做功能拓展使用；
@@ -198,23 +198,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart 图表设置</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+    <p align="center">
+    <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+    <p align="center">
+    <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart 图表设置</span>
+    <p align="center">
+    <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+    <p align="center">
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
