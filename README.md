@@ -198,23 +198,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-    <p align="center">
-    <img src='/public/result/chartmix-vchart.png' />
-    </p>
-    <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-    <p align="center">
-    <img src='/public/result/vchart.gif' />
-    </p>
-    <span style="font-weight:900">vchart setting</span>
-    <p align="center">
-    <img src='/public/result/vchart-setting.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-vchart.png' />
+   </p>
+   <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+   <p align="center">
+   <img src='/public/result/vchart.gif' />
+   </p>
+   <span style="font-weight:900">vchart setting</span>
+   <p align="center">
+   <img src='/public/result/vchart-setting.gif' />
+   </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-    <p align="center">
-    <img src='/public/result/chartmix-update-data-crdt.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-update-data-crdt.gif' />
+   </p>
 
 <span style="font-weight:900">vchart </span>
 
@@ -332,6 +332,17 @@ menuHandler: {
 	];
 }
 ```
+
+**Method for handling icon icons in custom menus**
+
+1. Download iconfont resources and place them in the `source/src/assets` directory (download locally and unzip)
+2. Import the currently downloaded resource package into the same level directory `iconfont/iconfont.css`
+
+```css
+@import url("../font_3944349_xxxxx/iconfont.css");
+```
+
+3. Package and output to use iconfont icon normally
 
 ## frequently asked questions
 
