@@ -200,23 +200,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-       <p align="center">
-       <img src='/public/result/chartmix-vchart.png' />
-       </p>
-       <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-       <p align="center">
-       <img src='/public/result/vchart.gif' />
-       </p>
-       <span style="font-weight:900">vchart 图表设置</span>
-       <p align="center">
-       <img src='/public/result/vchart-setting.gif' />
-       </p>
+    <p align="center">
+    <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+    <p align="center">
+    <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart 图表设置</span>
+    <p align="center">
+    <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-       <p align="center">
-       <img src='/public/result/chartmix-update-data-crdt.gif' />
-       </p>
+    <p align="center">
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
@@ -419,11 +419,11 @@ const dependScripts = [
    1. 如果端口后没有其他路径，则应该放到 public 目录下；
    2. 如果端口后有其他路径，则应该放到其他目录下，如：static。
 4. 文件在 `dist` 目录下有备份，直接复制出来即可。
+```
 
 <p align="center">
   <img src='/public/result/extendplugins.png' />
 </p>
-```
 
 5. **自定义创建图表类型**
    目前 vchart 创建图表是随机的`饼图`|`折线图`，如果想实现自定义的图表类型传递，需要修改 chartmix 相关源码，具体步骤可参考如下：
