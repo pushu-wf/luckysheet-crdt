@@ -1,9 +1,9 @@
 import {
 	BorderInfoType,
 	CellDataItemType,
-	BASE_CELL_DATA_TYPE
-} from './luckysheet';
-import { WebSocket } from 'ws';
+	BASE_CELL_DATA_TYPE,
+} from "./luckysheet";
+import { WebSocket } from "ws";
 
 interface CustomWebSocket extends WebSocket {
 	clientInfo: {
@@ -30,18 +30,18 @@ type CRDTDataType<T> = {
 
 	// cg
 	k?:
-		| 'config'
-		| 'images'
-		| 'name'
-		| 'rowhidden'
-		| 'colhidden'
-		| 'rowlen'
-		| 'columnlen'
-		| 'borderInfo'
-		| 'color';
+		| "config"
+		| "images"
+		| "name"
+		| "rowhidden"
+		| "colhidden"
+		| "rowlen"
+		| "columnlen"
+		| "borderInfo"
+		| "color";
 
 	// Chart
-	op?: 'add' | 'xy' | 'wh' | 'update' | 'del';
+	op?: "add" | "xy" | "wh" | "update" | "del";
 
 	// drc
 	rc?: string;
@@ -73,6 +73,9 @@ type CG = {
 type MERGE = {
 	merge: {
 		[key: string]: { r: number; c: number; rs: number; cs: number };
+	};
+	rowlen: {
+		[key: string]: number;
 	};
 };
 
@@ -132,5 +135,5 @@ export {
 	type CHART,
 	type MERGE,
 	CustomWebSocket,
-	type CRDTDataType
+	type CRDTDataType,
 };

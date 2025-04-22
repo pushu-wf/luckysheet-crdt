@@ -31,6 +31,7 @@ export class CellDataModel extends Model {
 	declare ht?: number;
 	declare f?: string | null;
 	declare ps?: string | null;
+	declare tb?: number; // 文本换行方式
 
 	// 都需要导出一个 register 方法，用于注册模型
 	static registerModule(sequelize: Sequelize) {
@@ -137,7 +138,13 @@ export class CellDataModel extends Model {
 					comment: "水平居中 0 居中、1 左、2右",
 					defaultValue: 0,
 				},
-				// tr rt tb 不想实现了~ 大家自己拓展其他的数据类型吧
+				tb: {
+					type: DataTypes.INTEGER,
+					allowNull: true,
+					comment: "文本换行方式 0 自动换行、1 单行、2 多行",
+					defaultValue: 0,
+				},
+				// tr rt 不想实现了~ 大家自己拓展其他的数据类型吧
 				// v m 的取值逻辑由 ct：{fa t} 决定
 				v: {
 					type: DataTypes.STRING,

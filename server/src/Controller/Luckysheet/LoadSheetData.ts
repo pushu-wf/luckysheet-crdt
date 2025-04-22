@@ -184,6 +184,8 @@ async function parseCellData(
 					 */
 					f: data.f || null,
 					un: Boolean(data.un),
+					// 文本截断方式 tb	textbeak	文本换行	0 截断、1溢出、2 自动换行
+					tb: Number(data.tb) || 0,
 					ps: data.ps ? { value: data.ps } : null,
 				},
 			});
