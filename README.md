@@ -284,7 +284,7 @@ luckysheet.create(options);
 2. Therefore, some functions are limited by plugins. If you need to expand them, please implement them yourself!
 3. Please configure plugins correctly Use the import function after `fileExport`.
 
-### 6️⃣ Expand menu functionality
+### 6️⃣ Customize Menu
 
 <span style="font-weight:900">Configuration:</span>
 
@@ -414,7 +414,6 @@ So, it will cause a problem that the actual project in the front-end is probably
    1. If there are no other paths after the port, it should be placed in the public directory;
    2. If there are other paths after the port, it should be placed in another directory, such as: static。
 4. The file is backed up in the `dist` directory and can be copied directly。
-
 ```
 
 <p align="center">
