@@ -451,35 +451,6 @@ async function all(data: string) {
 					await HiddenAndLenService.create(configInfo);
 				}
 			}
-			// 修改行高列宽
-			// if (
-			// 	k === "rowhidden" ||
-			// 	k === "colhidden" ||
-			// 	k === "rowlen" ||
-			// 	k === "columnlen"
-			// ) {
-			// 	for (const key in v) {
-			// 		if (Object.prototype.hasOwnProperty.call(v, key)) {
-			// 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// 			// @ts-ignore
-			// 			const value = Number(v[key]);
-			// 			// 判断具体是 行还是列
-			// 			const configInfo: HiddenAndLenModelType = {
-			// 				worker_sheet_id: i,
-			// 				config_index: key,
-			// 				config_type: k,
-			// 				config_value: value,
-			// 			};
-			// 			//  {"t":"cg","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"7":0,"8":0,"9":0},"k":"rowhidden"}
-			// 			//  {"t":"cg","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{},"k":"rowhidden"}
-			// 			// 如果是隐藏的状态，应该先删除全部的 configInfo 再创建，因为 luckysheet 前台的设计就是将当前所有的 hidden 全部传给后台，并不区分是隐藏还是取消隐藏
-			// 			if (k === "rowhidden" || k === "colhidden") {
-			// 				await HiddenAndLenService.deleteHidden(i, k, key);
-			// 			}
-			// 			await HiddenAndLenService.create(configInfo);
-			// 		}
-			// 	}
-			// }
 		}
 	} else if (k === "images") {
 		//  {"t":"all","i":"4735b996-d89d-4d7f-ad8e-1124bccc89b0","v":{
