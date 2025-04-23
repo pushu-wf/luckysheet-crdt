@@ -88,9 +88,56 @@ async function v(data: string) {
 	if (isEmpty(i)) return logger.error("i is undefined.");
 	if (isEmpty(r) || isEmpty(c)) return logger.error("r or c is undefined.");
 
+	// 场景一 输入内容存在换行符，则内容是通过 s 传输
+	// {"t":"v","i":"28a60885-46e3-4f59-9d25-442a30fdbba6","v":{"ct":{"fa":"General","t":"inlineStr","s":[{"ff":"Times New Roman","fc":"#000000","fs":10,"cl":0,"un":0,"bl":0,"it":0,"v":"123\r\nhhh"}]}},"r":7,"c":0}
+	// {"t":"v","i":"28a60885-46e3-4f59-9d25-442a30fdbba6","v":{"ct":{"fa":"General","t":"inlineStr","s":[{"ff":"Times New Roman","fc":"#000000","fs":10,"cl":0,"un":0,"bl":0,"it":0,"v":"jasdjkasdh\r\n换行"}]}},"r":14,"c":1}
+	if (v && !v.v && v.ct && v.ct.s) {
+		// 取 v m
+		const ctfa = v.ct.fa;
+		const ctt = v.ct.t;
+		const cts = JSON.stringify(v.ct.s);
+
+		// 判断表内是否存在当前记录
+		const exist = await CellDataService.hasCellData(i, r, c);
+
+		const info: CellDataModelType = {
+			worker_sheet_id: i,
+			r,
+			c,
+			ctfa,
+			ctt,
+			cts,
+			v: "",
+			m: "",
+			bg: v.bg,
+			bl: <boolean>v.bl,
+			cl: <boolean>v.cl,
+			fc: v.fc,
+			ff: <string>v.ff,
+			fs: <number>v.fs,
+			ht: v.ht,
+			it: <boolean>v.it,
+			un: <boolean>v.un,
+			vt: v.vt,
+			tb: <number>v.tb,
+			ps: <string>v?.ps?.value,
+		};
+
+		// 如果存在则更新
+		if (exist) {
+			await CellDataService.updateCellData({
+				cell_data_id: exist.cell_data_id,
+				...info,
+			});
+		} else {
+			// 创建新的记录时，当前记录的 cell_data_id 由 sequelize 自动创建
+			await CellDataService.createCellData(info);
+		}
+	}
+
 	// 场景一：单个单元格插入值
 	// {"t":"v","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"v":"123","ct":{"fa":"General","t":"n"},"m":"123"},"r":5,"c":0}
-	if (v && v.v && v.m) {
+	else if (v && v.v && v.m) {
 		// 取 v m
 		const value = <string>v.v;
 		const monitor = <string>v.m;

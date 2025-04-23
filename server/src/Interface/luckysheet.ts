@@ -72,19 +72,29 @@ type BASE_CELL_DATA_TYPE = {
 		//单元格值格式
 		fa: string; //格式名称为自动格式
 		t: string; //格式类型为数字类型
+		s?: {
+			ff: string;
+			fc: string;
+			fs: number;
+			cl: number;
+			un: number;
+			bl: number;
+			it: number;
+			v: string;
+		}[];
 	};
 	v: string | number; //内容的原始值为 233
 	m: string | number; //内容的显示值为 233
-	bg: string; //背景为 "#f6b26b"
-	ff: string; // 字体为 "Arial"
-	fc: string; //字体颜色为 "#990000"
-	bl: boolean; //字体加粗
-	it: boolean; //字体斜体
-	fs: number; //字体大小为 9px
-	cl: boolean; //启用删除线
-	un: boolean; // 启用下划线
-	ht: number; //水平居中
-	vt: number; //垂直居中
+	bg?: string; //背景为 "#f6b26b"
+	ff?: string; // 字体为 "Arial"
+	fc?: string; //字体颜色为 "#990000"
+	bl?: boolean; //字体加粗
+	it?: boolean; //字体斜体
+	fs?: number; //字体大小为 9px
+	cl?: boolean; //启用删除线
+	un?: boolean; // 启用下划线
+	ht?: number; //水平居中
+	vt?: number; //垂直居中
 	tr?: number; //文字旋转 -45°
 	tb?: number; //文本自动换行
 	mc?: {
@@ -94,7 +104,7 @@ type BASE_CELL_DATA_TYPE = {
 		rs: number; //合并单元格占的行数
 		cs: number; //合并单元格占的列数
 	};
-	ps: {
+	ps?: {
 		//批注
 		left?: number; //批注框左边距
 		top?: number; //批注框上边距
@@ -103,7 +113,7 @@ type BASE_CELL_DATA_TYPE = {
 		value: string; //批注内容
 		isshow?: boolean; //批注框为显示状态
 	} | null;
-	f: string | null; //单元格是一个求和公式 "=SUM(233)"
+	f?: string | null; //单元格是一个求和公式 "=SUM(233)"
 };
 
 // 合并单元格类型
