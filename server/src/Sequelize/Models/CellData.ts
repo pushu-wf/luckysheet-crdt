@@ -14,11 +14,12 @@ export class CellDataModel extends Model {
 	declare worker_sheet_id: string;
 	declare r: number;
 	declare c: number;
-	declare v: string;
-	declare m: string;
+	declare v?: string;
+	declare m?: string;
 
 	declare ctfa?: string;
 	declare ctt?: string;
+	declare cts?: string; // inline str
 	declare bg?: string;
 	declare ff?: string;
 	declare fc?: string;
@@ -76,6 +77,12 @@ export class CellDataModel extends Model {
 					allowNull: false,
 					comment: "ct:{t} Type类型,'g'|'s'|'n'....",
 					defaultValue: "g",
+				},
+				cts: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					comment: "ct:{s} inlineStr v 内容整体存储",
+					defaultValue: "",
 				},
 				bg: {
 					type: DataTypes.STRING,

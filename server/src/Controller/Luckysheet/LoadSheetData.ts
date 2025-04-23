@@ -166,6 +166,7 @@ async function parseCellData(
 					ct: {
 						fa: <string>data.ctfa,
 						t: <string>data.ctt,
+						s: JSON.parse(data.cts || "[]"),
 					},
 					v: data.v || "",
 					m: data.m || "",
