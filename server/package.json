@@ -1,32 +1,33 @@
 {
-  "name": "luckysheet-crdt-server",
-  "version": "0.0.0",
-  "private": true,
-  "description": "luckysheet-crdt-server",
-  "scripts": {
-    "serve": "tsc && node build/main.js",
-    "build": "tsc",
-    "dev": "nodemon -w src/ -e ts --exec \"ts-node src/main.ts\"",
-    "db": "tsc && node build/Sequelize/synchronization.js"
-  },
-  "dependencies": {
-    "dayjs": "^1.11.13",
-    "express": "^4.21.1",
-    "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.11.5",
-    "ollama": "^0.5.13",
-    "pako": "^2.1.0",
-    "sequelize": "^6.37.5",
-    "ws": "^8.18.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/multer": "^1.4.12",
-    "@types/node": "^22.10.1",
-    "@types/pako": "^2.0.3",
-    "@types/ws": "^8.5.13",
-    "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  }
+	"name": "luckysheet-crdt-server",
+	"version": "0.0.0",
+	"private": true,
+	"description": "luckysheet-crdt-server",
+	"scripts": {
+		"start": "node build/main.js",
+		"serve": "tsc && node build/main.js",
+		"build": "tsc",
+		"dev": "nodemon -w src/ -e ts --exec \"ts-node src/main.ts\"",
+		"db": "tsc && node build/Sequelize/synchronization.js"
+	},
+	"dependencies": {
+		"dayjs": "^1.11.13",
+		"express": "^4.21.1",
+		"multer": "^1.4.5-lts.1",
+		"mysql2": "^3.11.5",
+		"ollama": "^0.5.13",
+		"pako": "^2.1.0",
+		"sequelize": "^6.37.5",
+		"ws": "^8.18.0"
+	},
+	"devDependencies": {
+		"@types/express": "^5.0.0",
+		"@types/multer": "^1.4.12",
+		"@types/node": "^22.10.1",
+		"@types/pako": "^2.0.3",
+		"@types/ws": "^8.5.13",
+		"nodemon": "^3.1.9",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.2"
+	}
 }
