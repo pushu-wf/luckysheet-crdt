@@ -17,6 +17,8 @@ export default [
 			"**/build/**",
 			"**/logs/**",
 			"**public/**",
+			"**/server/wwwroot/**",
+			"**/server/scripts/**",
 		],
 	},
 	{
