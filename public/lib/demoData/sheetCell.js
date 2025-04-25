@@ -8,27 +8,5 @@ window.sheetCell = {
 		{ r: 0, c: 1, v: { v: "1", ct: { fa: "General", t: "n" }, m: "1" } },
 		{ r: 1, c: 0, v: { v: "B", ct: { fa: "General", t: "n" }, m: "1" } },
 		{ r: 1, c: 1, v: { v: "2", ct: { fa: "General", t: "n" }, m: "1" } },
-		{
-			r: 1,
-			c: 1,
-			v: {
-				ct: {
-					fa: "General",
-					t: "inlineStr",
-					s: [
-						{
-							ff: "Times New Roman",
-							fc: "#000000",
-							fs: 10,
-							cl: 0,
-							un: 0,
-							bl: 0,
-							it: 0,
-							v: "jasdjkasdh\r\n换行",
-						},
-					],
-				},
-			},
-		},
 	],
 };
