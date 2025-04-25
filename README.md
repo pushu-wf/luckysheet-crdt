@@ -104,42 +104,29 @@ npm run db
 
 ## Project Deployment
 
-1. Pack the front-end project first: `npm run build`
+1.  Pack the front-end project first: `npm run build`
 
-```js
-build: {
-  // Package output directory - will automatically package to the server directory
-   outDir: "./server/public/dist",
-   rollupOptions: {
-      input: {
-        // Front end entrance file - Please note that the entry used is the entrance file
-      	main: "./entry.html",
-      },
-   },
-},
-```
+    -   Please note that when packaging file files, the default output is to `server/public/dist`
 
-2. Deployment server
+2.  Package server code: `npm run build:server`
 
-```js
-// 1. When the server is running, it will automatically build a build directory containing JS files. Please deploy the following folder to the server:
-- 🗂️wwwroot
-  + 📂build // js files
-  + 📂public // Static resources
-  + 🗒️package-lock.json
-  + 🗒️package.json
-```
+    -   At this point, the packaging result of the entire project will be directly output to the `server/wwwroot` directory, which can be deployed directly to the server。
 
-3. Install node on the server
+3.  Please upload the files from the 'server/wwwroot' directory to the server
+<p align="center">
+  <img src='/public/result/build.png' />
+</p>
 
-```js
-// Related tutorials can be searched online by oneself, and this example provides：
-```
+4.  Install the 'node' environment on the server. You can search for related tutorials online by yourself
 
-[Install node on the centos](https://blog.csdn.net/weixin_61367575/article/details/138012405)
+    -   This example provides:[centos 参考此链接](https://blog.csdn.net/weixin_61367575/article/details/138012405)
 
-4. Start Server：`npm run serve`
-   Wait for compilation to complete, start the service, and access the `http://${ip}:9000` after deployment is complete
+5.  Synchronize database tables:`npm run db`
+
+    -   Please ensure that the database configuration is correct and available(~~If there is no database service, please skip this step~~)
+
+6.  Start service:`npm run serve`
+    -   Wait for dependency download to complete, start service `npm run start`, Access after deployment completion to just access `http://${ip}:9000`
 
 ## Collaborative Function Plan Table
 
@@ -198,23 +185,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart setting</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+       <p align="center">
+       <img src='/public/result/chartmix-vchart.png' />
+       </p>
+       <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+       <p align="center">
+       <img src='/public/result/vchart.gif' />
+       </p>
+       <span style="font-weight:900">vchart setting</span>
+       <p align="center">
+       <img src='/public/result/vchart-setting.gif' />
+       </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+       <p align="center">
+       <img src='/public/result/chartmix-update-data-crdt.gif' />
+       </p>
 
 <span style="font-weight:900">vchart </span>
 
