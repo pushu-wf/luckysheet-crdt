@@ -29,6 +29,7 @@ const rootPath = path.resolve(__dirname, "../");
 
 	// 重修修订 db 命令，取消 tsc 打包
 	packageJson.scripts.db = "node build/Sequelize/synchronization.js";
+	packageJson.scripts.start = "node build/main.js";
 
 	fs.writeFileSync(
 		`${rootPath}/wwwroot/package.json`,

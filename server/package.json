@@ -4,7 +4,6 @@
 	"private": true,
 	"description": "luckysheet-crdt-server",
 	"scripts": {
-		"start": "node build/main.js",
 		"serve": "tsc && node build/main.js",
 		"build": "tsc && node scripts/build.js",
 		"dev": "nodemon -w src/ -e ts --exec \"ts-node src/main.ts\"",

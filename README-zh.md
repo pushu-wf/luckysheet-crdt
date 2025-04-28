@@ -104,6 +104,8 @@ npm run db
 
 ## 项目部署
 
+**温馨提示：下列所有命令均在项目根目录下执行 /LUCKYSHEET-CRDT/**
+
 1.  先打包前台项目: `npm run build`
 
     -   请注意，打包文件文件，默认输出到 `server/public/dist`
@@ -125,7 +127,7 @@ npm run db
 
     -   请确保数据库配置正确可用(~~如果无数据库服务，请跳过此步骤~~)
 
-6.  启动服务：`npm run serve`
+6.  启动服务：`npm run start`: **此命令仅打包后 wwwroot 文件夹下有效**
     -   等待依赖下载完成，启动服务`npm run start`，部署完成后访问 `http://${ip}:9000` 即可访问
 
 ## 协同功能计划表
@@ -187,23 +189,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-    <p align="center">
-    <img src='/public/result/chartmix-vchart.png' />
-    </p>
-    <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-    <p align="center">
-    <img src='/public/result/vchart.gif' />
-    </p>
-    <span style="font-weight:900">vchart 图表设置</span>
-    <p align="center">
-    <img src='/public/result/vchart-setting.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-vchart.png' />
+   </p>
+   <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+   <p align="center">
+   <img src='/public/result/vchart.gif' />
+   </p>
+   <span style="font-weight:900">vchart 图表设置</span>
+   <p align="center">
+   <img src='/public/result/vchart-setting.gif' />
+   </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-    <p align="center">
-    <img src='/public/result/chartmix-update-data-crdt.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-update-data-crdt.gif' />
+   </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
