@@ -1,0 +1,53 @@
+.ant-form {
+	width: 55%;
+
+	// 输入框背景要透明
+	.ant-input-affix-wrapper,
+	:deep .ant-input-affix-wrapper > .ant-input {
+		transition: all 0.3s;
+		background-color: transparent;
+	}
+
+	// 输入框前缀图标
+	.ant-input-affix-wrapper .ant-input-prefix .anticon {
+		color: var(--colorTextQuaternary);
+		transition: all 0.3s;
+	}
+
+	// 多选框文本颜色
+	.ant-checkbox-wrapper {
+		color: var(--colorText);
+		transition: all 0.3s;
+	}
+
+	// 定义问号图标颜色
+	.anticon.anticon-question-circle {
+		color: var(--colorText);
+		transition: all 0.3s;
+	}
+	// 定义特殊行内样式
+	.ant-form-item-inline {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.ant-link {
+		margin-left: auto;
+	}
+}
+
+.canvas-code {
+	z-index: 99;
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 1px 0.5px;
+	width: 120px;
+	height: calc(100% - 2px);
+	border-radius: 6px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	background-color: transparent;
+}
