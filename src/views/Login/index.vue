@@ -1,152 +1,124 @@
 <template>
-	<div class="login-box">
-		<!-- header -->
-		<div class="login-box-header">
-			<div class="left">
-				<img src="/logo.svg" alt="" />
-				<span>Luckysheet-CRDT</span>
-			</div>
-			<div class="right">
-				<div class="login-box-header-item">
-					<GithubOutlined />
+	<div class="login-container">
+		<div class="left">
+			<div class="left-box">
+				<h2>协同文件管理系统</h2>
+				<p class="description">高效、便捷的在线表格协作平台，让团队协作更加流畅，数据管理更加智能。</p>
+				<div class="feature-list">
+					<div class="feature-item">
+						<h3>实时协作</h3>
+						<p>多人同时编辑，变更实时同步，提高团队工作效率</p>
+					</div>
+					<div class="feature-item">
+						<h3>数据安全</h3>
+						<p>严格的权限控制和数据加密，保障您的数据安全</p>
+					</div>
+					<div class="feature-item">
+						<h3>智能分析</h3>
+						<p>强大的数据分析功能，帮助您快速洞察业务趋势</p>
+					</div>
+					<div class="feature-item">
+						<h3>版本控制</h3>
+						<p>完整的历史记录，随时回溯查看或恢复之前的版本</p>
+					</div>
 				</div>
 			</div>
 		</div>
-
-		<!-- login-form -->
-		<div class="login-box-form">
-			<div class="left">
-				<img src="/bg.svg" alt="" />
+		<div class="right">
+			<div class="logo">
+				<img src="/logo.svg" alt="" />
 			</div>
-			<div class="right">
-				<div class="logo">
-					<img src="/logo.svg" alt="" />
-				</div>
-				<h2 class="title">Luckysheet-CRDT</h2>
-				<transition>
-					<RegisterForm v-if="formStatus === 'register'" @goto-login="formStatus = 'login'" />
-					<LoginForm
-						v-else-if="formStatus === 'login'"
-						@goto-register="formStatus = 'register'"
-						@forget-password="formStatus = 'forget'" />
-				</transition>
-			</div>
+			<h1>Luckysheet-CRDT</h1>
+			<transition>
+				<LoginForm />
+			</transition>
 		</div>
 	</div>
 </template>
-
 <script setup lang="ts">
-import { ref } from "vue";
 import LoginForm from "./components/LoginForm.vue";
-import { GithubOutlined } from "@ant-design/icons-vue";
-
-// 定义当前表单的状态 login | register （登陆表单还是注册表单）
-const formStatus = ref<"login" | "register" | "forget">("login");
 </script>
 
-<style lang="less" scoped>
-.login-box {
+<style lang="less">
+.login-container {
 	width: 100%;
 	height: 100%;
-}
-
-.login-box-header {
-	transition: all 0.3s;
-	border-bottom: solid var(--colorBorder) 1px;
-	height: 64px;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-.login-box-header .right {
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-}
-.login-box-header .left {
-	transition: all 0.3s;
-	color: var(--colorText);
-	font-size: 18px;
-	font-weight: 800;
-	user-select: none;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	img {
-		height: 50%;
-		margin: 0 20px;
-	}
-}
-.login-box-header-item {
-	color: var(--colorText);
-	transition: all 0.3s;
-	user-select: none;
-	cursor: pointer;
-	padding: 0 20px;
-	border-left: solid var(--colorBorder) 1px;
-	svg path {
-		fill: var(--colorText);
-		transition: all 0.3s;
-	}
-}
-
-// login-box-form
-.login-box-form {
-	height: calc(100% - 64px - 32px);
+	overflow: hidden;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
-.login-box-form > div {
+.login-container > div {
 	width: 50%;
 	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
-
-.login-box-form .left img {
-	width: 70%;
-	height: 70%;
-	filter: drop-shadow(0 0 2em rgba(113, 196, 239, 0.667));
-}
-
-.login-box-form .right {
+.login-container .left {
+	user-select: none;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	.logo {
-		width: 80px;
-		height: 80px;
+	background: linear-gradient(to right, #10b981, #0d9488);
 
-		img {
-			width: 100%;
-			height: 100%;
+	.left-box {
+		width: 60%;
+		h1 {
+			color: #fff;
+			font-weight: 700;
+			// 转大写
+			text-transform: uppercase;
+		}
+		h2 {
+			color: #fff;
+			font-size: 36px;
+			font-weight: 700;
+			margin: 38px 0;
+		}
+		p.description {
+			color: #fff;
+			font-size: 18px;
+			line-height: 28px;
+			margin-bottom: 32px;
 		}
 	}
+}
+.login-container .left .feature-list {
+	display: flex;
+	flex-wrap: wrap;
 
-	.title {
-		user-select: none;
-		transition: all 0.3s;
-		color: var(--colorText);
-		font: 700 200% Consolas, Monaco, monospace;
-		margin: 15px 0;
-		text-transform: uppercase;
+	.feature-item {
+		padding: 16px;
+		width: calc(50% - 20px);
+		margin-right: auto;
+		margin-bottom: 20px;
+		background-color: rgb(255 255 255 / 0.2);
+		border-radius: 0.5rem;
+		color: #fff;
+		h3 {
+			font-weight: 500;
+			margin-bottom: 8px;
+		}
+		p {
+			font-size: 14px;
+		}
 	}
 }
-
-.v-enter-active,
-.v-leave-active {
-	transition: all 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-	height: 0;
-	opacity: 0;
-	transform: scale(0);
+.login-container .right {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	.logo img {
+		width: 80px;
+		height: 80px;
+		margin-right: 10px;
+	}
+	h1 {
+		user-select: none;
+		margin: 18px 0;
+		color: #55bb8a;
+		// 转大写
+		text-transform: uppercase;
+	}
 }
 </style>
