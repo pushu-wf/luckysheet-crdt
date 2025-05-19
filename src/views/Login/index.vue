@@ -50,7 +50,7 @@ import RegisterForm from "./components/RegisterForm.vue";
 import PrivacyModal from "./components/PrivacyModal.vue";
 
 // 当前表单状态
-const formState = ref<"login" | "register">("register");
+const formState = ref<"login" | "register">("login");
 
 const privacyModalRef = ref();
 const registerFormRef = ref();
