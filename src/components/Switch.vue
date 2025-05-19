@@ -15,7 +15,7 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="Switch">
 /**
  * @description Switch 组件
  * @author pushu

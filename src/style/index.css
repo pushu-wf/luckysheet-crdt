@@ -4,30 +4,19 @@
 	box-sizing: border-box;
 }
 
+:root {
+	--colorText: rgba(0, 0, 0, 0.88);
+	--colorTextSecondary: rgba(0, 0, 0, 0.65);
+	--colorTextTertiary: rgba(0, 0, 0, 0.45);
+	--colorTextQuaternary: rgba(0, 0, 0, 0.25);
+	--colorBorder: #d9d9d9;
+	--colorBorderSecondary: #f0f0f0;
+}
+
 html,
 body,
-#app,
-.luckysheetContainer {
+#app {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
-}
-
-#app {
-	display: flex;
-}
-
-iframe {
-	flex: 1;
-}
-
-.left {
-	position: relative;
-	height: 100%;
-	width: 100%;
-}
-
-.right {
-	position: relative;
-	flex: 1;
 }

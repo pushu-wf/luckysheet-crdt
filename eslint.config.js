@@ -22,6 +22,8 @@ export default [
 		],
 	},
 	{
-		rules: {},
+		rules: {
+			"@typescript-eslint/no-unused-expressions": "off",
+		},
 	},
 ];
