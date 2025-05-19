@@ -1,28 +1,28 @@
 <template>
 	<a-form :model="form" ref="formRef" :rules="formRules" style="max-width: 600px">
 		<a-form-item name="userid">
-			<a-input autocomplete="off" :placeholder="locale.login.form.userid" v-model:value="form.userid">
+			<a-input autocomplete="off" placeholder="userid" v-model:value="form.userid">
 				<template #prefix>
 					<UserOutlined />
 				</template>
 			</a-input>
 		</a-form-item>
 		<a-form-item name="password">
-			<a-input autocomplete="off" :placeholder="locale.login.form.password" type="password" v-model:value="form.password">
+			<a-input autocomplete="off" placeholder="password" type="password" v-model:value="form.password">
 				<template #prefix>
 					<LockOutlined />
 				</template>
 			</a-input>
 		</a-form-item>
 		<a-form-item name="checkpassword">
-			<a-input autocomplete="off" :placeholder="locale.login.form.checkpassword" type="password" v-model:value="form.checkpassword">
+			<a-input autocomplete="off" placeholder="checkpassword" type="password" v-model:value="form.checkpassword">
 				<template #prefix>
 					<LockOutlined />
 				</template>
 			</a-input>
 		</a-form-item>
 		<a-form-item name="code">
-			<a-input autocomplete="off" :placeholder="locale.login.form.code" v-model:value="form.code">
+			<a-input autocomplete="off" placeholder="code" v-model:value="form.code">
 				<template #prefix>
 					<CreditCardOutlined />
 				</template>
@@ -32,30 +32,27 @@
 		</a-form-item>
 		<a-form-item name="read">
 			<div class="ant-form-item-inline">
-				<a-checkbox v-model:checked="form.read" size="large">{{ locale.login.form.read }}</a-checkbox>
-				<span class="ant-link" type="primary" @click="readPrivacyPolicy" style="margin-left: 0">{{ locale.login.form.protocol }}</span>
-				<span class="ant-link" type="info" style="margin-left: auto" @click="emit('gotoLogin')">{{ locale.login.form.gotoLogin }}</span>
+				<a-checkbox v-model:checked="form.read" size="large">我已知悉并接受相关</a-checkbox>
+				<a-button type="link" @click="readPrivacyPolicy" style="padding-left: 0">《隐私政策》</a-button>
+				<a-button type="link" style="margin-left: auto" @click="emit('gotoLogin')">前往登录</a-button>
 			</div>
 		</a-form-item>
 		<a-form-item>
-			<a-button type="primary" style="width: 100%" @click="register">{{ locale.login.form.register }}</a-button>
+			<a-button type="primary" style="width: 100%" @click="register">注 册</a-button>
 		</a-form-item>
 	</a-form>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { FormInstance } from 'ant-design-vue';
-import { useLocaleHook } from '../../../hooks/locale'; // 引入 locale hooks
-import { useLoginFormHook } from '../../../hooks/login-form'; // 引入 login form hooks
-import VerificationCodeVue from '../../../components/VerificationCode.vue';
-import { UserOutlined, LockOutlined, CreditCardOutlined } from '@ant-design/icons-vue';
+import { onMounted, ref } from "vue";
+import { FormInstance, theme } from "ant-design-vue";
+import { useLoginFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
+import VerificationCodeVue from "../../../components/VerificationCode.vue";
+import { UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
 
 const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 
-const { locale }= useLocaleHook();
-
-const emit = defineEmits(['gotoLogin']);
+const emit = defineEmits(["gotoLogin"]);
 
 // 表单 dom ref
 const formRef = ref<FormInstance>();
@@ -66,8 +63,10 @@ const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
 /** 注册逻辑 */
 async function register() {
 	const validata = await validateForm(formRef);
-	console.log('==> validata', validata);
+	console.log("==> validata", validata);
 }
+
+const { token } = theme.useToken();
 
 onMounted(() => {
 	resetForm(formRef);
@@ -80,5 +79,15 @@ function readPrivacyPolicy() {}
 </script>
 
 <style lang="less" scoped>
-@import url('../style/common.less');
+@import url("../style/common.less");
+.ant-form {
+	// 输入框前缀图标
+	.ant-input-affix-wrapper .ant-input-prefix .anticon {
+		color: v-bind("token.colorTextQuaternary");
+	}
+	.ant-checkbox-wrapper,
+	.anticon.anticon-question-circle {
+		color: v-bind("token.colorText");
+	}
+}
 </style>

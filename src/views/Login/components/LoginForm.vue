@@ -31,8 +31,7 @@
 					<QuestionCircleOutlined />
 				</a-tooltip>
 
-				<span class="ant-link" type="info" @click="emit('gotoRegister')">前往注册</span>
-				<span class="ant-link" type="primary" @click="emit('forgetPassword')">忘记密码</span>
+				<a-button type="link" @click="emit('gotoRegister')" style="margin-left: auto">前往注册</a-button>
 			</div>
 		</a-form-item>
 		<a-form-item>
@@ -43,7 +42,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { FormInstance } from "ant-design-vue";
+import { FormInstance, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
@@ -71,6 +70,9 @@ async function login() {
 	}
 }
 
+// 使用 theme token 实现主题色
+const { token } = theme.useToken();
+
 onMounted(() => {
 	resetForm(formRef);
 	// 请一定记住要初始化验证码实例对象，否则会报错
@@ -80,4 +82,14 @@ onMounted(() => {
 
 <style lang="less" scoped>
 @import url("../style/common.less");
+.ant-form {
+	// 输入框前缀图标
+	.ant-input-affix-wrapper .ant-input-prefix .anticon {
+		color: v-bind("token.colorTextQuaternary");
+	}
+	.ant-checkbox-wrapper,
+	.anticon.anticon-question-circle {
+		color: v-bind("token.colorText");
+	}
+}
 </style>

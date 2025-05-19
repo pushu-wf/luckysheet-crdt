@@ -30,13 +30,19 @@
 			</div>
 			<h1>Luckysheet-CRDT</h1>
 			<transition>
-				<LoginForm />
+				<RegisterForm @goto-login="formState = 'login'" v-if="formState === 'register'" />
+				<LoginForm @goto-register="formState = 'register'" v-else-if="formState === 'login'" />
 			</transition>
 		</div>
 	</div>
 </template>
 <script setup lang="ts">
+import { ref } from "vue";
 import LoginForm from "./components/LoginForm.vue";
+import RegisterForm from "./components/RegisterForm.vue";
+
+// 当前表单状态
+const formState = ref<"login" | "register">("register");
 </script>
 
 <style lang="less">
@@ -61,7 +67,7 @@ import LoginForm from "./components/LoginForm.vue";
 	background: linear-gradient(to right, #10b981, #0d9488);
 
 	.left-box {
-		width: 60%;
+		width: 70%;
 		h1 {
 			color: #fff;
 			font-weight: 700;
@@ -120,5 +126,17 @@ import LoginForm from "./components/LoginForm.vue";
 		// 转大写
 		text-transform: uppercase;
 	}
+}
+
+.v-enter-active,
+.v-leave-active {
+	transition: all 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+	height: 0;
+	opacity: 0;
+	transform: scale(0);
 }
 </style>
