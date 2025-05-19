@@ -30,19 +30,30 @@
 			</div>
 			<h1>Luckysheet-CRDT</h1>
 			<transition>
-				<RegisterForm @goto-login="formState = 'login'" v-if="formState === 'register'" />
+				<RegisterForm
+					ref="registerFormRef"
+					@goto-login="formState = 'login'"
+					@open-rrivacy-modal="privacyModalRef.show()"
+					v-if="formState === 'register'" />
 				<LoginForm @goto-register="formState = 'register'" v-else-if="formState === 'login'" />
 			</transition>
 		</div>
+
+		<!-- 隐私协议模态框 -->
+		<PrivacyModal ref="privacyModalRef" @agree="(isAgree) => registerFormRef.togglePrivacy(isAgree)" />
 	</div>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
 import LoginForm from "./components/LoginForm.vue";
 import RegisterForm from "./components/RegisterForm.vue";
+import PrivacyModal from "./components/PrivacyModal.vue";
 
 // 当前表单状态
 const formState = ref<"login" | "register">("register");
+
+const privacyModalRef = ref();
+const registerFormRef = ref();
 </script>
 
 <style lang="less">

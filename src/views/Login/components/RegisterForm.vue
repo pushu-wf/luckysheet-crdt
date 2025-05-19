@@ -33,7 +33,7 @@
 		<a-form-item name="read">
 			<div class="ant-form-item-inline">
 				<a-checkbox v-model:checked="form.read" size="large">我已知悉并接受相关</a-checkbox>
-				<a-button type="link" @click="readPrivacyPolicy" style="padding-left: 0">《隐私政策》</a-button>
+				<a-button type="link" @click="emit('openRrivacyModal')" style="padding-left: 0">《隐私政策》</a-button>
 				<a-button type="link" style="margin-left: auto" @click="emit('gotoLogin')">前往登录</a-button>
 			</div>
 		</a-form-item>
@@ -49,10 +49,10 @@ import { FormInstance, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
-
 const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
+const { token } = theme.useToken();
 
-const emit = defineEmits(["gotoLogin"]);
+const emit = defineEmits(["gotoLogin", "openRrivacyModal"]);
 
 // 表单 dom ref
 const formRef = ref<FormInstance>();
@@ -66,7 +66,12 @@ async function register() {
 	console.log("==> validata", validata);
 }
 
-const { token } = theme.useToken();
+/**
+ * 切换同意隐私协议状态 - 该状态通过模态框传入
+ */
+function togglePrivacy(isAgree: boolean) {
+	form.read = isAgree;
+}
 
 onMounted(() => {
 	resetForm(formRef);
@@ -74,8 +79,8 @@ onMounted(() => {
 	setVarificationCode(verificationCode.value);
 });
 
-/** 阅读隐私政策 */
-function readPrivacyPolicy() {}
+// 向外暴露方法
+defineExpose({ togglePrivacy });
 </script>
 
 <style lang="less" scoped>
