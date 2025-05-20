@@ -38,24 +38,27 @@
 			</div>
 		</a-form-item>
 		<a-form-item>
-			<a-button type="primary" style="width: 100%" @click="register">注 册</a-button>
+			<a-button type="primary" style="width: 100%" @click="registerHandle">注 册</a-button>
 		</a-form-item>
 	</a-form>
 </template>
 
 <script setup lang="ts">
+import { md5 } from "../../../utils";
 import { onMounted, ref, toRaw } from "vue";
+import { API_register } from "../../../axios";
 import { FormInstance, message, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
-import { API_register } from "../../../axios";
-import { md5 } from "../../../utils";
 
-const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
+// 引用主题
 const { token } = theme.useToken();
 
 const emit = defineEmits(["gotoLogin", "openRrivacyModal"]);
+
+// 解构 register form hooks
+const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 
 // 表单 dom ref
 const formRef = ref<FormInstance>();
@@ -64,7 +67,7 @@ const formRef = ref<FormInstance>();
 const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
 
 /** 注册逻辑 */
-async function register() {
+async function registerHandle() {
 	try {
 		const validata = await validateForm(formRef);
 		if (!validata) return;
@@ -84,21 +87,11 @@ async function register() {
 	} catch (error) {}
 }
 
-/**
- * 切换同意隐私协议状态 - 该状态通过模态框传入
- */
-function togglePrivacy(isAgree: boolean) {
-	form.read = isAgree;
-}
+// 请一定记住要初始化验证码实例对象，否则会报错
+onMounted(() => (resetForm(formRef), setVarificationCode(verificationCode.value)));
 
-onMounted(() => {
-	resetForm(formRef);
-	// 请一定记住要初始化验证码实例对象，否则会报错
-	setVarificationCode(verificationCode.value);
-});
-
-// 向外暴露方法
-defineExpose({ togglePrivacy });
+// 向外暴露方法 - 设置隐私协议
+defineExpose({ togglePrivacy: (isAgree: boolean) => (form.read = isAgree) });
 </script>
 
 <style lang="less" scoped>

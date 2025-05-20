@@ -35,25 +35,29 @@
 			</div>
 		</a-form-item>
 		<a-form-item>
-			<a-button type="primary" style="width: 100%" @click="login">登 录</a-button>
+			<a-button type="primary" style="width: 100%" @click="loginHandle">登 录</a-button>
 		</a-form-item>
 	</a-form>
 </template>
 
 <script setup lang="ts">
+import { md5 } from "../../../utils";
 import router from "../../../router";
+import { API_login } from "../../../axios";
 import { onMounted, ref, toRaw } from "vue";
+import { localForage } from "../../../localforage";
 import { FormInstance, message, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
-import { localForage } from "../../../localforage";
-import { API_login } from "../../../axios";
-import { md5 } from "../../../utils";
 
-const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
+// 使用 theme token 实现主题色
+const { token } = theme.useToken();
 
 const emit = defineEmits(["gotoRegister", "forgetPassword"]);
+
+// 结构登陆表单 hooks
+const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 
 // 表单 dom ref 做表单校验
 const formRef = ref<FormInstance>();
@@ -61,11 +65,8 @@ const formRef = ref<FormInstance>();
 // 验证码 dom ref
 const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
 
-/**
- * 登录逻辑
- * @param formEl 表单实例 - 通过表单示例实现表单校验
- */
-async function login() {
+/** 登录逻辑 */
+async function loginHandle() {
 	try {
 		const validata = await validateForm(formRef);
 		if (!validata) return;
@@ -92,14 +93,8 @@ async function login() {
 	}
 }
 
-// 使用 theme token 实现主题色
-const { token } = theme.useToken();
-
-onMounted(() => {
-	resetForm(formRef);
-	// 请一定记住要初始化验证码实例对象，否则会报错
-	setVarificationCode(verificationCode.value);
-});
+// 请一定记住要初始化验证码实例对象，否则会报错
+onMounted(() => (resetForm(formRef), setVarificationCode(verificationCode.value)));
 </script>
 
 <style lang="less" scoped>
