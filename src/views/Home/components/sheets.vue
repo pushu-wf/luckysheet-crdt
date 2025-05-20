@@ -208,9 +208,11 @@ function createFileConfirm() {
 		color: #18181b;
 	}
 	.sheet-filename {
-		width: 280px;
+		width: 480px;
 		display: flex;
 		align-items: center;
+		margin-right: auto;
+		margin-left: 20px;
 		svg {
 			height: 18px;
 		}
