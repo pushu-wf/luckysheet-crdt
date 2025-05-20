@@ -16,3 +16,18 @@ body,
 .ant-divider-horizontal {
 	margin: 2px 0;
 }
+
+.full-modal .ant-modal {
+	max-width: 100%;
+	top: 0;
+	padding-bottom: 0;
+	margin: 0;
+}
+.full-modal .ant-modal-content {
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh);
+}
+.full-modal .ant-modal-body {
+	flex: 1;
+}
