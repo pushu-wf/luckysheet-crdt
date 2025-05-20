@@ -35,3 +35,12 @@ export const API_register = (data: { userid: string; password: string }) => {
 		data,
 	});
 };
+
+// 创建工作簿
+export const API_createWorkerBook = (data: { bookname: string; userid: string }) => {
+	return fetch({
+		url: "/luckysheet/createWorkerBook",
+		method: "POST",
+		data,
+	});
+};

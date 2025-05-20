@@ -1,4 +1,5 @@
 import { MD5 } from "crypto-js";
+import { localForage } from "../localforage";
 
 // 获取当前环境是否为 开发环境
 const isDev = () => {
@@ -22,4 +23,8 @@ function md5(password: string): string {
 	return MD5(password).toString();
 }
 
-export { getLoadUrl, getRandom, md5, isDev };
+// 获取用户信息
+function getUserInfo() {
+	return localForage.getItem("userInfo");
+}
+export { getLoadUrl, getRandom, md5, isDev, getUserInfo };

@@ -1,6 +1,8 @@
 // 封装用户请求axios
 import axios, { AxiosRequestConfig } from "axios";
 import { isDev } from "../utils";
+import { localForage } from "../localforage";
+import router from "../router";
 
 export const fetch = (options: AxiosRequestConfig) => {
 	return axios({
@@ -13,7 +15,11 @@ axios.defaults.baseURL = isDev() ? "/api" : "";
 // 添加请求拦截器
 axios.interceptors.request.use(
 	(config) => {
-		// 在发送请求之前进行操作
+		// 在发送请求之前进行 token 添加
+		const token = localForage.getItem("token");
+		if (!token) router.push("/login");
+		// 不然添加到 heanders 上，请注意：此字段为小写，与服务器保持一致即可
+		if (token) config.headers.authorization = token;
 		return config;
 	},
 	(error) => {

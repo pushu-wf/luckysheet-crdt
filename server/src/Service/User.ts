@@ -2,13 +2,14 @@
  * User Service
  */
 
+import { FindOptions } from "sequelize/types/model";
 import { UserModel, UserModelType } from "../Sequelize/Models/User";
 import { logger } from "../Utils/Logger";
 
 // 查询用户传递的 userid 是否可用
-async function findOne(userid: string, password?: string) {
+async function findOne(userid: string, password?: string, options?: FindOptions<UserModelType>) {
 	try {
-		return await UserModel.findOne({ where: password ? { userid, password } : { userid } });
+		return await UserModel.findOne({ where: password ? { userid, password } : { userid }, ...options });
 	} catch (error) {
 		logger.error(error);
 	}

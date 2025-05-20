@@ -101,11 +101,13 @@
 
 <script setup lang="ts">
 import { ref, h } from "vue";
-import { theme } from "ant-design-vue";
+import { message, theme } from "ant-design-vue";
 import MockData from "../../../mock/sheets.json";
 import { ImportFile } from "../../../utils/ImportFile";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
+import { API_createWorkerBook } from "../../../axios";
+import { getUserInfo } from "../../../utils";
 const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
@@ -137,7 +139,17 @@ function handleSheetOperate(payload: { key: string }) {
 }
 
 // 新建文件确认回调
-function createFileConfirm() {
+async function createFileConfirm() {
+	if (!createFileName.value) message.warn("请输入工作簿名称");
+
+	const { userid } = getUserInfo();
+	// 调用 createWorkerBooks API
+	const { data } = await API_createWorkerBook({ bookname: createFileName.value, userid });
+	if (data.code !== 200) {
+		message.error(data.message);
+		return;
+	}
+	message.success("创建成功");
 	createFileVisible.value = false;
 }
 </script>

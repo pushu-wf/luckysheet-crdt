@@ -12,5 +12,8 @@ routes.post("/getWorkerBook", Controller.getWorkerBook);
 // 初始化 luckysheet 数据
 routes.post("/loadSheetData", Controller.loadSheetData);
 
+// 新建  workerbook
+routes.post("/createWorkerBook", Controller.createWorkerBook);
+
 // 模块化的路由，直接调用 routes.use() 即可
 export const LuckySheetRouter = routes;

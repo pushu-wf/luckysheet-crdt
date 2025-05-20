@@ -7,6 +7,11 @@ import { WorkerBookModel } from "./WorkerBook";
 import { DataTypes, InferAttributes, Model, Sequelize } from "sequelize";
 
 export class FileMapModel extends Model {
+	declare file_map_id?: string;
+	declare owner: string;
+	declare operator: string;
+	declare gridKey: string;
+	declare favor?: boolean;
 	// 注册模型
 	static registerModule(sequelize: Sequelize) {
 		FileMapModel.init(
