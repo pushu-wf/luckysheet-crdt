@@ -39,16 +39,20 @@ export async function login(req: Request, res: Response) {
 		return;
 	}
 
-	// 不然判断当前用户ID是否可用
-	const exist = await UserService.findOne(userid, md5(password));
-	if (!exist) {
+	// 不然判断当前用户是否存在
+	const user = await UserService.findOne(userid, md5(password));
+	if (!user) {
 		res.json({ code: 400, message: "账号或密码错误" });
 		return;
 	}
+	const currentUser = JSON.parse(JSON.stringify(user));
+	delete currentUser.createdAt;
+	delete currentUser.updatedAt;
+	delete currentUser.user_uuid;
 
 	const token = createToken(userid, md5(password));
 
-	res.json({ code: 200, message: "登录成功", token });
+	res.json({ code: 200, message: "登录成功", token, user: currentUser });
 }
 
 // 更新用户信息

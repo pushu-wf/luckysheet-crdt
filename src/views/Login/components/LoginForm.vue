@@ -84,6 +84,7 @@ async function login() {
 		localForage.setItem("token", data.token);
 
 		message.success("登录成功");
+		console.log(" ==> ", router);
 		// 跳转到首页
 		router.push("/home");
 	} catch (error) {

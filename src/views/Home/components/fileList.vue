@@ -31,7 +31,7 @@
 			</template>
 			<template #renderItem="{ item }">
 				<a-list-item class="sheet-item">
-					<a-checkbox v-model:checked="checked"></a-checkbox>
+					<a-checkbox></a-checkbox>
 					<span class="sheet-filename">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +193,7 @@ function createFileConfirm() {
 	.sheet-createtime,
 	.sheet-updatetime {
 		position: relative;
-		width: 200px;
+		width: 220px;
 		// 单行省略号
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -202,7 +202,7 @@ function createFileConfirm() {
 		color: #18181b;
 	}
 	.sheet-filename {
-		width: 480px;
+		width: 380px;
 		display: flex;
 		align-items: center;
 		margin-right: auto;
