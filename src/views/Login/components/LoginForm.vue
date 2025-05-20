@@ -41,11 +41,13 @@
 </template>
 
 <script setup lang="ts">
+import router from "../../../router";
 import { onMounted, ref } from "vue";
 import { FormInstance, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
+import { localForage } from "../../../localforage";
 
 const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 
@@ -62,6 +64,10 @@ const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
  * @param formEl 表单实例 - 通过表单示例实现表单校验
  */
 async function login() {
+	// 直接登录
+	localForage.setItem("token", "token");
+	router.push("/home");
+	return;
 	try {
 		const validata = await validateForm(formRef);
 		console.log("==> validata", validata);

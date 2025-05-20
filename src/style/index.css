@@ -11,3 +11,8 @@ body,
 	height: 100vh;
 	overflow: hidden;
 }
+
+/* 分割线 */
+.ant-divider-horizontal {
+	margin: 2px 0;
+}

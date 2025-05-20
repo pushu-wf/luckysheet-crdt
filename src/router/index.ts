@@ -12,6 +12,14 @@ const router = createRouter({
 			path: "/login",
 			component: () => import("../views/Login/index.vue"),
 		},
+		{
+			path: "/home",
+			component: () => import("../views/Home/index.vue"),
+		},
+		{
+			path: "/excel",
+			component: () => import("../views/Excel/index.vue"),
+		},
 	],
 });
 
