@@ -26,6 +26,7 @@
 		"VChart for luckysheet"
 	],
 	"dependencies": {
+		"@ant-design/icons-vue": "^7.0.1",
 		"ant-design-vue": "^4.2.6",
 		"axios": "^1.7.9",
 		"crypto-js": "^4.2.0",
