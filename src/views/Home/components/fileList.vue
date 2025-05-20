@@ -100,22 +100,12 @@
 </template>
 
 <script setup lang="ts">
-import MockData from "./sheets.json";
 import { ref, h } from "vue";
-import {
-	PlusOutlined,
-	BranchesOutlined,
-	DeleteOutlined,
-	CloudDownloadOutlined,
-	CloudUploadOutlined,
-	StarFilled,
-	EllipsisOutlined,
-	StarOutlined,
-	FileAddOutlined,
-} from "@ant-design/icons-vue";
 import { theme } from "ant-design-vue";
+import MockData from "../../../mock/sheets.json";
 import { ImportFile } from "../../../utils/ImportFile";
-
+import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
 const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
@@ -169,13 +159,17 @@ function createFileConfirm() {
 	margin: 20px 0;
 	height: 42px;
 	line-height: 42px;
-	background-color: #f4f4f5;
+	background-color: v-bind("token.colorFillTertiary");
 	border-radius: 6px;
 	padding: 0 8px;
 	span {
 		font-size: 14px;
 		user-select: none;
 	}
+}
+.ant-list-items .ant-list-item:hover {
+	cursor: pointer;
+	background-color: v-bind("token.colorFillTertiary");
 }
 
 // 保持 Header 与 内容相同宽度

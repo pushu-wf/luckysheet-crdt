@@ -26,7 +26,7 @@
 				</template>
 			</a-dropdown>
 		</div>
-		<div class="home-sheets-container"><sheets /></div>
+		<div class="home-sheets-container"><fileList /></div>
 		<div class="home-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
 		</div>
@@ -40,7 +40,7 @@
 import { ref } from "vue";
 import router from "../../router";
 import { theme } from "ant-design-vue";
-import sheets from "./components/sheets.vue";
+import fileList from "./components/fileList.vue";
 import { localForage } from "../../localforage";
 import userInfoModal from "./components/userInfoModal.vue";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
@@ -54,6 +54,7 @@ const userInfoModalRef = ref();
 // 头像下拉菜单事件
 function handleOperate(payload: { key: string }) {
 	if (payload.key === "userInfo") {
+		userInfoModalRef.value.open();
 	} else if (payload.key === "help") {
 	} else if (payload.key === "logout") {
 		// 清空 storage

@@ -1,6 +1,6 @@
 <template>
 	<a-modal v-model:open="modalVisible" title="" width="100%" :footer="null" :closable="false" wrap-class-name="full-modal">
-		<a-page-header title="个人信息" @back="modalVisible = false" />
+		<a-page-header title="个人信息" sub-title="温馨提示: 部分数据为虚拟数据" @back="modalVisible = false" />
 		<div class="user-info-container">
 			<!-- 左右布局 -->
 			<div class="user-info-left">
@@ -37,11 +37,10 @@
 	</a-modal>
 </template>
 <script setup lang="ts">
-import { theme } from "ant-design-vue";
 import { reactive, ref } from "vue";
+import { UserOutlined } from "@ant-design/icons-vue";
 
-const modalVisible = ref(true);
-const { token } = theme.useToken();
+const modalVisible = ref(false);
 
 // 用户表单
 const userInfoForm = reactive({
@@ -56,6 +55,13 @@ const userInfoForm = reactive({
 	birthday: "1990-01-01",
 	address: "北京市海淀区中关村",
 });
+
+// 打开用户信息弹窗
+function open() {
+	modalVisible.value = true;
+}
+
+defineExpose({ open });
 </script>
 
 <style lang="less" scoped>
