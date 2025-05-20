@@ -8,8 +8,8 @@
 				<a-radio-button value="favor">收藏</a-radio-button>
 			</a-radio-group>
 
-			<a-button type="primary" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
-			<a-button type="default" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
+			<a-button type="primary" @click="createFileVisible = true" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
+			<a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
 		</div>
 		<div class="choose-files">
 			<span>已选择 5 个文件</span>
@@ -91,6 +91,11 @@
 				</a-list-item>
 			</template>
 		</a-list>
+
+		<!-- 新建文件弹窗 -->
+		<a-modal v-model:open="createFileVisible" title="创建工作簿" okText="创建" cancelText="取消" @ok="createFileConfirm">
+			<a-input placeholder="请输入工作簿名称" v-model:value="createFileName" />
+		</a-modal>
 	</div>
 </template>
 
@@ -109,6 +114,7 @@ import {
 	FileAddOutlined,
 } from "@ant-design/icons-vue";
 import { theme } from "ant-design-vue";
+import { ImportFile } from "../../../utils/ImportFile";
 
 const { token } = theme.useToken();
 
@@ -118,6 +124,12 @@ const operator = ref("all");
 // 是否全选
 const checkAll = ref(false);
 
+// 新建文件弹窗
+const createFileVisible = ref(false);
+// 新建工作簿名称
+const createFileName = ref("");
+
+// 分页器
 const pagination = {
 	current: 1,
 	pageSize: 5,
@@ -132,6 +144,11 @@ function handleSheetOperate(payload: { key: string }) {
 	// favor
 	// export
 	// delete
+}
+
+// 新建文件确认回调
+function createFileConfirm() {
+	createFileVisible.value = false;
 }
 </script>
 

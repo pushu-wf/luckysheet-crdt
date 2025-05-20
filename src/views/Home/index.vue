@@ -30,21 +30,26 @@
 		<div class="home-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
 		</div>
+
+		<!-- 个人信息弹窗 -->
+		<userInfoModal ref="userInfoModalRef" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import router from "../../router";
 import { theme } from "ant-design-vue";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 import sheets from "./components/sheets.vue";
 import { localForage } from "../../localforage";
-import router from "../../router";
+import userInfoModal from "./components/userInfoModal.vue";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 
 const { token } = theme.useToken();
 
 // 文件搜索关键词
 const searchKey = ref("");
+const userInfoModalRef = ref();
 
 // 头像下拉菜单事件
 function handleOperate(payload: { key: string }) {
