@@ -23,7 +23,17 @@ async function create(user: UserModelType) {
 	}
 }
 
+// 更新字段
+async function update(user: UserModelType) {
+	try {
+		return await UserModel.update(user, { where: { userid: user.userid } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const UserService = {
 	findOne,
 	create,
+	update,
 };

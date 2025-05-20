@@ -1,6 +1,6 @@
-import { login, register } from "./User/idex";
 import { initPages } from "./Page/index";
 import { uploadImage } from "./Luckysheet/uploadImage";
+import { login, register, updateUser } from "./User/idex";
 import { loadSheetData } from "./Luckysheet/LoadSheetData";
 import { getWorkerBook } from "./Luckysheet/getWorkerBook";
 
@@ -12,4 +12,5 @@ export const Controller = {
 	getWorkerBook,
 	register,
 	login,
+	updateUser,
 };

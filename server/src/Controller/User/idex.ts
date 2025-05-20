@@ -23,7 +23,7 @@ export async function register(req: Request, res: Response) {
 	}
 
 	// 不然执行创建用户操作
-	const newUser = await UserService.create({ userid, password: md5(password) });
+	const newUser = await UserService.create({ userid, password: md5(password), username: userid });
 	if (newUser?.dataValues) res.json({ code: 0, message: "用户注册成功" });
 	else res.json({ code: 400, message: "用户注册失败，请稍后重试！" });
 }
@@ -52,4 +52,25 @@ export async function login(req: Request, res: Response) {
 }
 
 // 更新用户信息
-export async function updateUser(req: Request, res: Response) {}
+export async function updateUser(req: Request, res: Response) {
+	/**
+	 * 目前表字段为：
+	 *  password
+	 *  username 用户昵称
+	 *  email
+	 *  avatar
+	 */
+	const { userid, password, username, email, avatar } = req.body;
+	if (!userid) {
+		res.json({ code: 400, message: "缺少 userid 参数" });
+		return;
+	}
+
+	// 不然就更新字段
+	const data = await UserService.update({ userid, password: md5(password), username, email, avatar });
+	if (data) {
+		res.json({ code: 200, message: "更新成功" });
+	} else {
+		res.json({ code: 500, message: "更新失败" });
+	}
+}

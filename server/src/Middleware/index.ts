@@ -50,13 +50,16 @@ function initToken(app: express.Application) {
 
 		// 不然校验token
 		const token = req.headers.authorization;
+
 		if (!token) {
 			res.status(401).json({ code: 401, msg: "token 缺失" });
 			return;
 		}
 
 		try {
+			// 目前只做 token 校验功能，并不将信息绑定到 req 上，还请接口请求传递 userid
 			jwt.verify(token, JWT_SECRET);
+			// console.log("userinfo:", userinfo);
 			next();
 		} catch (err) {
 			res.status(401).json({ code: 401, msg: "token 错误" });
