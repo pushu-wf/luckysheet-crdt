@@ -10,8 +10,10 @@
 		"db": "tsc && node build/Sequelize/synchronization.js"
 	},
 	"dependencies": {
+		"crypto-js": "^4.2.0",
 		"dayjs": "^1.11.13",
 		"express": "^4.21.1",
+		"jsonwebtoken": "^9.0.2",
 		"multer": "^1.4.5-lts.1",
 		"mysql2": "^3.11.5",
 		"ollama": "^0.5.13",
@@ -20,7 +22,9 @@
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
+		"@types/crypto-js": "^4.2.2",
 		"@types/express": "^5.0.0",
+		"@types/jsonwebtoken": "^9.0.9",
 		"@types/multer": "^1.4.12",
 		"@types/node": "^22.10.1",
 		"@types/pako": "^2.0.3",

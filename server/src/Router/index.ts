@@ -1,19 +1,16 @@
 import express from "express";
+import { UserRouter } from "./User";
 import { Controller } from "../Controller";
+import { LuckySheetRouter } from "./LuckySheet";
 
 const routes = express.Router();
 
 // 用于处理 html 页面，部署使用
 routes.get("/", Controller.initPages);
 
-// 用于上传图片 - 先定义 upload name 属性
-routes.post("/uploadImage", Controller.uploadImage);
-
-// 请求 workerbook 数据
-routes.post("/getWorkerBook", Controller.getWorkerBook);
-
-// 初始化 luckysheet 数据
-routes.post("/loadSheetData", Controller.loadSheetData);
-
 // 模块化的路由，直接调用 routes.use() 即可
+routes.use("/luckysheet", LuckySheetRouter);
+
+routes.use("/user", UserRouter);
+
 export default routes;

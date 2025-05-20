@@ -1,10 +1,13 @@
 import pako from "pako";
+import { MD5 } from "crypto-js";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../Config";
 
 /**
  * Pako 数据解析
  */
 
-export function unzip(str: string): string {
+function unzip(str: string): string {
 	const chartData = str
 		.toString()
 		.split("")
@@ -26,7 +29,7 @@ export function unzip(str: string): string {
  * @example type => luckysheet
  * @return { string } query 值
  */
-export function getURLQuery(url: string | undefined, key: string) {
+function getURLQuery(url: string | undefined, key: string) {
 	if (!url) return "";
 	// 通过 ? 分割
 	const params = url.split("?")[1];
@@ -49,6 +52,20 @@ export function getURLQuery(url: string | undefined, key: string) {
 /**
  * 判断传入的参数是否为空 null undefined ""
  */
-export function isEmpty(val: unknown) {
+function isEmpty(val: unknown) {
 	return val === null || val === undefined || val === "";
 }
+
+/**
+ * 对 password 进行 MD5 加密
+ */
+function md5(password: string): string {
+	return MD5(password).toString();
+}
+
+// 生成 token
+function createToken(userid: string, password: string): string {
+	return jwt.sign({ userid, password }, JWT_SECRET);
+}
+
+export { unzip, getURLQuery, isEmpty, md5, createToken };

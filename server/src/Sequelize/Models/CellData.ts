@@ -68,8 +68,7 @@ export class CellDataModel extends Model {
 				ctfa: {
 					type: DataTypes.STRING,
 					allowNull: false,
-					comment:
-						"ct:{fa} Format格式的定义串，'General'|'@'|'0'|'0.0'....",
+					comment: "ct:{fa} Format格式的定义串，'General'|'@'|'0'|'0.0'....",
 					defaultValue: "General",
 				},
 				ctt: {

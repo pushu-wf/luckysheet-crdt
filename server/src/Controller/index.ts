@@ -1,3 +1,4 @@
+import { login, register } from "./User/idex";
 import { initPages } from "./Page/index";
 import { uploadImage } from "./Luckysheet/uploadImage";
 import { loadSheetData } from "./Luckysheet/LoadSheetData";
@@ -9,4 +10,6 @@ export const Controller = {
 	uploadImage,
 	loadSheetData,
 	getWorkerBook,
+	register,
+	login,
 };
