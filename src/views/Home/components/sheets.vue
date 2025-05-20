@@ -58,17 +58,32 @@
 					<span class="sheet-updatetime">{{ item.modified_at }}</span>
 					<span class="sheet-owner">{{ item.owner }}</span>
 					<span class="sheet-operator">
-						<a-dropdown>
+						<a-dropdown :trigger="['click']">
 							<EllipsisOutlined />
 							<template #overlay>
-								<a-menu>
-									<a-menu-item>新窗口打开</a-menu-item>
+								<a-menu @click="handleSheetOperate">
+									<a-menu-item key="open">
+										<FileAddOutlined />
+										新窗口打开
+									</a-menu-item>
 									<a-divider />
-									<a-menu-item>分享表格</a-menu-item>
-									<a-menu-item>收藏表格</a-menu-item>
-									<a-menu-item>导出文件</a-menu-item>
+									<a-menu-item key="share">
+										<BranchesOutlined />
+										分享表格
+									</a-menu-item>
+									<a-menu-item key="favor">
+										<StarOutlined />
+										收藏表格
+									</a-menu-item>
+									<a-menu-item key="export">
+										<CloudDownloadOutlined />
+										导出文件
+									</a-menu-item>
 									<a-divider />
-									<a-menu-item :style="{ color: token.colorError }">删除记录</a-menu-item>
+									<a-menu-item key="delete" :style="{ color: token.colorError }">
+										<DeleteOutlined />
+										删除记录
+									</a-menu-item>
 								</a-menu>
 							</template>
 						</a-dropdown>
@@ -91,6 +106,7 @@ import {
 	StarFilled,
 	EllipsisOutlined,
 	StarOutlined,
+	FileAddOutlined,
 } from "@ant-design/icons-vue";
 import { theme } from "ant-design-vue";
 
@@ -108,6 +124,15 @@ const pagination = {
 	total: MockData.length,
 	onChange: (page: number) => (pagination.current = page),
 };
+
+// 表格操作
+function handleSheetOperate(payload: { key: string }) {
+	// open
+	// share
+	// favor
+	// export
+	// delete
+}
 </script>
 
 <style lang="less" scoped>

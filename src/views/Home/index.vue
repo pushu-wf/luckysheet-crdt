@@ -17,11 +17,11 @@
 					</template>
 				</a-avatar>
 				<template #overlay>
-					<a-menu>
-						<a-menu-item>个人信息</a-menu-item>
-						<a-menu-item>获取帮助</a-menu-item>
+					<a-menu @click="handleOperate">
+						<a-menu-item key="userInfo">个人信息</a-menu-item>
+						<a-menu-item key="help">获取帮助</a-menu-item>
 						<a-divider />
-						<a-menu-item :style="{ color: token.colorError }">退出系统</a-menu-item>
+						<a-menu-item key="logout" :style="{ color: token.colorError }">退出系统</a-menu-item>
 					</a-menu>
 				</template>
 			</a-dropdown>
@@ -38,11 +38,24 @@ import { ref } from "vue";
 import { theme } from "ant-design-vue";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 import sheets from "./components/sheets.vue";
+import { localForage } from "../../localforage";
+import router from "../../router";
 
 const { token } = theme.useToken();
 
 // 文件搜索关键词
 const searchKey = ref("");
+
+// 头像下拉菜单事件
+function handleOperate(payload: { key: string }) {
+	if (payload.key === "userInfo") {
+	} else if (payload.key === "help") {
+	} else if (payload.key === "logout") {
+		// 清空 storage
+		localForage.clear();
+		router.push("/login");
+	}
+}
 </script>
 
 <style lang="less" scoped>
