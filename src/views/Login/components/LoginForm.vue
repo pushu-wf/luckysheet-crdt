@@ -83,9 +83,9 @@ async function loginHandle() {
 
 		// 不然存储 token  到 localStorage
 		localForage.setItem("token", data.token);
-
+		// 存储用户信息
+		localForage.setItem("userInfo", data.user);
 		message.success("登录成功");
-		console.log(" ==> ", router);
 		// 跳转到首页
 		router.push("/home");
 	} catch (error) {

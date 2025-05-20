@@ -51,8 +51,9 @@ import PrivacyModal from "./components/PrivacyModal.vue";
 
 // 当前表单状态
 const formState = ref<"login" | "register">("login");
-
+// 隐私协议模态框Ref
 const privacyModalRef = ref();
+// 注册表单Ref
 const registerFormRef = ref();
 </script>
 

@@ -49,6 +49,7 @@ export async function login(req: Request, res: Response) {
 	delete currentUser.createdAt;
 	delete currentUser.updatedAt;
 	delete currentUser.user_uuid;
+	delete currentUser.password;
 
 	const token = createToken(userid, md5(password));
 
