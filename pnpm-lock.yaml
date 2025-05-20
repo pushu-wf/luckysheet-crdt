@@ -11,6 +11,9 @@ importers:
       '@ant-design/icons-vue':
         specifier: ^7.0.1
         version: 7.0.1(vue@3.5.14(typescript@5.8.3))
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       ant-design-vue:
         specifier: ^4.2.6
         version: 4.2.6(vue@3.5.14(typescript@5.8.3))
@@ -413,6 +416,9 @@ packages:
 
   '@simonwep/pickr@1.8.2':
     resolution: {integrity: sha512-/l5w8BIkrpP6n1xsetx9MWPWlU6OblN5YgZZphxan0Tq4BByTCETL6lyIeY8lagalS2Nbt4F2W034KHLIiunKA==}
+
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
 
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -1433,6 +1439,8 @@ snapshots:
     dependencies:
       core-js: 3.42.0
       nanopop: 2.4.2
+
+  '@types/crypto-js@4.2.2': {}
 
   '@types/estree@1.0.7': {}
 

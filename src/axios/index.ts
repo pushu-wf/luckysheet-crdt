@@ -3,7 +3,7 @@ import { fetch } from "./core";
 // 导出初始化工作簿 API
 export const API_getWorkerBook = (gridKey: string) => {
 	return fetch({
-		url: "/getWorkerBook",
+		url: "/luckysheet/getWorkerBook",
 		method: "post",
 		data: { gridKey },
 	});
@@ -12,7 +12,25 @@ export const API_getWorkerBook = (gridKey: string) => {
 // 导出图片上传API
 export const API_uploadImage = (data: FormData) => {
 	return fetch({
-		url: "/uploadImage",
+		url: "/luckysheet/uploadImage",
+		method: "POST",
+		data,
+	});
+};
+
+// 用户登录
+export const API_login = (data: { userid: string; password: string }) => {
+	return fetch({
+		url: "/user/login",
+		method: "POST",
+		data,
+	});
+};
+
+// 用户注册
+export const API_register = (data: { userid: string; password: string }) => {
+	return fetch({
+		url: "/user/register",
 		method: "POST",
 		data,
 	});

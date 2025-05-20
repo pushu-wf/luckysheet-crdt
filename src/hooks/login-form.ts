@@ -74,14 +74,11 @@ export const useLoginFormHook = () => {
 
 	/** 验证表单 - conform 触发 */
 	function validateForm(formRef: Ref<FormInstance | undefined>) {
-		return new Promise((resolve) => {
+		return new Promise<boolean>((resolve, reject) => {
 			formRef.value
 				?.validate()
 				.then(() => resolve(true))
-				.catch((error) => {
-					console.error("Fail to validate:", error.errorFields);
-					resolve(false);
-				});
+				.catch((err) => reject(err));
 		});
 	}
 
@@ -91,7 +88,7 @@ export const useLoginFormHook = () => {
 		return new Promise((resolve, reject) => {
 			if (!verificationCode.value) reject("验证码组件实例不存在");
 			else if (!value) reject("验证码不能为空");
-			else if (verificationCode.value?.checkCode(value)) resolve;
+			else if (verificationCode.value?.checkCode(value)) resolve("验证码正确");
 			else {
 				form.code = "";
 				reject("验证码错误");
@@ -104,7 +101,7 @@ export const useLoginFormHook = () => {
 		return new Promise((resolve, reject) => {
 			if (!value) reject("请确认密码");
 			else if (value !== form.password) reject("密码不一致");
-			else resolve;
+			else resolve("密码验证通过");
 		});
 	}
 

@@ -42,12 +42,14 @@
 
 <script setup lang="ts">
 import router from "../../../router";
-import { onMounted, ref } from "vue";
-import { FormInstance, theme } from "ant-design-vue";
+import { onMounted, ref, toRaw } from "vue";
+import { FormInstance, message, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
 import { localForage } from "../../../localforage";
+import { API_login } from "../../../axios";
+import { md5 } from "../../../utils";
 
 const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 
@@ -64,13 +66,26 @@ const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
  * @param formEl 表单实例 - 通过表单示例实现表单校验
  */
 async function login() {
-	// 直接登录
-	localForage.setItem("token", "token");
-	router.push("/home");
-	return;
 	try {
 		const validata = await validateForm(formRef);
-		console.log("==> validata", validata);
+		if (!validata) return;
+
+		// 验证通过后，进行登录操作
+		const { userid, password } = toRaw(form);
+		const { data } = await API_login({ userid, password: md5(password) });
+		if (data.code !== 200) {
+			message.error(data.message);
+			// 重置表单
+			resetForm(formRef);
+			return;
+		}
+
+		// 不然存储 token  到 localStorage
+		localForage.setItem("token", data.token);
+
+		message.success("登录成功");
+		// 跳转到首页
+		router.push("/home");
 	} catch (error) {
 		console.error(error);
 	}

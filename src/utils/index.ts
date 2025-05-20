@@ -1,3 +1,4 @@
+import { MD5 } from "crypto-js";
 import { SERVER_URL } from "../config";
 import { API_uploadImage } from "../axios";
 
@@ -38,3 +39,8 @@ export const isDev = () => {
 export const getLoadUrl = (gridKey: string) => {
 	return `${isDev() ? "/api/" : "/"}loadSheetData?gridkey=${gridKey}`;
 };
+
+//  md5 加密
+export function md5(password: string): string {
+	return MD5(password).toString();
+}

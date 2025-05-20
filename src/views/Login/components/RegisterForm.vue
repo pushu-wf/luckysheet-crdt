@@ -44,11 +44,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { FormInstance, theme } from "ant-design-vue";
+import { onMounted, ref, toRaw } from "vue";
+import { FormInstance, message, theme } from "ant-design-vue";
 import { useLoginFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
+import { API_register } from "../../../axios";
+import { md5 } from "../../../utils";
+
 const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
 const { token } = theme.useToken();
 
@@ -62,8 +65,23 @@ const verificationCode = ref<InstanceType<typeof VerificationCodeVue>>();
 
 /** 注册逻辑 */
 async function register() {
-	const validata = await validateForm(formRef);
-	console.log("==> validata", validata);
+	try {
+		const validata = await validateForm(formRef);
+		if (!validata) return;
+
+		const { userid, password } = toRaw(form);
+		// 执行注册操作
+		const { data } = await API_register({ userid, password: md5(password) });
+		if (data.code !== 200) {
+			message.error(data.message);
+			// 重置表单
+			resetForm(formRef);
+			return;
+		}
+		message.success("注册成功");
+		// 不然跳转到登录页
+		emit("gotoLogin");
+	} catch (error) {}
 }
 
 /**
