@@ -142,9 +142,8 @@ function handleSheetOperate(payload: { key: string }) {
 async function createFileConfirm() {
 	if (!createFileName.value) message.warn("请输入工作簿名称");
 
-	const { userid } = getUserInfo();
 	// 调用 createWorkerBooks API
-	const { data } = await API_createWorkerBook({ bookname: createFileName.value, userid });
+	const { data } = await API_createWorkerBook(createFileName.value);
 	if (data.code !== 200) {
 		message.error(data.message);
 		return;
@@ -156,8 +155,10 @@ async function createFileConfirm() {
 
 // 查询文件列表
 async function getFileList() {
-	const { userid } = getUserInfo();
-	const { data } = await API_getFileList({ userid });
+	const { data } = await API_getFileList({
+		current: pagination.current,
+		pageSize: pagination.pageSize,
+	});
 }
 
 onMounted(getFileList);

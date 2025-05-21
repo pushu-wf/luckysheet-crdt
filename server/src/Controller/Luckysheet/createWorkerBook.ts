@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { WorkerBookService } from "../../Service/WorkerBook";
-import { md5 } from "../../Utils";
-import { FileMapService } from "../../Service/FileMap";
 import { UserService } from "../../Service/User";
+import { getUseridFromToken, md5 } from "../../Utils";
+import { FileMapService } from "../../Service/FileMap";
+import { WorkerBookService } from "../../Service/WorkerBook";
 
 /**
  * 创建新的工作簿
@@ -10,14 +10,16 @@ import { UserService } from "../../Service/User";
  * @returns
  */
 export async function createWorkerBook(req: Request, res: Response) {
-	const { bookname, userid } = req.body;
+	const { bookname } = req.body;
 
 	if (!bookname) {
 		res.json({ code: 400, message: "bookname 参数缺失" });
 		return;
 	}
+
+	const userid = getUseridFromToken(req);
 	if (!userid) {
-		res.json({ code: 400, message: "userid 缺失" });
+		res.json({ code: 400, message: "Invalid token" });
 		return;
 	}
 

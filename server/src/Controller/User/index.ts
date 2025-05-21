@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
+import { createToken, getUseridFromToken, md5 } from "../../Utils";
 import { UserService } from "../../Service/User";
-import { createToken, md5 } from "../../Utils";
 
 /**
  * @description 注册用户
@@ -58,16 +58,13 @@ export async function login(req: Request, res: Response) {
 
 // 更新用户信息
 export async function updateUser(req: Request, res: Response) {
-	/**
-	 * 目前表字段为：
-	 *  password
-	 *  username 用户昵称
-	 *  email
-	 *  avatar
-	 */
-	const { userid, password, username, email, avatar } = req.body;
+	const { password, username, email, avatar } = req.body;
+
+	// 通过 token 获取 userid
+	const userid = getUseridFromToken(req);
+
 	if (!userid) {
-		res.json({ code: 400, message: "缺少 userid 参数" });
+		res.json({ code: 400, message: "Invalid token" });
 		return;
 	}
 

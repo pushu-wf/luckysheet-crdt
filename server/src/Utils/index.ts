@@ -1,6 +1,8 @@
 import pako from "pako";
-import { MD5 } from "crypto-js";
 import jwt from "jsonwebtoken";
+import { MD5 } from "crypto-js";
+import { Request } from "express";
+import { logger } from "./Logger";
 import { JWT_SECRET } from "../Config";
 
 /**
@@ -68,4 +70,18 @@ function createToken(userid: string, password: string): string {
 	return jwt.sign({ userid, password }, JWT_SECRET, { expiresIn: "1h" });
 }
 
-export { unzip, getURLQuery, isEmpty, md5, createToken };
+// 从 token 中获取 userid
+function getUseridFromToken(req: Request): string {
+	const token = req.headers.authorization;
+	if (!token) return "";
+
+	try {
+		const decoded = <jwt.JwtPayload>jwt.verify(token, JWT_SECRET);
+		return decoded.userid;
+	} catch (error) {
+		logger.error(error);
+		return "";
+	}
+}
+
+export { unzip, getURLQuery, isEmpty, md5, createToken, getUseridFromToken };

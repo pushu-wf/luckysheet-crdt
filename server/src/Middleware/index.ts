@@ -57,7 +57,7 @@ function initToken(app: express.Application) {
 		}
 
 		try {
-			// 目前只做 token 校验功能，并不将信息绑定到 req 上，还请接口请求传递 userid
+			// 目前只做 token 校验功能，并不将信息绑定到 req 上，已提供 utils 工具函数实现 token 解析 userid
 			jwt.verify(token, JWT_SECRET);
 			next();
 		} catch (err) {

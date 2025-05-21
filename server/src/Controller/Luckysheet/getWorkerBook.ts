@@ -8,7 +8,7 @@ import { WorkerBookService } from "../../Service/WorkerBook";
  * @returns
  */
 export async function getWorkerBook(req: Request, res: Response) {
-	const gridKey = req.body.gridKey;
+	const { gridKey } = req.body;
 
 	if (!gridKey) {
 		res.status(400).json({ code: 400, msg: "gridKey 参数缺失" });

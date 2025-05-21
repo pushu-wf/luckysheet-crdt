@@ -37,16 +37,16 @@ export const API_register = (data: { userid: string; password: string }) => {
 };
 
 // 创建工作簿
-export const API_createWorkerBook = (data: { bookname: string; userid: string }) => {
+export const API_createWorkerBook = (bookname: string) => {
 	return fetch({
 		url: "/luckysheet/createWorkerBook",
 		method: "POST",
-		data,
+		data: { bookname },
 	});
 };
 
 // 查询文件列表
-export const API_getFileList = (data: { userid: string }) => {
+export const API_getFileList = (data: { current: number; pageSize: number }) => {
 	return fetch({
 		url: "/luckysheet/getFileList",
 		method: "POST",
