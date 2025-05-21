@@ -35,6 +35,10 @@ axios.interceptors.response.use(
 		return res;
 	},
 	function (error) {
+		if (error.response.status === 401) {
+			// 跳转到登录页面
+			router.push("/login");
+		}
 		// 对响应错误进行操作
 		return Promise.reject(error);
 	}

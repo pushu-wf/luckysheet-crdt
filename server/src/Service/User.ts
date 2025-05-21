@@ -24,6 +24,16 @@ async function create(user: UserModelType) {
 	}
 }
 
+// 获取 UUID 主键
+async function getUserUUID(userid: string) {
+	try {
+		const user = await findOne(userid, undefined, { attributes: ["user_uuid"] });
+		return user?.user_uuid;
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 // 更新字段
 async function update(user: UserModelType) {
 	try {
@@ -37,4 +47,5 @@ export const UserService = {
 	findOne,
 	create,
 	update,
+	getUserUUID,
 };

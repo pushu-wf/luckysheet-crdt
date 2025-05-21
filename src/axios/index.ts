@@ -44,3 +44,12 @@ export const API_createWorkerBook = (data: { bookname: string; userid: string })
 		data,
 	});
 };
+
+// 查询文件列表
+export const API_getFileList = (data: { userid: string }) => {
+	return fetch({
+		url: "/luckysheet/getFileList",
+		method: "POST",
+		data,
+	});
+};

@@ -1,7 +1,7 @@
 <template>
 	<div class="sheets-container">
 		<div class="sheets-container-btns">
-			<a-radio-group v-model:value="operator" button-style="solid">
+			<a-radio-group v-model:value="filterType" button-style="solid">
 				<a-radio-button value="all">全部</a-radio-button>
 				<a-radio-button value="recently">最近</a-radio-button>
 				<a-radio-button value="share">共享</a-radio-button>
@@ -100,18 +100,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from "vue";
+import { ref, h, onMounted } from "vue";
 import { message, theme } from "ant-design-vue";
 import MockData from "../../../mock/sheets.json";
 import { ImportFile } from "../../../utils/ImportFile";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
-import { API_createWorkerBook } from "../../../axios";
+import { API_createWorkerBook, API_getFileList } from "../../../axios";
 import { getUserInfo } from "../../../utils";
 const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
-const operator = ref("all");
+const filterType = ref("all");
 
 // 是否全选
 const checkAll = ref(false);
@@ -152,6 +152,14 @@ async function createFileConfirm() {
 	message.success("创建成功");
 	createFileVisible.value = false;
 }
+
+// 查询文件列表
+async function getFileList() {
+	const { userid } = getUserInfo();
+	const { data } = await API_getFileList({ userid });
+}
+
+onMounted(getFileList);
 </script>
 
 <style lang="less" scoped>

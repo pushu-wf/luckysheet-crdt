@@ -15,5 +15,8 @@ routes.post("/loadSheetData", Controller.loadSheetData);
 // 新建  workerbook
 routes.post("/createWorkerBook", Controller.createWorkerBook);
 
+// 查询文件列表 - 全部 /  收藏 / 最近 / 共享
+routes.post("/getFileList", Controller.getFileList);
+
 // 模块化的路由，直接调用 routes.use() 即可
 export const LuckySheetRouter = routes;
