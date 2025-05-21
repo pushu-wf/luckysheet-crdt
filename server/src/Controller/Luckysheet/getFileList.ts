@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
-import { UserWorkerBookModel } from "../../Sequelize/Models/UserWorkerBook";
-import { UserWorkerBookService } from "../../Service/UserWorkerBook";
 
 /**
  * 获取文件列表 - 需要实现分页
@@ -21,8 +19,5 @@ export async function getFileList(req: Request, res: Response) {
 		return;
 	}
 
-	const fileList = await UserWorkerBookService.findFileList();
-	console.log(" ==> ", fileList);
-
-	res.json({ code: 200, data: fileList });
+	res.json({ code: 200, data: "未处理" });
 }
