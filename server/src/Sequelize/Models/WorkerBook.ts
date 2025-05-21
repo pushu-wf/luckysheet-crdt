@@ -8,6 +8,8 @@ export class WorkerBookModel extends Model {
 	declare gridKey: string; /** gridKey 是用户系统唯一文件ID 必须由用户传递 */
 	declare title?: string;
 	declare lang?: string;
+	declare createdAt?: Date;
+	declare updatedAt?: Date;
 
 	static registerModule(sequelize: Sequelize) {
 		WorkerBookModel.init(

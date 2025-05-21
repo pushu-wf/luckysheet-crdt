@@ -151,6 +151,7 @@ async function createFileConfirm() {
 	}
 	message.success("创建成功");
 	createFileVisible.value = false;
+	createFileName.value = "";
 }
 
 // 查询文件列表

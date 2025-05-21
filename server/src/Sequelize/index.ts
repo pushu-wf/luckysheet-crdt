@@ -52,6 +52,7 @@ class DataBase {
 
 			/** 连接成功后，进行模型注册 */
 			this.registerModule();
+
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			logger.error("🚫 Failed to connect to the database!");

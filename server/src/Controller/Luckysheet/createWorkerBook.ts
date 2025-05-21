@@ -41,7 +41,7 @@ export async function createWorkerBook(req: Request, res: Response) {
 
 	// 需要关联文件映射表 filemap
 	const filemap = await FileMapService.createFileMap({
-		owner: user_uuid,
+		isowner: true,
 		operator: user_uuid,
 		gridKey,
 	});
