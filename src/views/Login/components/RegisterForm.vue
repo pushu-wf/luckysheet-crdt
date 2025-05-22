@@ -73,17 +73,13 @@ async function registerHandle() {
 		if (!validata) return;
 
 		const { userid, password } = toRaw(form);
+
 		// 执行注册操作
-		const { data } = await API_register({ userid, password: md5(password) });
-		if (data.code !== 200) {
-			message.error(data.message);
-			// 重置表单
-			resetForm(formRef);
-			return;
-		}
+		await API_register({ userid, password: md5(password) });
+
 		message.success("注册成功");
-		// 不然跳转到登录页
-		emit("gotoLogin");
+		// 不然跳转到登录页 - 可以携带参数进行快捷登录
+		emit("gotoLogin", { userid, password });
 	} catch (error) {}
 }
 

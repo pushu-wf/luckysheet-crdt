@@ -74,12 +74,6 @@ async function loginHandle() {
 		// 验证通过后，进行登录操作
 		const { userid, password } = toRaw(form);
 		const { data } = await API_login({ userid, password: md5(password) });
-		if (data.code !== 200) {
-			message.error(data.message);
-			// 重置表单
-			resetForm(formRef);
-			return;
-		}
 
 		// 不然存储 token  到 localStorage
 		localForage.setItem("token", data.token);

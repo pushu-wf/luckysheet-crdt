@@ -84,4 +84,33 @@ function getUseridFromToken(req: Request): string {
 	}
 }
 
-export { unzip, getURLQuery, isEmpty, md5, createToken, getUseridFromToken };
+/**
+ * 数据库服务不可用，直接返回空模板数据
+ */
+function getEmptySheetsData() {
+	return JSON.stringify([
+		{
+			name: "Sheet1",
+			index: "Sheet_Index_Demo",
+			status: 1,
+			order: 0,
+			celldata: [
+				{
+					r: 0,
+					c: 0,
+					v: {
+						v: "数据库服务不可用，但不影响协同功能",
+						m: "数据库服务不可用，但不影响协同功能",
+						bg: "#ff0000",
+						fc: "#ffffff",
+						fs: 12,
+						ht: 0,
+						vt: 0,
+					},
+				},
+			],
+		},
+	]);
+}
+
+export { unzip, getURLQuery, isEmpty, md5, createToken, getUseridFromToken, getEmptySheetsData };
