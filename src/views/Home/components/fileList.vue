@@ -77,6 +77,7 @@
 				</a-list-item>
 			</template>
 			<a-skeleton :loading="loading" active :rows="5"> </a-skeleton>
+			<a-empty v-if="!loading && !fileList.length" description="暂无数据" />
 		</a-list>
 
 		<!-- 新建文件弹窗 -->
@@ -88,12 +89,13 @@
 
 <script setup lang="ts">
 import { message, theme } from "ant-design-vue";
-import { ref, h, onMounted, reactive, watch } from "vue";
+import { SheetListItem } from "../../../interface";
 import { ImportFile } from "../../../utils/ImportFile";
+import { ref, h, onMounted, reactive, watch } from "vue";
+import { API_createWorkerBook, API_getFileList } from "../../../axios";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
-import { API_createWorkerBook, API_getFileList } from "../../../axios";
-import { SheetListItem } from "../../../interface";
+
 const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
@@ -127,7 +129,7 @@ const pagination = {
 	pageSize: 5,
 	total: 0,
 	onChange: (page: number) => {
-		pagination.current = page;
+		pagination.current = page || 1;
 		getFileList();
 	},
 };
@@ -146,11 +148,8 @@ async function createFileConfirm() {
 	if (!createFileName.value) message.warn("请输入工作簿名称");
 
 	// 调用 createWorkerBooks API
-	const { data } = await API_createWorkerBook(createFileName.value);
-	if (data.code !== 200) {
-		message.error(data.message);
-		return;
-	}
+	await API_createWorkerBook(createFileName.value);
+
 	message.success("创建成功");
 	createFileVisible.value = false;
 	createFileName.value = "";
@@ -162,6 +161,7 @@ async function getFileList() {
 	try {
 		loading.value = true;
 		fileList.length = 0;
+		pagination.total = 0;
 		const { data } = await API_getFileList({
 			current: pagination.current,
 			pageSize: pagination.pageSize,
