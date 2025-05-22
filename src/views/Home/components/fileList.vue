@@ -33,24 +33,7 @@
 				<a-list-item class="sheet-item">
 					<a-checkbox></a-checkbox>
 					<span class="sheet-filename">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-file-spreadsheet h-5 w-5 text-primary">
-							<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
-							<path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-							<path d="M8 13h2"></path>
-							<path d="M14 13h2"></path>
-							<path d="M8 17h2"></path>
-							<path d="M14 17h2"></path>
-						</svg>
+						<img src="/file-icon.png" alt="" />
 						<p>{{ item.workerbook.title }}</p>
 						<a-button
 							type="text"
@@ -104,8 +87,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted, reactive } from "vue";
 import { message, theme } from "ant-design-vue";
+import { ref, h, onMounted, reactive, watch } from "vue";
 import { ImportFile } from "../../../utils/ImportFile";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
@@ -115,6 +98,14 @@ const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
 const filterType = ref("all");
+
+watch(
+	() => filterType.value,
+	() => {
+		pagination.current = 1;
+		getFileList();
+	}
+);
 
 // 是否全选
 const checkAll = ref(false);
@@ -174,6 +165,7 @@ async function getFileList() {
 		const { data } = await API_getFileList({
 			current: pagination.current,
 			pageSize: pagination.pageSize,
+			filterType: filterType.value,
 		});
 
 		// 解析参数
@@ -254,8 +246,8 @@ onMounted(getFileList);
 		align-items: center;
 		margin-right: auto;
 		margin-left: 20px;
-		svg {
-			height: 18px;
+		img {
+			height: 28px;
 		}
 		p {
 			max-width: calc(100% - 16px - 56px);

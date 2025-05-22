@@ -46,7 +46,7 @@ export const API_createWorkerBook = (bookname: string) => {
 };
 
 // 查询文件列表
-export const API_getFileList = (data: { current: number; pageSize: number }) => {
+export const API_getFileList = (data: { current: number; pageSize: number; filterType: string }) => {
 	return fetch({
 		url: "/luckysheet/getFileList",
 		method: "POST",

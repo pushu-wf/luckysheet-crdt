@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 	},
 	function (error) {
 		if (error.response.status === 401) return loginExpired();
-		else message.error(error.response.data.message);
+		else message.error(error.response.data.message || "服务器异常");
 		// 对响应错误进行操作
 		return Promise.reject(error);
 	}
