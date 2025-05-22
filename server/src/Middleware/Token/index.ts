@@ -9,7 +9,7 @@ import { logger } from "../../Utils/Logger";
 export function initToken(app: express.Application) {
 	app.use(async (req, res, next) => {
 		// 请求的路径白名单
-		const whiteList = ["/", "/lib", "/user/login", "/user/register"];
+		const whiteList = ["/", "/user/login", "/user/register"];
 		const path = req.path;
 
 		// 静态资源路径不需要校验token

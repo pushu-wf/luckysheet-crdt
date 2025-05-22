@@ -1,11 +1,8 @@
-import path from "path";
 import express from "express";
+import { StaticSourceList } from "../../Config";
 /**
  * 初始化静态资源
  */
 export function initStaticSource(app: express.Application) {
-	app.use(express.static(path.resolve(__dirname, "../../public")));
-	app.use(express.static(path.resolve(__dirname, "../../public/dist")));
-	app.use(express.static(path.resolve(__dirname, "../../public/uploads")));
-	app.use(express.static(path.resolve(__dirname, "../../public/dist/assets")));
+	StaticSourceList.forEach((path) => app.use(path, express.static(path)));
 }

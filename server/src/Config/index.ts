@@ -48,10 +48,18 @@ const MULTER_CONFIG = {
 };
 
 // 静态资源地址 打包后 web 的入口文件
-const ENTRY_URL = path.join(__dirname, "../../public/dist/index.html");
+const ENTRY_URL = path.resolve(__dirname, "../../public/dist/index.html");
 
 //  JWT 密钥
 const JWT_SECRET = "luckysheet_crdt_jsonwebtoken_secret";
 
+// 配置静态资源目录
+const StaticSourceList = [
+	path.resolve(__dirname, "../../public"),
+	path.resolve(__dirname, "../../public/dist"),
+	path.resolve(__dirname, "../../public/uploads"),
+	path.resolve(__dirname, "../../public/dist/assets"),
+];
+
 // 统一导出配置对象
-export { ENTRY_URL, SQL_CONFIG, SERVER_PORT, LOGGER_CONFIG, MULTER_CONFIG, JWT_SECRET };
+export { ENTRY_URL, SQL_CONFIG, SERVER_PORT, LOGGER_CONFIG, MULTER_CONFIG, JWT_SECRET, StaticSourceList };
