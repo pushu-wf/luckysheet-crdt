@@ -41,8 +41,16 @@ function initBodyParser(app: express.Application) {
 function initToken(app: express.Application) {
 	app.use(async (req, res, next) => {
 		// 请求的路径白名单
-		const whiteList = ["/user/login", "/user/register"];
+		const whiteList = ["/", "/lib", "/user/login", "/user/register"];
 		const path = req.path;
+		console.log(" ==> ", req.path, req.url);
+
+		// 静态资源路径不需要校验token
+		if (path.startsWith("/lib") || path.startsWith("/assets") || path.startsWith("/public")) {
+			next();
+			return;
+		}
+
 		if (whiteList.includes(path)) {
 			next();
 			return;
@@ -72,7 +80,8 @@ function initToken(app: express.Application) {
  * @param app
  */
 export const initMeddlewear = (app: express.Application) => {
-	initStaticSource(app);
+	// 请注意：此中间件的顺序会影响到后续的中间件执行，请勿修改顺序
+	initStaticSource(app); // 静态资源 - 特别需要在最先注册中间件，不然首页访问不到
 	initCors(app);
 	initBodyParser(app);
 	initToken(app);

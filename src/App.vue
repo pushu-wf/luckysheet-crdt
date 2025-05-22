@@ -1,6 +1,6 @@
 <template>
 	<a-config-provider :theme="configProvideTheme">
-		<router-view></router-view>
+		<router-view />
 	</a-config-provider>
 </template>
 

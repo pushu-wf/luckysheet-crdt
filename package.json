@@ -27,7 +27,6 @@
 	],
 	"dependencies": {
 		"@ant-design/icons-vue": "^7.0.1",
-		"@types/crypto-js": "^4.2.2",
 		"ant-design-vue": "^4.2.6",
 		"axios": "^1.7.9",
 		"crypto-js": "^4.2.0",
@@ -36,6 +35,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
+		"@types/crypto-js": "^4.2.2",
 		"@vitejs/plugin-vue": "^5.2.4",
 		"eslint": "^9.16.0",
 		"globals": "^15.13.0",

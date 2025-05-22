@@ -1,8 +1,8 @@
 // 封装用户请求axios
-import axios, { AxiosRequestConfig } from "axios";
+import router from "../router";
 import { isDev } from "../utils";
 import { localForage } from "../localforage";
-import router from "../router";
+import axios, { AxiosRequestConfig } from "axios";
 
 export const fetch = (options: AxiosRequestConfig) => {
 	return axios({

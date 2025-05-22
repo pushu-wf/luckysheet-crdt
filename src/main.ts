@@ -1,9 +1,7 @@
 import "./style/index.css";
-
 import App from "./App.vue";
+import router from "./router";
 import { createApp } from "vue";
-
-import router from "./router/index";
 
 // AntDesignVue
 import Antd from "ant-design-vue";

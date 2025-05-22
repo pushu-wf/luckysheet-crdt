@@ -35,7 +35,7 @@ export async function loadSheetData(req: Request, res: Response) {
 
 		const result: WorkerSheetItemType[] = [];
 
-		// 1. 解析用户 URL gridkey 参数 || WORKER_BOOK_INFO gridkey
+		// 1. 解析用户 URL gridkey 参数
 		const gridKey = getURLQuery(req.url, "gridkey");
 
 		if (!gridKey) {
@@ -146,10 +146,7 @@ function getEmptyData() {
 /**
  * parseCellData 解析 cellData 数据
  */
-async function parseCellData(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseCellData(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <CellDataItemType[]>[];
 
@@ -202,10 +199,7 @@ async function parseCellData(
 /**
  * parseMerge 解析合并单元格
  */
-async function parseMerge(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseMerge(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result: MergeType = {};
 
@@ -217,9 +211,7 @@ async function parseMerge(
 			result[`${r}_${c}`] = merge.dataValues;
 
 			// 配置 celldata mc 属性
-			const currentMergeCell = currentSheetData.celldata?.find(
-				(i) => i.r == r && i.c == c
-			);
+			const currentMergeCell = currentSheetData.celldata?.find((i) => i.r == r && i.c == c);
 
 			if (currentMergeCell) currentMergeCell.v.mc = merge.dataValues;
 		});
@@ -235,10 +227,7 @@ async function parseMerge(
 /**
  * parseConfigBorder 解析边框
  */
-async function parseConfigBorder(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseConfigBorder(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <BorderInfoType[]>[];
 
@@ -282,10 +271,7 @@ async function parseConfigBorder(
 /**
  * 解析隐藏行列和行高列宽
  */
-async function parseHiddenAndLen(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseHiddenAndLen(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const dataArray = await HiddenAndLenService.findConfig(worker_sheet_id);
 		dataArray?.forEach((item) => {
@@ -312,10 +298,7 @@ async function parseHiddenAndLen(
 /**
  * parseImages 解析图片
  */
-async function parseImages(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseImages(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <ImagesType[]>[];
 
@@ -363,10 +346,7 @@ async function parseImages(
  * parseCharts 解析图表数据
  */
 
-async function parseCharts(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseCharts(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result: ChartType[] = [];
 		const charts = await ChartService.findAllChart(worker_sheet_id);

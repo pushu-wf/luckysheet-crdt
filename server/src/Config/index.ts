@@ -40,15 +40,6 @@ const LOGGER_CONFIG = {
 };
 
 /**
- * 导出演示用 Worker Books Info
- */
-const WORKER_BOOK_INFO = {
-	lang: "zh",
-	title: "测试工作簿",
-	gridKey: "gridkey_demo",
-};
-
-/**
  * 导出文件上传 Multer 配置对象
  */
 const MULTER_CONFIG = {
@@ -57,10 +48,10 @@ const MULTER_CONFIG = {
 };
 
 // 静态资源地址 打包后 web 的入口文件
-const ENTRY_URL = path.join(__dirname, "../../public/dist/entry.html");
+const ENTRY_URL = path.join(__dirname, "../../public/dist/index.html");
 
 //  JWT 密钥
 const JWT_SECRET = "luckysheet_crdt_jsonwebtoken_secret";
 
 // 统一导出配置对象
-export { ENTRY_URL, SQL_CONFIG, SERVER_PORT, LOGGER_CONFIG, MULTER_CONFIG, WORKER_BOOK_INFO, JWT_SECRET };
+export { ENTRY_URL, SQL_CONFIG, SERVER_PORT, LOGGER_CONFIG, MULTER_CONFIG, JWT_SECRET };
