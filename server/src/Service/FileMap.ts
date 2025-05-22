@@ -3,6 +3,7 @@ import { logger } from "../Utils/Logger";
 import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
 import { UserModel, UserModelType } from "../Sequelize/Models/User";
 import { FileMapModel, FileMapModelType } from "../Sequelize/Models/FileMap";
+import dayjs from "dayjs";
 
 // 定义关联查询返回结果类型
 type UniFileMapItemResult = {
@@ -79,7 +80,13 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 				favor: item.favor,
 				operator: item.OperatorUser,
 				owner: item.OwnerUser,
-				workerbook: item.WorkerBook,
+				workerbook: {
+					gridKey: item.WorkerBook.gridKey,
+					lang: item.WorkerBook.lang,
+					title: item.WorkerBook.title,
+					updatedAt: dayjs(item.WorkerBook.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+					createAt: dayjs(item.WorkerBook.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+				},
 			};
 		});
 

@@ -18,7 +18,7 @@
 			<a-button type="primary" size="small" disabled danger style="margin-left: 10px" :icon="h(DeleteOutlined)">删除</a-button>
 		</div>
 
-		<a-list bordered :pagination="pagination" :data-source="MockData">
+		<a-list bordered :pagination="pagination" :data-source="fileList">
 			<template #header>
 				<div class="sheet-header">
 					<a-checkbox v-model:checked="checkAll"></a-checkbox>
@@ -51,12 +51,15 @@
 							<path d="M8 17h2"></path>
 							<path d="M14 17h2"></path>
 						</svg>
-						<p>{{ item.filename }}</p>
-						<a-button type="text" :icon="h(StarOutlined)"></a-button>
+						<p>{{ item.workerbook.title }}</p>
+						<a-button
+							type="text"
+							:style="{ color: item.favor ? '#ffbb12' : null }"
+							:icon="h(item.favor ? StarFilled : StarOutlined)"></a-button>
 					</span>
-					<span class="sheet-createtime">{{ item.created_at }}</span>
-					<span class="sheet-updatetime">{{ item.modified_at }}</span>
-					<span class="sheet-owner">{{ item.owner }}</span>
+					<span class="sheet-createtime">{{ item.workerbook.createAt }}</span>
+					<span class="sheet-updatetime">{{ item.workerbook.updatedAt }}</span>
+					<span class="sheet-owner">{{ item.owner.username }}</span>
 					<span class="sheet-operator">
 						<a-dropdown :trigger="['click']">
 							<EllipsisOutlined />
@@ -90,6 +93,7 @@
 					</span>
 				</a-list-item>
 			</template>
+			<a-skeleton :loading="loading" active :rows="5"> </a-skeleton>
 		</a-list>
 
 		<!-- 新建文件弹窗 -->
@@ -100,14 +104,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted } from "vue";
+import { ref, h, onMounted, reactive } from "vue";
 import { message, theme } from "ant-design-vue";
-import MockData from "../../../mock/sheets.json";
 import { ImportFile } from "../../../utils/ImportFile";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
 import { API_createWorkerBook, API_getFileList } from "../../../axios";
-import { getUserInfo } from "../../../utils";
+import { SheetListItem } from "../../../interface";
 const { token } = theme.useToken();
 
 // 定义当前过滤条件 全部 最近  共享  收藏
@@ -116,17 +119,26 @@ const filterType = ref("all");
 // 是否全选
 const checkAll = ref(false);
 
+// 是否正在加载
+const loading = ref(true);
+
 // 新建文件弹窗
 const createFileVisible = ref(false);
 // 新建工作簿名称
 const createFileName = ref("");
 
+// 列表数据
+const fileList: SheetListItem[] = reactive([]);
+
 // 分页器
 const pagination = {
 	current: 1,
 	pageSize: 5,
-	total: MockData.length,
-	onChange: (page: number) => (pagination.current = page),
+	total: 0,
+	onChange: (page: number) => {
+		pagination.current = page;
+		getFileList();
+	},
 };
 
 // 表格操作
@@ -151,14 +163,27 @@ async function createFileConfirm() {
 	message.success("创建成功");
 	createFileVisible.value = false;
 	createFileName.value = "";
+	getFileList();
 }
 
 // 查询文件列表
 async function getFileList() {
-	const { data } = await API_getFileList({
-		current: pagination.current,
-		pageSize: pagination.pageSize,
-	});
+	try {
+		loading.value = true;
+		fileList.length = 0;
+		const { data } = await API_getFileList({
+			current: pagination.current,
+			pageSize: pagination.pageSize,
+		});
+
+		// 解析参数
+		const { list, total } = data.data;
+		pagination.total = total;
+		list.forEach((i: SheetListItem) => fileList.push(i));
+		loading.value = false;
+	} catch (error) {
+		loading.value = false;
+	}
 }
 
 onMounted(getFileList);
