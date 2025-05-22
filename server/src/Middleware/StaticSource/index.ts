@@ -4,5 +4,5 @@ import { StaticSourceList } from "../../Config";
  * 初始化静态资源
  */
 export function initStaticSource(app: express.Application) {
-	StaticSourceList.forEach((path) => app.use(path, express.static(path)));
+	StaticSourceList.forEach((path) => app.use(express.static(path)));
 }
