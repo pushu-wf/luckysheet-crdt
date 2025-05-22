@@ -16,7 +16,7 @@ async function create(info: WorkerBookModelType) {
 	try {
 		// 1. 先查询用户传递的 gridKey 是否存在记录
 		const exist = await findOne(info.gridKey);
-		if (exist) return { code: 1, msg: "该 gridKey 已经存在" };
+		if (exist) return { code: 1, message: "该 gridKey 已经存在" };
 
 		// 2. 创建一个 worker books
 		const workerbook = await WorkerBookModel.create(info);

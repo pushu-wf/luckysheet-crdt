@@ -39,14 +39,14 @@ export async function loadSheetData(req: Request, res: Response) {
 		const gridKey = getURLQuery(req.url, "gridkey");
 
 		if (!gridKey) {
-			res.json({ code: 400, msg: "gridKey 参数缺失" });
+			res.status(400).json({ code: 400, message: "gridKey 参数缺失" });
 			return;
 		}
 
 		// 2. 根据 gridKey 查询相关数据，拼接生成 luckysheet 初始数据，进行 luckysheet 初始化
 		const sheets = await WorkerSheetService.findAllByGridKey(gridKey);
 		if (!sheets || !sheets.length) {
-			res.json({ code: 400, msg: "未查询到相关数据" });
+			res.status(400).json({ code: 400, message: "未查询到相关数据" });
 			return;
 		}
 
@@ -83,7 +83,7 @@ export async function loadSheetData(req: Request, res: Response) {
 		res.json(JSON.stringify(result));
 	} catch (error) {
 		logger.error(error);
-		res.json({ code: 500, msg: "服务异常" });
+		res.status(500).json({ code: 500, message: "服务异常" });
 	}
 }
 

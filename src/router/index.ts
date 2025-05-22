@@ -1,38 +1,40 @@
 // router
-import { createRouter, createWebHistory } from "vue-router";
 import { localForage } from "../localforage";
+import { createRouter, createWebHistory } from "vue-router";
+
+// 路由配置
+const routes = [
+	{
+		path: "/",
+		redirect: "/home",
+	},
+	{
+		path: "/login",
+		component: () => import("../views/Login/index.vue"),
+	},
+	{
+		path: "/home",
+		component: () => import("../views/Home/index.vue"),
+	},
+	{
+		path: "/excel",
+		component: () => import("../views/Excel/index.vue"),
+	},
+];
+
+// 路由实例
 const router = createRouter({
+	routes,
 	history: createWebHistory(),
-	routes: [
-		{
-			path: "/",
-			redirect: "/home",
-		},
-		{
-			path: "/login",
-			component: () => import("../views/Login/index.vue"),
-		},
-		{
-			path: "/home",
-			component: () => import("../views/Home/index.vue"),
-		},
-		{
-			path: "/excel",
-			component: () => import("../views/Excel/index.vue"),
-		},
-	],
 });
 
+// 拦截路由
 router.beforeEach((to, _from, next) => {
-	if (to.path === "/login") {
+	const token = localForage.getItem("token");
+	if (to.path === "/login" || token) {
 		next();
 	} else {
-		// 判断是否存在 token
-		if (localForage.getItem("token")) {
-			next();
-		} else {
-			next("/login");
-		}
+		next("/login");
 	}
 });
 

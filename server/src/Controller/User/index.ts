@@ -11,21 +11,21 @@ export async function register(req: Request, res: Response) {
 	const password: string = req.body.password;
 
 	if (!userid || !password) {
-		res.json({ code: 400, message: "用户名或密码不能为空" });
+		res.status(400).json({ code: 400, message: "用户名或密码不能为空" });
 		return;
 	}
 
 	// 不然判断当前用户ID是否可用
 	const exist = await UserService.findOne(userid);
 	if (exist) {
-		res.json({ code: 400, message: "用户已存在" });
+		res.status(400).json({ code: 400, message: "用户已存在" });
 		return;
 	}
 
 	// 不然执行创建用户操作
 	const newUser = await UserService.create({ userid, password: md5(password), username: userid });
 	if (newUser?.dataValues) res.json({ code: 200, message: "用户注册成功" });
-	else res.json({ code: 400, message: "用户注册失败，请稍后重试！" });
+	else res.status(400).json({ code: 400, message: "用户注册失败，请稍后重试！" });
 }
 
 /**
@@ -35,14 +35,14 @@ export async function login(req: Request, res: Response) {
 	// 用户需要传递的参数为 userid password
 	const { userid, password } = req.body;
 	if (!userid || !password) {
-		res.json({ code: 400, message: "用户名或密码不能为空" });
+		res.status(400).json({ code: 400, message: "用户名或密码不能为空" });
 		return;
 	}
 
 	// 不然判断当前用户是否存在
 	const user = await UserService.findOne(userid, md5(password));
 	if (!user) {
-		res.json({ code: 400, message: "账号或密码错误" });
+		res.status(400).json({ code: 400, message: "账号或密码错误" });
 		return;
 	}
 	const currentUser = JSON.parse(JSON.stringify(user));
@@ -64,7 +64,7 @@ export async function updateUser(req: Request, res: Response) {
 	const userid = getUseridFromToken(req);
 
 	if (!userid) {
-		res.json({ code: 400, message: "Invalid token" });
+		res.status(400).json({ code: 400, message: "Invalid token" });
 		return;
 	}
 
@@ -73,6 +73,6 @@ export async function updateUser(req: Request, res: Response) {
 	if (data) {
 		res.json({ code: 200, message: "更新成功" });
 	} else {
-		res.json({ code: 500, message: "更新失败" });
+		res.status(500).json({ code: 500, message: "更新失败" });
 	}
 }

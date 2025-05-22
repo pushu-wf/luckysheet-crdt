@@ -11,14 +11,14 @@ export async function getWorkerBook(req: Request, res: Response) {
 	const { gridKey } = req.body;
 
 	if (!gridKey) {
-		res.status(400).json({ code: 400, msg: "gridKey 参数缺失" });
+		res.status(400).json({ code: 400, message: "gridKey 参数缺失" });
 		return;
 	}
 
 	if (!DB.getConnectState()) {
 		res.json({
 			code: 200,
-			msg: "数据库未连接",
+			message: "数据库未连接",
 			data: { lang: "zh", title: "未命名工作簿" },
 		});
 		return;
@@ -29,5 +29,5 @@ export async function getWorkerBook(req: Request, res: Response) {
 		attributes: ["gridKey", "title", "lang"],
 	});
 
-	res.json({ code: 200, msg: "ok", data: book });
+	res.json({ code: 200, message: "ok", data: book });
 }

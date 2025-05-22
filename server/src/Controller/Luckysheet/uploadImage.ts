@@ -16,7 +16,7 @@ export async function uploadImage(req: Request, res: Response) {
 
 		// 如果没有解析到 file 对象，则直接返回 400
 		if (!file) {
-			res.status(400).json({ code: 400, msg: "请选择文件" });
+			res.status(400).json({ code: 400, message: "请选择文件" });
 			return;
 		}
 
@@ -37,7 +37,7 @@ export async function uploadImage(req: Request, res: Response) {
 
 		res.json({
 			code: 200,
-			msg: "Success to upload.",
+			message: "Success to upload.",
 			url: `/uploads/${filename}.${suffix}`,
 		});
 	});

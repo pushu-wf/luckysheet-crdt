@@ -11,14 +11,14 @@ export async function getFileList(req: Request, res: Response) {
 
 	const userid = getUseridFromToken(req);
 	if (!userid) {
-		res.json({ code: 400, message: "Invalid token" });
+		res.status(400).json({ code: 400, message: "Invalid token" });
 		return;
 	}
 
 	// 联合查询实现列表渲染
 	const user_uuid = await UserService.getUserUUID(userid);
 	if (!user_uuid) {
-		res.json({ code: 400, message: "用户不存在" });
+		res.status(400).json({ code: 400, message: "用户不存在" });
 		return;
 	}
 

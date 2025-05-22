@@ -13,13 +13,13 @@ export async function createWorkerBook(req: Request, res: Response) {
 	const { bookname } = req.body;
 
 	if (!bookname) {
-		res.json({ code: 400, message: "bookname 参数缺失" });
+		res.status(400).json({ code: 400, message: "bookname 参数缺失" });
 		return;
 	}
 
 	const userid = getUseridFromToken(req);
 	if (!userid) {
-		res.json({ code: 400, message: "Invalid token" });
+		res.status(400).json({ code: 400, message: "Invalid token" });
 		return;
 	}
 
@@ -35,7 +35,7 @@ export async function createWorkerBook(req: Request, res: Response) {
 	// 不然请求 user_uuid 作为外键
 	const userinfo = await UserService.findOne(userid, undefined, { attributes: ["user_uuid"] });
 	if (!userinfo) {
-		res.json({ code: 400, message: "用户不存在" });
+		res.status(400).json({ code: 400, message: "用户不存在" });
 		return;
 	}
 
@@ -48,7 +48,7 @@ export async function createWorkerBook(req: Request, res: Response) {
 		gridKey,
 	});
 	if (!filemap) {
-		res.json({ code: 400, message: "创建文件映射表失败" });
+		res.status(400).json({ code: 400, message: "创建文件映射表失败" });
 		return;
 	}
 
