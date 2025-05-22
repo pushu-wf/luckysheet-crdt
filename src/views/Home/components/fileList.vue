@@ -12,16 +12,22 @@
 			<a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
 		</div>
 		<div class="choose-files">
-			<span>已选择 5 个文件</span>
-			<a-button type="default" size="small" disabled style="margin-left: auto" :icon="h(BranchesOutlined)">共享</a-button>
-			<a-button type="default" size="small" disabled style="margin-left: 10px" :icon="h(CloudDownloadOutlined)">导出</a-button>
-			<a-button type="primary" size="small" disabled danger style="margin-left: 10px" :icon="h(DeleteOutlined)">删除</a-button>
+			<span v-show="checkedNumber">已选择 {{ checkedNumber }} 个文件</span>
+			<a-button type="default" size="small" :disabled="!checkedNumber" style="margin-left: auto" :icon="h(BranchesOutlined)">
+				共享
+			</a-button>
+			<a-button type="default" size="small" :disabled="!checkedNumber" style="margin-left: 10px" :icon="h(CloudDownloadOutlined)">
+				导出
+			</a-button>
+			<a-button type="primary" size="small" :disabled="!checkedNumber" danger style="margin-left: 10px" :icon="h(DeleteOutlined)">
+				删除
+			</a-button>
 		</div>
 
 		<a-list bordered :pagination="pagination" :data-source="fileList">
 			<template #header>
 				<div class="sheet-header">
-					<a-checkbox v-model:checked="checkAll"></a-checkbox>
+					<a-checkbox @change="toggleCheckedAll"></a-checkbox>
 					<span class="sheet-filename">文件名</span>
 					<span class="sheet-createtime">创建时间</span>
 					<span class="sheet-updatetime">更新时间</span>
@@ -31,7 +37,7 @@
 			</template>
 			<template #renderItem="{ item }">
 				<a-list-item class="sheet-item">
-					<a-checkbox></a-checkbox>
+					<a-checkbox v-model:checked="item.checked"></a-checkbox>
 					<span class="sheet-filename">
 						<img src="/file-icon.png" alt="" />
 						<p>{{ item.workerbook.title }}</p>
@@ -91,7 +97,7 @@
 import { message, theme } from "ant-design-vue";
 import { SheetListItem } from "../../../interface";
 import { ImportFile } from "../../../utils/ImportFile";
-import { ref, h, onMounted, reactive, watch } from "vue";
+import { ref, h, onMounted, reactive, watch, computed } from "vue";
 import { API_createWorkerBook, API_getFileList } from "../../../axios";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
@@ -109,8 +115,15 @@ watch(
 	}
 );
 
+// 一共有几个文件被选中
+const checkedNumber = computed(() => fileList.filter((i) => i.checked).length);
+
 // 是否全选
-const checkAll = ref(false);
+function toggleCheckedAll(e: Event) {
+	// 当前状态
+	const { checked } = e.target as HTMLInputElement;
+	fileList.forEach((i) => (i.checked = checked));
+}
 
 // 是否正在加载
 const loading = ref(true);
@@ -171,7 +184,7 @@ async function getFileList() {
 		// 解析参数
 		const { list, total } = data.data;
 		pagination.total = total;
-		list.forEach((i: SheetListItem) => fileList.push(i));
+		list.forEach((i: SheetListItem) => fileList.push({ ...i, checked: false }));
 		loading.value = false;
 	} catch (error) {
 		loading.value = false;

@@ -10,6 +10,7 @@ interface User {
 interface SheetListItem {
 	favor: boolean;
 	operator: User;
+	checked: boolean; // 是否选中
 	owner: User;
 	workerbook: {
 		gridKey: string;
