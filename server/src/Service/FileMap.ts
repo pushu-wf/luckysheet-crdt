@@ -1,16 +1,15 @@
 import { Op } from "sequelize";
-import { FileMapModel, FileMapModelType } from "../Sequelize/Models/FileMap";
-import { UserModel, UserModelType } from "../Sequelize/Models/User";
-import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
 import { logger } from "../Utils/Logger";
+import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
+import { UserModel, UserModelType } from "../Sequelize/Models/User";
+import { FileMapModel, FileMapModelType } from "../Sequelize/Models/FileMap";
 
 // 定义关联查询返回结果类型
-
 type UniFileMapItemResult = {
-	isowner: boolean;
 	favor: boolean;
-	UserModel: UserModelType;
-	WorkerBookModel: WorkerBookModel;
+	OperatorUser: UserModelType;
+	OwnerUser: UserModelType;
+	WorkerBook: WorkerBookModel;
 };
 
 /**
@@ -31,23 +30,31 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 	// 处理查询条件
 	const searchParams =
 		filterType === "favor"
-			? { operator: user_uuid, favor: true }
+			? { operator: { [Op.eq]: user_uuid }, favor: { [Op.is]: true } }
 			: filterType === "share"
 			? {
-					operator: user_uuid,
-					isowner: false,
+					operator: { [Op.eq]: user_uuid },
+					owner: { [Op.ne]: user_uuid }, // 获取分享文件时，owner 不是 user_uuid
 			  }
 			: {
-					operator: user_uuid,
+					operator: { [Op.eq]: user_uuid },
 			  };
 	try {
 		const { count, rows } = await FileMapModel.findAndCountAll({
 			include: [
 				{
 					model: UserModel,
+					attributes: ["userid", "username", "avatar"],
+					as: "OperatorUser",
+				},
+				{
+					model: UserModel,
+					attributes: ["userid", "username", "avatar"],
+					as: "OwnerUser",
 				},
 				{
 					model: WorkerBookModel,
+					as: "WorkerBook",
 					// 如果是查询最近的7天记录，则需要 WorkerBookModel updateAt 字段在7天内
 					where:
 						filterType === "recently"
@@ -59,6 +66,7 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 							: undefined,
 				},
 			],
+			attributes: ["favor"],
 			where: searchParams,
 			limit,
 			offset,
@@ -68,15 +76,10 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 		const list = rows.map((i) => {
 			const item = i.toJSON() as UniFileMapItemResult;
 			return {
-				isowner: item.isowner,
 				favor: item.favor,
-				operator_id: item.UserModel.userid,
-				operator_name: item.UserModel.username,
-				operator_avatar: item.UserModel.avatar,
-				gridKey: item.WorkerBookModel.gridKey,
-				title: item.WorkerBookModel.title,
-				createdAt: item.WorkerBookModel.createdAt,
-				updatedAt: item.WorkerBookModel.updatedAt,
+				operator: item.OperatorUser,
+				owner: item.OwnerUser,
+				workerbook: item.WorkerBook,
 			};
 		});
 

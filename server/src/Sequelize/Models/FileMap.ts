@@ -8,7 +8,7 @@ import { DataTypes, InferAttributes, Model, Sequelize } from "sequelize";
 
 export class FileMapModel extends Model {
 	declare file_map_id?: string; // 文件映射表ID
-	declare isowner: boolean; // 是否文件拥有者
+	declare owner: string; // 文件拥有者
 	declare operator: string; // 文件操作者
 	declare gridKey: string; // 关联的 gridKey
 	declare favor?: boolean; // 是否收藏
@@ -23,11 +23,14 @@ export class FileMapModel extends Model {
 					primaryKey: true,
 					defaultValue: DataTypes.UUIDV4, // 默认使用 uuid 作为 主键ID
 				},
-				isowner: {
-					type: DataTypes.BOOLEAN,
-					allowNull: false,
-					comment: "是否文件拥有者",
-					defaultValue: false,
+				owner: {
+					type: DataTypes.STRING, // 类型
+					allowNull: false, // 非空
+					comment: "(文件拥有者)外键：关联 users 的 user_uuid,", // 描述
+					references: {
+						model: UserModel,
+						key: "user_uuid",
+					},
 				},
 				operator: {
 					type: DataTypes.STRING, // 类型
@@ -63,13 +66,20 @@ export class FileMapModel extends Model {
 		/**
 		 * 配置关联
 		 *  1. UserModel user_uuid
-		 *  2. FileMapModel operator --> user_uuid
-		 *  3. WorkerBookModel gridKey --> filemaps.gridKey
+		 *  2. FileMapModel operator --> user_uuid 涉及相同模型的多个关联
+		 *  3. FileMapModel owner --> user_uuid 涉及相同模型的多个关联
+		 *  4. WorkerBookModel gridKey --> filemaps.gridKey
 		 */
-		UserModel.hasMany(FileMapModel, { foreignKey: "operator" });
-		FileMapModel.belongsTo(UserModel, { foreignKey: "operator" });
 
-		FileMapModel.belongsTo(WorkerBookModel, { foreignKey: "gridKey" });
+		// A.hasMany(B) 关联意味着 A 和 B 之间存在一对多关系,外键在目标模型(B)中定义.
+		UserModel.hasMany(FileMapModel, { foreignKey: "operator" });
+		UserModel.hasMany(FileMapModel, { foreignKey: "owner" });
+		// A.belongsTo(B)关联意味着 A 和 B 之间存在一对一的关系,外键在源模型中定义(A).
+		FileMapModel.belongsTo(UserModel, { foreignKey: "operator", as: "OperatorUser" });
+		FileMapModel.belongsTo(UserModel, { foreignKey: "owner", as: "OwnerUser" });
+
+		// 映射表与文件表是典型的一对多关系，一个映射表只能对应一个文件，而一个文件可以对应多个映射表
+		FileMapModel.belongsTo(WorkerBookModel, { foreignKey: "gridKey", as: "WorkerBook" });
 		WorkerBookModel.hasMany(FileMapModel, { foreignKey: "gridKey" });
 	}
 }

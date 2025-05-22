@@ -32,7 +32,7 @@ async function createWorkerBook(req: Request, res: Response) {
 		lang: "zh",
 	});
 
-	// 创建完工作簿后，需要创建一条文件映射表记录 isowner = true
+	// 创建完工作簿后，需要创建一条文件映射表记录 owner = true
 	// 请求 user_uuid 作为外键
 	const user_uuid = await UserService.getUserUUID(userid);
 	if (!user_uuid) {
@@ -42,7 +42,7 @@ async function createWorkerBook(req: Request, res: Response) {
 
 	// 需要关联文件映射表 filemap
 	const filemap = await FileMapService.createFileMap({
-		isowner: true,
+		owner: user_uuid,
 		operator: user_uuid,
 		gridKey,
 	});
