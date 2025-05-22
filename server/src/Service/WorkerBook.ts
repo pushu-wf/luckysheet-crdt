@@ -3,9 +3,9 @@
  */
 
 import { logger } from "../Utils/Logger";
+import { FindOptions } from "sequelize";
 import { WorkerBookModel, WorkerBookModelType } from "../Sequelize/Models/WorkerBook";
 import { WorkerSheetModel, WorkerSheetModelType } from "../Sequelize/Models/WorkerSheet";
-import { FindOptions } from "sequelize";
 
 /**
  * 新增 workerBooks 记录
@@ -53,7 +53,6 @@ async function update(info: WorkerBookModelType) {
 /**
  * 删除 workerBooks 记录 - 注意：该表有外键关联，如果删除记录可能会导致其他业务表有问题，因此，提供 stage 参数，标记记录是否可用
  */
-async function del() {}
 
 /**
  * 查询 workerBooks 记录
@@ -80,7 +79,6 @@ async function findAll() {
 export const WorkerBookService = {
 	create,
 	update,
-	delete: del,
 	findOne,
 	findAll,
 };

@@ -1,8 +1,5 @@
-import {
-	HiddenAndLenModelType,
-	HiddenAndLenModel,
-} from "../Sequelize/Models/HiddenAndLen";
 import { logger } from "../Utils/Logger";
+import { HiddenAndLenModelType, HiddenAndLenModel } from "../Sequelize/Models/HiddenAndLen";
 
 /**
  * 创建隐藏记录
@@ -44,11 +41,7 @@ async function findConfig(worker_sheet_id: string) {
 }
 
 // 删除 hidden 记录
-async function deleteHidden(
-	worker_sheet_id: string,
-	config_type: string,
-	config_index: string
-) {
+async function deleteHidden(worker_sheet_id: string, config_type: string, config_index: string) {
 	try {
 		return await HiddenAndLenModel.destroy({
 			where: { worker_sheet_id, config_type, config_index },

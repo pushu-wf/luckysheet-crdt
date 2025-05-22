@@ -1,18 +1,15 @@
-import {
-	BorderInfoModel,
-	BorderInfoModelType
-} from '../Sequelize/Models/BorderInfo';
-import { logger } from '../Utils/Logger';
+import { logger } from "../Utils/Logger";
+import { BorderInfoModel, BorderInfoModelType } from "../Sequelize/Models/BorderInfo";
 
 /**
  * 查找是否存在边框
  * @param info
  * @returns
  */
-async function hasConfigBorder(info: BorderInfoModelType) {
+async function findOne(info: BorderInfoModelType) {
 	try {
 		return await BorderInfoModel.findOne({
-			where: info
+			where: info,
 		});
 	} catch (error) {
 		logger.error(error);
@@ -24,7 +21,7 @@ async function hasConfigBorder(info: BorderInfoModelType) {
  * @param info
  * @returns
  */
-async function createConfigBorder(info: BorderInfoModelType) {
+async function create(info: BorderInfoModelType) {
 	try {
 		return await BorderInfoModel.create(info);
 	} catch (error) {
@@ -37,10 +34,10 @@ async function createConfigBorder(info: BorderInfoModelType) {
  * @param info
  * @returns
  */
-async function updateConfigBorder(info: BorderInfoModelType) {
+async function update(info: BorderInfoModelType) {
 	try {
 		return await BorderInfoModel.update(info, {
-			where: { config_border_id: info.config_border_id }
+			where: { config_border_id: info.config_border_id },
 		});
 	} catch (error) {
 		logger.error(error);
@@ -52,7 +49,7 @@ async function updateConfigBorder(info: BorderInfoModelType) {
  * @param worker_sheet_id
  * @returns
  */
-async function findAllBorder(worker_sheet_id: string) {
+async function findAll(worker_sheet_id: string) {
 	try {
 		return await BorderInfoModel.findAll({ where: { worker_sheet_id } });
 	} catch (error) {
@@ -61,8 +58,8 @@ async function findAllBorder(worker_sheet_id: string) {
 }
 
 export const BorderInfoService = {
-	findAllBorder,
-	hasConfigBorder,
-	createConfigBorder,
-	updateConfigBorder
+	findAll,
+	findOne,
+	create,
+	update,
 };

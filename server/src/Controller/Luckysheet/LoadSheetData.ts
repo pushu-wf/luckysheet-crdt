@@ -121,7 +121,7 @@ async function parseCellData(worker_sheet_id: string, currentSheetData: WorkerSh
 	try {
 		const result = <CellDataItemType[]>[];
 
-		const cellDatas = await CellDataService.getCellData(worker_sheet_id);
+		const cellDatas = await CellDataService.findAll(worker_sheet_id);
 
 		cellDatas?.forEach((item) => {
 			const data = <CellDataModelType>item.dataValues;
@@ -202,7 +202,7 @@ async function parseConfigBorder(worker_sheet_id: string, currentSheetData: Work
 	try {
 		const result = <BorderInfoType[]>[];
 
-		const borders = await BorderInfoService.findAllBorder(worker_sheet_id);
+		const borders = await BorderInfoService.findAll(worker_sheet_id);
 
 		borders?.forEach((border) => {
 			const data = border.dataValues;

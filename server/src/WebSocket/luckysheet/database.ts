@@ -25,17 +25,7 @@
  *
  * 注意一点，对象中的i为当前sheet的index值，而不是order
  */
-import {
-	V,
-	CG,
-	RV,
-	DRC,
-	ARC,
-	SHA,
-	CHART,
-	MERGE,
-	CRDTDataType,
-} from "../../Interface/WebSocket";
+import { V, CG, RV, DRC, ARC, SHA, CHART, MERGE, CRDTDataType } from "../../Interface/WebSocket";
 import { isEmpty } from "../../Utils";
 import { logger } from "../../Utils/Logger";
 import { ImageService } from "../../Service/Image";
@@ -98,7 +88,7 @@ async function v(data: string) {
 		const cts = JSON.stringify(v.ct.s);
 
 		// 判断表内是否存在当前记录
-		const exist = await CellDataService.hasCellData(i, r, c);
+		const exist = await CellDataService.findOne(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -125,13 +115,13 @@ async function v(data: string) {
 
 		// 如果存在则更新
 		if (exist) {
-			await CellDataService.updateCellData({
+			await CellDataService.update({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
 		} else {
 			// 创建新的记录时，当前记录的 cell_data_id 由 sequelize 自动创建
-			await CellDataService.createCellData(info);
+			await CellDataService.create(info);
 		}
 	}
 
@@ -145,7 +135,7 @@ async function v(data: string) {
 		const ctt = v.ct.t;
 
 		// 判断表内是否存在当前记录
-		const exist = await CellDataService.hasCellData(i, r, c);
+		const exist = await CellDataService.findOne(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -172,13 +162,13 @@ async function v(data: string) {
 
 		// 如果存在则更新
 		if (exist) {
-			await CellDataService.updateCellData({
+			await CellDataService.update({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
 		} else {
 			// 创建新的记录时，当前记录的 cell_data_id 由 sequelize 自动创建
-			await CellDataService.createCellData(info);
+			await CellDataService.create(info);
 		}
 	}
 
@@ -186,7 +176,7 @@ async function v(data: string) {
 	// {"t":"v","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"v":null,"bg":"#ff0000"},"r":3,"c":2}
 	else if (v && v.v === null) {
 		// 判断 i r c 是否存在
-		const exist = await CellDataService.hasCellData(i, r, c);
+		const exist = await CellDataService.findOne(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -209,11 +199,11 @@ async function v(data: string) {
 
 		if (exist) {
 			// 如果存在则更新 - 注意全量的样式数据
-			await CellDataService.updateCellData({
+			await CellDataService.update({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
-		} else await CellDataService.createCellData(info);
+		} else await CellDataService.create(info);
 	}
 
 	// 场景三：剪切/粘贴到某个单元格 - 会触发两次广播（一次是删除，一次是创建）
@@ -287,7 +277,7 @@ async function rv(data: string) {
 			// "range":{"row":[4,4],"column":[0,1]}}
 			if ((item && item.v === null) || (item && item.v && item.m)) {
 				// i r c 先判断是否存在记录，存在则更新，不存在则创建
-				const exist = await CellDataService.hasCellData(i, r, c);
+				const exist = await CellDataService.findOne(i, r, c);
 
 				// 检查 item 是否为 null 或 undefined
 				const cellInfo = {
@@ -313,7 +303,7 @@ async function rv(data: string) {
 
 				if (exist) {
 					// 如果存在则更新 - 注意全量的样式数据
-					await CellDataService.updateCellData({
+					await CellDataService.update({
 						cell_data_id: exist.cell_data_id,
 						...cellInfo,
 						bg: cellInfo.bg,
@@ -322,7 +312,7 @@ async function rv(data: string) {
 						fc: cellInfo.fc,
 						ff: <string>cellInfo.ff,
 					});
-				} else await CellDataService.createCellData(cellInfo);
+				} else await CellDataService.create(cellInfo);
 			}
 
 			// 复制范围单元格，有样式与删除范围单元格触发的事件参数是一样的，目前未解决BUG
@@ -362,12 +352,7 @@ async function cg(data: string) {
 
 	// 修改行高列宽
 	// {"t":"cg","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"4":100},"k":"rowlen"}
-	if (
-		k === "rowhidden" ||
-		k === "colhidden" ||
-		k === "rowlen" ||
-		k === "columnlen"
-	) {
+	if (k === "rowhidden" || k === "colhidden" || k === "rowlen" || k === "columnlen") {
 		for (const key in v) {
 			if (Object.prototype.hasOwnProperty.call(v, key)) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -414,10 +399,10 @@ async function cg(data: string) {
 				col_start: range[0].column[0],
 				col_end: range[0].column[1],
 			};
-			const exist = await BorderInfoService.hasConfigBorder(info);
+			const exist = await BorderInfoService.findOne(info);
 			if (exist) {
 				// 更新
-				await BorderInfoService.updateConfigBorder({
+				await BorderInfoService.update({
 					config_border_id: exist.config_border_id,
 					...info,
 					color,
@@ -425,7 +410,7 @@ async function cg(data: string) {
 				});
 			} else {
 				// 创建新的边框记录
-				await BorderInfoService.createConfigBorder({
+				await BorderInfoService.create({
 					...info,
 					style: Number(style),
 					color,
@@ -660,7 +645,7 @@ async function arc(data: string) {
 				ctt: <string>cellItem?.ct?.t,
 				ps: <string>cellItem?.ps?.value,
 			};
-			await CellDataService.createCellData(celldata);
+			await CellDataService.create(celldata);
 		}
 	}
 }
@@ -745,7 +730,7 @@ async function sha(data: string, gridKey: string) {
 			};
 
 			// 执行插入操作
-			await CellDataService.createCellData(newCellDataItem);
+			await CellDataService.create(newCellDataItem);
 		}
 	}
 
@@ -779,7 +764,7 @@ async function sha(data: string, gridKey: string) {
 					b_style: item.value?.b?.style,
 					b_color: item.value?.b?.color,
 				};
-				await BorderInfoService.createConfigBorder(newBorderInfo);
+				await BorderInfoService.create(newBorderInfo);
 			} else if (item.rangeType === "range") {
 			}
 		}
@@ -973,13 +958,13 @@ async function copySheetData(copyIndex: string, newSheetIndex: string) {
 	// ==> newSheetIndex Sheet_5330eTr735lz_1743664108612
 	// 处理思路：先 查询当前被复制 sheet 的所有数据，然后批量插入到新 sheet 中
 	// borders
-	const copySheetBorder = await BorderInfoService.findAllBorder(copyIndex);
+	const copySheetBorder = await BorderInfoService.findAll(copyIndex);
 	if (copySheetBorder?.length) {
 		for (let i = 0; i < copySheetBorder.length; i++) {
 			const item = copySheetBorder[i].dataValues;
 			delete item.config_border_id;
 			// 批量插入到新 sheet 中
-			await BorderInfoService.createConfigBorder({
+			await BorderInfoService.create({
 				...item,
 				worker_sheet_id: newSheetIndex,
 			});
@@ -987,13 +972,13 @@ async function copySheetData(copyIndex: string, newSheetIndex: string) {
 	}
 
 	// celldatas
-	const copySheetCellData = await CellDataService.getCellData(copyIndex);
+	const copySheetCellData = await CellDataService.findAll(copyIndex);
 	if (copySheetCellData?.length) {
 		for (let i = 0; i < copySheetCellData.length; i++) {
 			const item = copySheetCellData[i].dataValues;
 			delete item.cell_data_id;
 			// 批量插入到新 sheet 中
-			await CellDataService.createCellData({
+			await CellDataService.create({
 				...item,
 				worker_sheet_id: newSheetIndex,
 			});

@@ -1,5 +1,5 @@
-import { logger } from '../Utils/Logger';
-import { ImageModel, ImageModelType } from '../Sequelize/Models/Image';
+import { logger } from "../Utils/Logger";
+import { ImageModel, ImageModelType } from "../Sequelize/Models/Image";
 
 /**
  * 先删除当前 sheet 的所有图片
