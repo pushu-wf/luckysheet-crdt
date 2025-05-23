@@ -25,17 +25,7 @@
  *
  * 注意一点，对象中的i为当前sheet的index值，而不是order
  */
-import {
-	V,
-	CG,
-	RV,
-	DRC,
-	ARC,
-	SHA,
-	CHART,
-	MERGE,
-	CRDTDataType,
-} from "../../Interface/WebSocket";
+import { V, CG, RV, DRC, ARC, SHA, CHART, MERGE, CRDTDataType } from "../../Interface/WebSocket";
 import { isEmpty } from "../../Utils";
 import { logger } from "../../Utils/Logger";
 import { ImageService } from "../../Service/Image";
@@ -50,6 +40,7 @@ import { CellDataModelType } from "../../Sequelize/Models/CellData";
 import { BorderInfoModelType } from "../../Sequelize/Models/BorderInfo";
 import { WorkerSheetModelType } from "../../Sequelize/Models/WorkerSheet";
 import { HiddenAndLenModelType } from "../../Sequelize/Models/HiddenAndLen";
+import { CalcChainService } from "../../Service/CalcChain";
 
 /**
  * 协同消息映射的操作
@@ -225,8 +216,24 @@ async function v(data: string) {
 
 	// 场景四： 删除单元格内容
 	// {"t":"v","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"ct":{"fa":"General","t":"n"}},"r":5,"c":0}
-	else if (v && !v.v && !v.m) {
+	else if (v && typeof v === "object" && !v.v && !v.m) {
 		await CellDataService.deleteCellData(i, r, c); // 删除记录
+	}
+
+	// 场景五：公式链操作时，会直接生成数值
+	// {"t":"v","i":"61f708fc-b159-4950-afab-176a81f4e1f6","v":6,"r":0,"c":2}
+	else if (v && typeof v === "number") {
+		// console.log(" ==> 监听到了");
+		// 更新 r c 的value 值
+		const cell = await CellDataService.hasCellData(i, r, c);
+		await CellDataService.updateCellData({
+			cell_data_id: cell?.cell_data_id,
+			worker_sheet_id: i,
+			r,
+			c,
+			v: v,
+			m: v,
+		});
 	}
 }
 
@@ -362,12 +369,7 @@ async function cg(data: string) {
 
 	// 修改行高列宽
 	// {"t":"cg","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"4":100},"k":"rowlen"}
-	if (
-		k === "rowhidden" ||
-		k === "colhidden" ||
-		k === "rowlen" ||
-		k === "columnlen"
-	) {
+	if (k === "rowhidden" || k === "colhidden" || k === "rowlen" || k === "columnlen") {
 		for (const key in v) {
 			if (Object.prototype.hasOwnProperty.call(v, key)) {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -547,9 +549,41 @@ async function all(data: string) {
 	}
 }
 
-// 函数链操作
+// 函数链操作 r c index func color parent children times
 async function fc(data: string) {
-	console.log("==> fc", data);
+	// console.log("==> fc", data);
+	// https://dream-num.github.io/LuckysheetDocs/zh/guide/operate.html#%E5%87%BD%E6%95%B0%E9%93%BE%E6%93%8D%E4%BD%9C
+	// fc {"t":"fc","i":"4298e271-548d-4207-a826-ecececceef6f","v":"{\"r\":0,\"c\":2,\"index\":\"4298e271-548d-4207-a826-ecececceef6f\"}","op":"add","pos":0}
+	//  {"t":"fc","i":"4298e271-548d-4207-a826-ecececceef6f","v":"{\"r\":6,\"c\":2,\"index\":\"4298e271-548d-4207-a826-ecececceef6f\",\"func\":[true,122,\"=A7+B7\"]}","op":"add","pos":0}
+	logger.info("[CRDT DATA]:", data);
+	const { t, i, v, op } = <CRDTDataType<string>>JSON.parse(data);
+	if (t !== "fc") return logger.error("t is not fc.");
+	if (isEmpty(i)) return logger.error("i is undefined.");
+
+	// 请注意，此处的 v 是字符串
+	const item = JSON.parse(v);
+	const { r, c, index, func } = item;
+
+	// 如果是 del 直接删除记录
+	// {"t":"fc","i":"61f708fc-b159-4950-afab-176a81f4e1f6","v":null,"op":"del","pos":0}
+	if (op === "del") {
+		await CalcChainService.deleteCalcChain(index, r, c);
+		return;
+	}
+
+	// 判断是否存在该记录
+	const calcChain = await CalcChainService.findOne(index, r, c);
+	// 存在则更新，不存在则创建
+	if (calcChain) {
+		await CalcChainService.update(calcChain.calcchain_id!, JSON.stringify(func));
+	} else {
+		await CalcChainService.create({
+			worker_sheet_id: index,
+			r,
+			c,
+			func: JSON.stringify(func),
+		});
+	}
 }
 
 // 删除的该行，可能会引起其他的一些变化，因此，也会触发 all 事件类型

@@ -5,6 +5,7 @@ import {
 	type BorderInfoType,
 	type CellDataItemType,
 	type WorkerSheetItemType,
+	CalcChainType,
 } from "../../Interface/luckysheet";
 import { DB } from "../../Sequelize";
 import { getURLQuery } from "../../Utils";
@@ -19,6 +20,7 @@ import { WorkerSheetService } from "../../Service/WorkerSheet";
 import { HiddenAndLenService } from "../../Service/HiddenAndLen";
 import { CellDataModelType } from "../../Sequelize/Models/CellData";
 import { WorkerSheetModelType } from "../../Sequelize/Models/WorkerSheet";
+import { CalcChainService } from "../../Service/CalcChain";
 
 /**
  * loadSheetData loadUrl 加载数据
@@ -76,6 +78,9 @@ export async function loadSheetData(req: Request, res: Response) {
 			// 8. 查询 image 数据
 			await parseImages(worker_sheet_id, currentSheetData);
 
+			// 9. 解析公式链
+			await parseCalcChain(worker_sheet_id, currentSheetData);
+
 			result.push(currentSheetData);
 		}
 
@@ -109,6 +114,7 @@ function getSheetDataTemp(item: WorkerSheetModelType) {
 		},
 		images: [], //图片
 		chart: [], //图表配置
+		calcChain: [], // 公式链
 	};
 
 	return currentSheetData;
@@ -146,10 +152,7 @@ function getEmptyData() {
 /**
  * parseCellData 解析 cellData 数据
  */
-async function parseCellData(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseCellData(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <CellDataItemType[]>[];
 
@@ -202,10 +205,7 @@ async function parseCellData(
 /**
  * parseMerge 解析合并单元格
  */
-async function parseMerge(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseMerge(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result: MergeType = {};
 
@@ -217,9 +217,7 @@ async function parseMerge(
 			result[`${r}_${c}`] = merge.dataValues;
 
 			// 配置 celldata mc 属性
-			const currentMergeCell = currentSheetData.celldata?.find(
-				(i) => i.r == r && i.c == c
-			);
+			const currentMergeCell = currentSheetData.celldata?.find((i) => i.r == r && i.c == c);
 
 			if (currentMergeCell) currentMergeCell.v.mc = merge.dataValues;
 		});
@@ -235,10 +233,7 @@ async function parseMerge(
 /**
  * parseConfigBorder 解析边框
  */
-async function parseConfigBorder(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseConfigBorder(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <BorderInfoType[]>[];
 
@@ -282,10 +277,7 @@ async function parseConfigBorder(
 /**
  * 解析隐藏行列和行高列宽
  */
-async function parseHiddenAndLen(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseHiddenAndLen(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const dataArray = await HiddenAndLenService.findConfig(worker_sheet_id);
 		dataArray?.forEach((item) => {
@@ -312,10 +304,7 @@ async function parseHiddenAndLen(
 /**
  * parseImages 解析图片
  */
-async function parseImages(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseImages(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result = <ImagesType[]>[];
 
@@ -363,10 +352,7 @@ async function parseImages(
  * parseCharts 解析图表数据
  */
 
-async function parseCharts(
-	worker_sheet_id: string,
-	currentSheetData: WorkerSheetItemType
-) {
+async function parseCharts(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result: ChartType[] = [];
 		const charts = await ChartService.findAllChart(worker_sheet_id);
@@ -386,6 +372,31 @@ async function parseCharts(
 		});
 
 		currentSheetData.chart = result;
+		return Promise.resolve();
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+/**
+ * parseCalcChain 解析公式连
+ */
+async function parseCalcChain(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
+	try {
+		const result: CalcChainType[] = [];
+		const charts = await CalcChainService.findAll(worker_sheet_id);
+		charts?.forEach((chart) => {
+			const data = chart.dataValues;
+			result.push({
+				r: data.r,
+				c: data.c,
+				index: data.worker_sheet_id,
+				func: JSON.parse(data.func),
+				color: "w",
+			});
+		});
+
+		currentSheetData.calcChain = result;
 		return Promise.resolve();
 	} catch (error) {
 		logger.error(error);

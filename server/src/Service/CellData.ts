@@ -23,7 +23,6 @@ async function hasCellData(worker_sheet_id: string, r: number, c: number) {
 		});
 	} catch (error) {
 		logger.error(error);
-		return null;
 	}
 }
 
@@ -46,11 +45,7 @@ async function createCellData(info: CellDataModelType) {
 	}
 }
 
-async function deleteCellDataRC(
-	worker_sheet_id: string,
-	index: number,
-	rc: "r" | "c"
-) {
+async function deleteCellDataRC(worker_sheet_id: string, index: number, rc: "r" | "c") {
 	try {
 		return await CellDataModel.destroy({
 			where: { worker_sheet_id, [rc]: index },
@@ -74,12 +69,7 @@ async function deleteCellData(worker_sheet_id: string, r: number, c: number) {
 /**
  * 删除行列
  */
-async function updateCellDataRC(payload: {
-	worker_sheet_id: string;
-	index: number;
-	len: number;
-	update_type: "r" | "c";
-}) {
+async function updateCellDataRC(payload: { worker_sheet_id: string; index: number; len: number; update_type: "r" | "c" }) {
 	// {"t":"drc","i":"2b62e1f2-7f7f-4889-b34d-007fe7277364","v":{"index":0,"len":1},"rc":"r"}
 	const { worker_sheet_id, index, len, update_type } = payload;
 
@@ -108,12 +98,7 @@ async function updateCellDataRC(payload: {
 /**
  * 增加行列
  */
-async function addCellDataRC(payload: {
-	worker_sheet_id: string;
-	index: number;
-	len: number;
-	update_type: "r" | "c";
-}) {
+async function addCellDataRC(payload: { worker_sheet_id: string; index: number; len: number; update_type: "r" | "c" }) {
 	const { worker_sheet_id, index, len, update_type } = payload;
 	// 在上面加一列跟在下面加一列的区别：就是标记的这一行是否也跟着变化
 	try {
@@ -142,6 +127,17 @@ async function addCellDataRC(payload: {
 	}
 }
 
+/**
+ * 存储函数链操作
+ */
+async function createFC(worker_sheet_id: string, r: number, c: number, calcChain: string) {
+	try {
+		await CellDataModel.update({ calcChain }, { where: { worker_sheet_id, r, c } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const CellDataService = {
 	getCellData,
 	hasCellData,
@@ -151,4 +147,5 @@ export const CellDataService = {
 	updateCellDataRC,
 	deleteCellDataRC,
 	addCellDataRC,
+	createFC,
 };
