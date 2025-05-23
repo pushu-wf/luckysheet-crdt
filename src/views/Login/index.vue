@@ -34,13 +34,14 @@
 					ref="registerFormRef"
 					@goto-login="formState = 'login'"
 					@open-rrivacy-modal="privacyModalRef.show()"
-					v-if="formState === 'register'" />
+					v-if="formState === 'register'"
+				/>
 				<LoginForm @goto-register="formState = 'register'" v-else-if="formState === 'login'" />
 			</transition>
 		</div>
 
 		<!-- 隐私协议模态框 -->
-		<PrivacyModal ref="privacyModalRef" @agree="(isAgree) => registerFormRef.togglePrivacy(isAgree)" />
+		<PrivacyModal ref="privacyModalRef" @agree="(isAgree:boolean) => registerFormRef.togglePrivacy(isAgree)" />
 	</div>
 </template>
 <script setup lang="ts">
@@ -57,7 +58,7 @@ const privacyModalRef = ref();
 const registerFormRef = ref();
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .login-container {
 	width: 100%;
 	height: 100%;

@@ -14,7 +14,7 @@ const routes = [
 	},
 	{
 		path: "/home",
-		component: () => import("../views/Home/index.vue"),
+		component: () => import("../views/Pages/index.vue"),
 	},
 	{
 		path: "/excel",
@@ -23,10 +23,7 @@ const routes = [
 ];
 
 // 路由实例
-const router = createRouter({
-	routes,
-	history: createWebHistory(),
-});
+const router = createRouter({ routes, history: createWebHistory() });
 
 // 拦截路由
 router.beforeEach((to, _from, next) => {

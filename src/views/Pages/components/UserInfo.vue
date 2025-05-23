@@ -1,6 +1,6 @@
 <template>
 	<a-modal v-model:open="modalVisible" title="" width="100%" :footer="null" :closable="false" wrap-class-name="full-modal">
-		<a-page-header title="个人信息" sub-title="温馨提示: 部分数据为虚拟数据" @back="modalVisible = false" />
+		<a-page-header title="个人信息" sub-title="温馨提示: 页面为虚拟数据" @back="modalVisible = false" />
 		<div class="user-info-container">
 			<!-- 左右布局 -->
 			<div class="user-info-left">
@@ -19,7 +19,7 @@
 							<a-input v-model:value="userInfoForm.username" disabled></a-input>
 						</a-form-item>
 						<a-form-item label="密码">
-							<a-input v-model:value="userInfoForm.password" type="password"></a-input>
+							<a-input v-model:value="userInfoForm.password" type="password" disabled></a-input>
 						</a-form-item>
 						<a-form-item label="邮箱">
 							<a-input v-model:value="userInfoForm.email" disabled></a-input>
@@ -48,12 +48,7 @@ const userInfoForm = reactive({
 	password: "123456",
 	email: "123456@qq.com",
 	phone: "12345678901",
-	role: "admin",
-	status: "normal",
-	avatar: "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
-	sex: "male",
-	birthday: "1990-01-01",
-	address: "北京市海淀区中关村",
+	avatar: "xxx",
 });
 
 // 打开用户信息弹窗
@@ -93,12 +88,15 @@ defineExpose({ open });
 .user-info-right {
 	width: 48%;
 	display: flex;
-	justify-content: space-between;
 	flex-wrap: wrap;
-	& > div {
+	justify-content: space-between;
+	& > div:nth-child(3),
+	& > div:nth-child(4) {
 		margin-top: auto;
+	}
+	& > div {
 		width: calc(50% - 10px);
-		height: calc(50% - 20px);
+		height: calc(50% - 10px);
 		border: solid 1px #e4e4e7;
 		border-radius: 8px;
 		overflow: hidden;

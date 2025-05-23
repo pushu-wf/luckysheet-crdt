@@ -1,5 +1,5 @@
 <template>
-	<a-form :model="form" ref="formRef" :rules="formRules">
+	<a-form :model="form" ref="formRef" :rules="formRules" @finish="loginHandle">
 		<a-form-item name="userid">
 			<a-input autocomplete="off" placeholder="userid" v-model:value="form.userid">
 				<template #prefix>
@@ -35,7 +35,7 @@
 			</div>
 		</a-form-item>
 		<a-form-item>
-			<a-button type="primary" style="width: 100%" @click="loginHandle">登 录</a-button>
+			<a-button type="primary" style="width: 100%" html-type="submit">登 录</a-button>
 		</a-form-item>
 	</a-form>
 </template>
@@ -47,7 +47,7 @@ import { API_login } from "../../../axios";
 import { onMounted, ref, toRaw } from "vue";
 import { localForage } from "../../../localforage";
 import { FormInstance, message, theme } from "ant-design-vue";
-import { useLoginFormHook } from "../../../hooks/login-form";
+import { useAntFormHook } from "../../../hooks/login-form";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
 
@@ -57,7 +57,7 @@ const { token } = theme.useToken();
 const emit = defineEmits(["gotoRegister", "forgetPassword"]);
 
 // 结构登陆表单 hooks
-const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
+const { form, formRules, resetForm, validateForm, setVarificationCode } = useAntFormHook();
 
 // 表单 dom ref 做表单校验
 const formRef = ref<FormInstance>();
@@ -89,7 +89,7 @@ async function loginHandle() {
 		// 跳转到首页
 		router.push("/home");
 	} catch (error) {
-		console.log(" ==> ", error);
+		console.error(error);
 		resetForm(formRef);
 	}
 }

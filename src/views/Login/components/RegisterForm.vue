@@ -1,5 +1,5 @@
 <template>
-	<a-form :model="form" ref="formRef" :rules="formRules" style="max-width: 600px">
+	<a-form :model="form" ref="formRef" :rules="formRules" @finish="registerHandle">
 		<a-form-item name="userid">
 			<a-input autocomplete="off" placeholder="userid" v-model:value="form.userid">
 				<template #prefix>
@@ -38,7 +38,7 @@
 			</div>
 		</a-form-item>
 		<a-form-item>
-			<a-button type="primary" style="width: 100%" @click="registerHandle">注 册</a-button>
+			<a-button type="primary" style="width: 100%" html-type="submit">注 册</a-button>
 		</a-form-item>
 	</a-form>
 </template>
@@ -48,7 +48,7 @@ import { md5 } from "../../../utils";
 import { onMounted, ref, toRaw } from "vue";
 import { API_register } from "../../../axios";
 import { FormInstance, message, theme } from "ant-design-vue";
-import { useLoginFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
+import { useAntFormHook } from "../../../hooks/login-form"; // 引入 login form hooks
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
 
@@ -58,7 +58,7 @@ const { token } = theme.useToken();
 const emit = defineEmits(["gotoLogin", "openRrivacyModal"]);
 
 // 解构 register form hooks
-const { form, formRules, resetForm, validateForm, setVarificationCode } = useLoginFormHook();
+const { form, formRules, resetForm, validateForm, setVarificationCode } = useAntFormHook();
 
 // 表单 dom ref
 const formRef = ref<FormInstance>();

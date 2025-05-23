@@ -129,6 +129,8 @@ const common_colors = {
 	// 浮层的背景蒙层颜色
 	colorBgMask: "rgba(0, 0, 0, 0.45)",
 };
+
+// Ant Config Provide Theme
 export const configProvideTheme = {
 	token: {
 		wireframe: true,

@@ -17,6 +17,7 @@ body,
 	margin: 2px 0;
 }
 
+/* 全屏模态框 */
 .full-modal .ant-modal {
 	max-width: 100%;
 	top: 0;
