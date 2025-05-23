@@ -4,7 +4,7 @@
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
 
-		<a-button type="primary" @click="createFileVisible = true" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
+		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
 		<a-button type="default" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
 	</div>
 	<div class="choose-files">
@@ -22,11 +22,11 @@
 
 	<!-- 新建文件弹窗 -->
 	<a-modal v-model:open="createFileVisible" title="创建工作簿" okText="创建" cancelText="取消" @ok="createFileConfirm">
-		<a-input placeholder="请输入工作簿名称" v-model:value="createFileName" />
+		<a-input placeholder="请输入工作簿名称" ref="createFileNameRef" allowClear v-model:value="createFileName" />
 	</a-modal>
 </template>
 <script setup lang="ts">
-import { ref, h, watch } from "vue";
+import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
 import { API_createWorkerBook } from "../../../axios";
 import { PlusOutlined, CloudUploadOutlined, BranchesOutlined, CloudDownloadOutlined, DeleteOutlined } from "@ant-design/icons-vue";
@@ -56,6 +56,17 @@ watch(
 const createFileVisible = ref(false);
 // 新建工作簿名称
 const createFileName = ref("");
+
+// 创建文件输入框
+const createFileNameRef = ref();
+
+// 打卡创建文件模态框
+function openCreateFileModal() {
+	createFileVisible.value = true;
+	nextTick(() => {
+		createFileNameRef.value.focus();
+	});
+}
 // 新建文件确认回调
 async function createFileConfirm() {
 	if (!createFileName.value) message.warn("请输入工作簿名称");
