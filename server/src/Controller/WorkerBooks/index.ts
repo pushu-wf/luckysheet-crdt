@@ -140,6 +140,21 @@ async function deleteFile(req: Request, res: Response) {
 }
 
 /**
+ * 文件重命名
+ */
+async function renameFile(req: Request, res: Response) {
+	const { title, gridKey } = req.body;
+	if (!gridKey || !title) {
+		res.status(400).json({ code: 400, message: "gridKey | title 缺失" });
+		return;
+	}
+
+	await WorkerBookService.update({ gridKey, title });
+
+	res.status(200).json({ code: 200, message: "重命名成功" });
+}
+
+/**
  * 工作簿相关控制类 - WorkerBooks  Controller
  */
-export { createWorkerBook, getWorkerBook, getFileList, deleteFile };
+export { createWorkerBook, getWorkerBook, getFileList, deleteFile, renameFile };

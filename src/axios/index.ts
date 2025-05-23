@@ -71,3 +71,12 @@ export const API_deleteFile = (data: { filemapid: string; gridKey: string }) => 
 		data,
 	});
 };
+
+// 文件重命名
+export const API_renameFile = (data: { gridKey: string; newName: string }) => {
+	return fetch({
+		url: "/luckysheet/renameFile",
+		method: "POST",
+		data: { gridKey: data.gridKey, title: data.newName },
+	});
+};

@@ -21,5 +21,8 @@ routes.post("/getFileList", Controller.getFileList);
 // 删除文件
 routes.post("/deleteFile", Controller.deleteFile);
 
+// 重命名
+routes.post("/renameFile", Controller.renameFile);
+
 // 模块化的路由，直接调用 routes.use() 即可
 export const LuckySheetRouter = routes;

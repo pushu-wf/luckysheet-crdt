@@ -30,9 +30,9 @@
 						<EllipsisOutlined />
 						<template #overlay>
 							<a-menu @click="(e:MenuProps['onClick']) => handleSheetOperate(e, item)">
-								<a-menu-item key="open">
-									<FileAddOutlined />
-									新窗口打开
+								<a-menu-item key="rename">
+									<FormOutlined />
+									文件重命名
 								</a-menu-item>
 								<a-divider />
 								<a-menu-item key="share">
@@ -61,16 +61,26 @@
 		<a-skeleton :loading="loading" active :rows="5"> </a-skeleton>
 		<a-empty v-if="!loading && !fileList.length" description="暂无数据" />
 	</a-list>
+
+	<!-- 重命名弹窗 -->
+	<a-modal v-model:open="renameModalVisible" title="重命名文件" okText="重命名" cancelText="取消" @ok="renameConfirm">
+		<a-input
+			placeholder="请输入工作簿名称"
+			ref="renameInputRef"
+			allowClear
+			v-model:value="renameInputValue"
+			@pressEnter="renameConfirm" />
+	</a-modal>
 </template>
 
 <script setup lang="ts">
 import { message, Modal, theme } from "ant-design-vue";
-import { API_getFileList } from "../../../axios";
+import { API_getFileList, API_renameFile } from "../../../axios";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { SheetListItem } from "../../../interface";
-import { ref, h, onMounted, reactive, toRaw, watch, createVNode } from "vue";
+import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
-import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
+import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
 // 有些数据需要外部传入
@@ -85,6 +95,17 @@ const loading = ref(true);
 
 // 是否全选
 const checkedAll = ref(false);
+
+// 重命名模态框
+const renameModalVisible = ref(false);
+
+// 重命名输入框
+const renameInputRef = ref();
+
+// 重命名输入框绑定值
+const renameInputValue = ref("");
+// 当前重命名的 gridKey
+const renameGridKey = ref("");
 
 // 分页器
 const pagination = {
@@ -140,6 +161,27 @@ async function toggleFavor(item: SheetListItem) {
 	}
 }
 
+// 重命名文件
+async function renameConfirm() {
+	if (!renameInputValue.value) return message.warn("请输入文件名称");
+
+	try {
+		const { data } = await API_renameFile({ gridKey: renameGridKey.value, newName: renameInputValue.value });
+		if (data.code === 200) {
+			message.success("重命名成功");
+			const current = fileList.find((i) => i.workerbook.gridKey === renameGridKey.value);
+			if (!current) return;
+			current.workerbook.title = renameInputValue.value;
+
+			renameModalVisible.value = false;
+			renameInputValue.value = "";
+			renameGridKey.value = "";
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // 删除文件
 async function handleDeleteFile(item: SheetListItem) {
 	Modal.confirm({
@@ -165,14 +207,19 @@ async function handleDeleteFile(item: SheetListItem) {
 async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) {
 	// @ts-ignore
 	const { key } = e!;
-	// open
+
 	// share
 	// export
 
-	if (key === "favor") {
-		toggleFavor(item);
-	} else if (key === "delete") {
-		handleDeleteFile(item);
+	if (key === "favor") toggleFavor(item);
+	else if (key === "delete") handleDeleteFile(item);
+	else if (key === "rename") {
+		renameModalVisible.value = true;
+		renameInputValue.value = item.workerbook.title;
+		renameGridKey.value = item.workerbook.gridKey;
+		nextTick(() => {
+			renameInputRef.value.focus();
+		});
 	}
 }
 
