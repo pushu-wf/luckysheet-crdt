@@ -4,7 +4,7 @@
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
 			<ButtonList :checkedNumber="checkedNumber" />
-			<fileList />
+			<fileList @updateCheckedNumber="(number:number) => (checkedNumber = number)" />
 		</div>
 		<div class="pages-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>

@@ -2,7 +2,7 @@
 	<a-list bordered :pagination="pagination" :data-source="fileList">
 		<template #header>
 			<div class="sheet-header">
-				<a-checkbox @change="toggleCheckedAll"></a-checkbox>
+				<a-checkbox @change="toggleCheckedAll" v-model:checked="checkedAll"></a-checkbox>
 				<span class="sheet-filename">文件名</span>
 				<span class="sheet-createtime">创建时间</span>
 				<span class="sheet-updatetime">更新时间</span>
@@ -68,7 +68,7 @@ import { message, theme } from "ant-design-vue";
 import { API_getFileList } from "../../../axios";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { SheetListItem } from "../../../interface";
-import { ref, h, onMounted, reactive, toRaw } from "vue";
+import { ref, h, onMounted, reactive, toRaw, watch } from "vue";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
@@ -78,10 +78,15 @@ const { filterType } = defineProps({
 	filterType: { type: String, default: "all" },
 });
 
+const emit = defineEmits(["updateCheckedNumber"]);
+
 const { token } = theme.useToken();
 
 // 是否正在加载
 const loading = ref(true);
+
+// 是否全选
+const checkedAll = ref(false);
 
 // 分页器
 const pagination = {
@@ -96,6 +101,23 @@ const pagination = {
 
 // 列表数据
 const fileList: SheetListItem[] = reactive([]);
+
+// 监听数据列表选中状态 - 向上触发实现 buttonList 组件的 checkedNumber 更新
+watch(
+	() => fileList,
+	(newVal) => {
+		const checkedNumber = newVal.filter((item) => item.checked).length;
+		// 如果有被选中，则向上触发事件
+		emit("updateCheckedNumber", checkedNumber);
+		// 如果当前列表的长度 === 选中的列表长度，则全选状态为 true
+		if (newVal.length === checkedNumber) {
+			checkedAll.value = true;
+		} else {
+			checkedAll.value = false;
+		}
+	},
+	{ deep: true }
+);
 
 // 切换全选状态
 function toggleCheckedAll(e: Event) {
@@ -152,6 +174,7 @@ async function getFileList() {
 		loading.value = true;
 		fileList.length = 0;
 		pagination.total = 0;
+
 		const { data } = await API_getFileList({
 			current: pagination.current,
 			pageSize: pagination.pageSize,
