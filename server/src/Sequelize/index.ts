@@ -3,17 +3,18 @@
  *  导出唯一实例，需要提供判断数据库连接是否正常的方法
  */
 
-import { Sequelize } from 'sequelize';
-import { logger } from '../Utils/Logger';
-import { ImageModel } from './Models/Image';
-import { MergeModel } from './Models/Merge';
-import { ChartModel } from './Models/Chart';
-import { SQL_CONFIG } from '../Config/index';
-import { CellDataModel } from './Models/CellData';
-import { BorderInfoModel } from './Models/BorderInfo';
-import { WorkerBookModel } from './Models/WorkerBook';
-import { WorkerSheetModel } from './Models/WorkerSheet';
-import { HiddenAndLenModel } from './Models/HiddenAndLen';
+import { Sequelize } from "sequelize";
+import { logger } from "../Utils/Logger";
+import { ImageModel } from "./Models/Image";
+import { MergeModel } from "./Models/Merge";
+import { ChartModel } from "./Models/Chart";
+import { SQL_CONFIG } from "../Config/index";
+import { CellDataModel } from "./Models/CellData";
+import { BorderInfoModel } from "./Models/BorderInfo";
+import { WorkerBookModel } from "./Models/WorkerBook";
+import { WorkerSheetModel } from "./Models/WorkerSheet";
+import { HiddenAndLenModel } from "./Models/HiddenAndLen";
+import { CalcChainModel } from "./Models/CalcChain";
 
 class DataBase {
 	private _connected: boolean = false; // 连接状态
@@ -31,30 +32,28 @@ class DataBase {
 		const { port, host, database, user, password, enable } = SQL_CONFIG;
 
 		// 禁用数据库
-		if (!enable) return logger.warn('🚫 数据库服务已禁用！');
+		if (!enable) return logger.warn("🚫 数据库服务已禁用！");
 
 		// 创建连接
 		this._sequelize = new Sequelize(database, user, password, {
 			port,
 			host,
-			dialect: 'mysql',
-			logging: SQL_CONFIG.logger
-				? (sql: string) => logger.debug(sql)
-				: false,
-			logQueryParameters: true
+			dialect: "mysql",
+			logging: SQL_CONFIG.logger ? (sql: string) => logger.debug(sql) : false,
+			logQueryParameters: true,
 		});
 
 		// 测试连接
 		try {
 			await this._sequelize.authenticate();
-			logger.info('✅️ Successfully connected to the database!');
+			logger.info("✅️ Successfully connected to the database!");
 			this._connected = true;
 
 			/** 连接成功后，进行模型注册 */
 			this.registerModule();
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			logger.error('🚫 Failed to connect to the database!');
+			logger.error("🚫 Failed to connect to the database!");
 			this._connected = false;
 			this._sequelize = null;
 		}
@@ -96,6 +95,7 @@ class DataBase {
 		HiddenAndLenModel.registerModule(this._sequelize);
 		ImageModel.registerModule(this._sequelize);
 		ChartModel.registerModule(this._sequelize);
+		CalcChainModel.registerModule(this._sequelize);
 	}
 }
 
