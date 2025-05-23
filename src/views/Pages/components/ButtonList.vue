@@ -3,21 +3,35 @@
 		<a-radio-group v-model:value="filterType" button-style="solid">
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
-
 		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
 		<a-button type="default" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
 	</div>
 	<div class="choose-files">
-		<span v-show="checkedNumber">已选择 {{ checkedNumber }} 个文件</span>
-		<a-button type="default" size="small" :disabled="!checkedNumber" style="margin-left: auto" :icon="h(BranchesOutlined)">
-			共享
+		<span v-show="checkedNumber">
+			已选择 <code>{{ checkedNumber }}</code> 个文件
+		</span>
+		<a-button
+			v-for="item in outerFileOperateBtns"
+			:type="item.type"
+			@click="emit('handleOuterFileOperate', item.operation)"
+			size="small"
+			:disabled="!checkedNumber"
+			:style="{ marginLeft: item.marginLeft }"
+			:danger="item.type === 'primary' ? true : false"
+			:icon="h(item.icon)">
+			{{ item.label }}
 		</a-button>
-		<a-button type="default" size="small" :disabled="!checkedNumber" style="margin-left: 10px" :icon="h(CloudDownloadOutlined)">
-			导出
-		</a-button>
-		<a-button type="primary" size="small" :disabled="!checkedNumber" danger style="margin-left: 10px" :icon="h(DeleteOutlined)">
-			删除
-		</a-button>
+		<a-popconfirm
+			:disabled="!checkedNumber"
+			title="您正在批量删除文件，请确认操作！"
+			okText="确定"
+			cancelText="取消"
+			arrowPointAtCenter
+			placement="left"
+			@confirm="emit('handleOuterFileOperate', 'delete')">
+			<template #icon><question-circle-outlined style="color: red" /></template>
+			<a-button style="margin-left: 10px" :disabled="!checkedNumber" type="primary" size="small" danger> 批量删除 </a-button>
+		</a-popconfirm>
 	</div>
 
 	<!-- 新建文件弹窗 -->
@@ -30,17 +44,18 @@
 			@pressEnter="createFileConfirm" />
 	</a-modal>
 </template>
+
 <script setup lang="ts">
 import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
 import { API_createWorkerBook } from "../../../axios";
-import { PlusOutlined, CloudUploadOutlined, BranchesOutlined, CloudDownloadOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, CloudUploadOutlined, BranchesOutlined, CloudDownloadOutlined, QuestionCircleOutlined } from "@ant-design/icons-vue";
 
 // 选中几个文件
 const { checkedNumber } = defineProps({ checkedNumber: { type: Number, default: 0 } });
 
 // 定义 emit
-const emit = defineEmits(["updateFileList"]);
+const emit = defineEmits(["updateFileList", "handleOuterFileOperate"]);
 
 const { token } = theme.useToken();
 
@@ -56,6 +71,13 @@ watch(
 	() => filterType.value,
 	() => emit("updateFileList", { filterType: filterType.value })
 );
+
+// 定义文件多选操作
+const outerFileOperateBtns = [
+	{ label: "分享", marginLeft: "auto", type: "default", icon: BranchesOutlined, operation: "share" },
+	{ label: "导出", marginLeft: "10px", type: "default", icon: CloudDownloadOutlined, operation: "export" },
+	// { label: "删除", marginLeft: "10px", type: "primary", icon: DeleteOutlined, operation: "delete" },
+];
 
 // 新建文件弹窗
 const createFileVisible = ref(false);

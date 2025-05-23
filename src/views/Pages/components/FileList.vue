@@ -124,12 +124,12 @@ const fileList: SheetListItem[] = reactive([]);
 // 监听数据列表选中状态 - 向上触发实现 buttonList 组件的 checkedNumber 更新
 watch(
 	() => fileList,
-	(newVal) => {
-		const checkedNumber = newVal.filter((item) => item.checked).length;
+	() => {
+		const checkedNumber = getCheckedFileList().length;
 		// 如果有被选中，则向上触发事件
 		emit("updateCheckedNumber", checkedNumber);
 		// 如果当前列表的长度 === 选中的列表长度，则全选状态为 true
-		if (newVal.length === checkedNumber && checkedNumber) {
+		if (fileList.length === checkedNumber && checkedNumber) {
 			checkedAll.value = true;
 		} else {
 			checkedAll.value = false;
@@ -138,16 +138,26 @@ watch(
 	{ deep: true }
 );
 
-// 切换全选状态
+/**
+ * @description 工具函数 - 获取当前文件列表被选中的元素
+ */
+function getCheckedFileList() {
+	return fileList.filter((item) => item.checked);
+}
+
+/**
+ * @description 切换全选状态
+ */
 function toggleCheckedAll(e: Event) {
 	// 当前状态
 	const { checked } = e.target as HTMLInputElement;
 	fileList.forEach((i) => (i.checked = checked));
 }
 
-// 切换收藏状态
+/**
+ * @description 切换收藏状态
+ */
 async function toggleFavor(item: SheetListItem) {
-	// API_toggleFavor
 	// 解析当前的 favor filemapid
 	const { file_map_id, favor } = toRaw(item);
 	try {
@@ -185,13 +195,15 @@ async function renameConfirm() {
 }
 
 /**
- * @description 删除文件
+ * @description 单个删除文件
  */
 async function handleDeleteFile(item: SheetListItem) {
+	const filename = item.workerbook.title;
+
 	Modal.confirm({
-		title: "温馨提示?",
+		title: "温馨提示",
 		icon: createVNode(ExclamationCircleOutlined),
-		content: `确认删除文件：${item.workerbook.title}.xlsx ?`,
+		content: `确认删除文件：${filename}.xlsx ?`,
 		okText: "删除",
 		okType: "danger",
 		cancelText: "取消",
@@ -205,6 +217,30 @@ async function handleDeleteFile(item: SheetListItem) {
 			}
 		},
 	});
+}
+
+/**
+ * @description 批量删除文件
+ */
+async function handleBatchDeleteFile() {
+	const checkedArray = getCheckedFileList();
+	// 通过 promise.all 批量删除文件
+	try {
+		await Promise.all(
+			checkedArray.map(async (item) => {
+				try {
+					await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
+				} catch (error) {
+					console.error(error);
+				}
+			})
+		);
+		message.success("删除成功");
+	} catch (error) {
+		console.error(error);
+		message.error("删除失败");
+	}
+	queryFileList();
 }
 
 /**
@@ -227,6 +263,18 @@ async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) 
 			renameInputRef.value.focus();
 		});
 	}
+}
+
+/**
+ * @description 外部多选文件操作回调 - 多选的文件在本文件内
+ * @param operation 操作类型 share export delete
+ */
+async function handleOuterFileOperate(operation: string) {
+	if (!operation) return;
+	// 如果没有选中文件
+	const checkedArray = getCheckedFileList();
+	if (!checkedArray.length) return message.warn("没有文件被选中");
+	if (operation === "delete") handleBatchDeleteFile();
 }
 
 /**
@@ -257,7 +305,7 @@ async function queryFileList() {
 onMounted(queryFileList);
 
 // 向外暴露接口
-defineExpose({ queryFileList });
+defineExpose({ queryFileList, handleOuterFileOperate });
 </script>
 
 <style lang="less" scoped>

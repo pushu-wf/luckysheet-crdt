@@ -2,7 +2,7 @@
  * 使用 localstorage 实现本地存储
  */
 
-const com_prefix = "es_co_";
+const com_prefix = "lucky_crdt_";
 
 const storage = window.sessionStorage;
 
