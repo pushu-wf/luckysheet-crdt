@@ -64,19 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import { message, theme } from "ant-design-vue";
+import { message, Modal, theme } from "ant-design-vue";
 import { API_getFileList } from "../../../axios";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { SheetListItem } from "../../../interface";
-import { ref, h, onMounted, reactive, toRaw, watch } from "vue";
+import { ref, h, onMounted, reactive, toRaw, watch, createVNode } from "vue";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
-import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
+import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
 // 有些数据需要外部传入
-const { filterType } = defineProps({
-	filterType: { type: String, default: "all" },
-});
+const { filterType } = defineProps({ filterType: { type: String, default: "all" } });
 
 const emit = defineEmits(["updateCheckedNumber"]);
 
@@ -110,7 +108,7 @@ watch(
 		// 如果有被选中，则向上触发事件
 		emit("updateCheckedNumber", checkedNumber);
 		// 如果当前列表的长度 === 选中的列表长度，则全选状态为 true
-		if (newVal.length === checkedNumber) {
+		if (newVal.length === checkedNumber && checkedNumber) {
 			checkedAll.value = true;
 		} else {
 			checkedAll.value = false;
@@ -144,13 +142,23 @@ async function toggleFavor(item: SheetListItem) {
 
 // 删除文件
 async function handleDeleteFile(item: SheetListItem) {
-	try {
-		const { data } = await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
-		if (data.code === 200) message.success("删除成功");
-		getFileList();
-	} catch (error) {
-		console.error(error);
-	}
+	Modal.confirm({
+		title: "温馨提示?",
+		icon: createVNode(ExclamationCircleOutlined),
+		content: `确认删除文件：${item.workerbook.title}.xlsx ?`,
+		okText: "删除",
+		okType: "danger",
+		cancelText: "取消",
+		async onOk() {
+			try {
+				const { data } = await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
+				if (data.code === 200) message.success("删除成功");
+				getFileList();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	});
 }
 
 // 表格操作 - 分享 | 删除 | 收藏 ....
@@ -192,6 +200,9 @@ async function getFileList() {
 }
 
 onMounted(getFileList);
+
+// 向外暴露接口
+defineExpose({ getFileList });
 </script>
 
 <style lang="less" scoped>

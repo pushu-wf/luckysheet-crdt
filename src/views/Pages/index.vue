@@ -3,8 +3,8 @@
 		<HeaderVue />
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
-			<ButtonList :checkedNumber="checkedNumber" />
-			<fileList @updateCheckedNumber="(number:number) => (checkedNumber = number)" />
+			<ButtonList :checkedNumber="checkedNumber" @updateFileList="updateFileList" />
+			<fileList @updateCheckedNumber="(number:number) => (checkedNumber = number)" ref="fileListRef" />
 		</div>
 		<div class="pages-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
@@ -23,6 +23,14 @@ const { token } = theme.useToken();
 
 // 当前有几个文件被选中
 const checkedNumber = ref(0);
+
+const fileListRef = ref<typeof fileList>();
+
+// 更新数据列表
+function updateFileList() {
+	if (!fileListRef.value) return;
+	fileListRef.value.getFileList();
+}
 </script>
 
 <style lang="less" scoped>
