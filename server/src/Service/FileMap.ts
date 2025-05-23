@@ -107,8 +107,18 @@ async function updateFavor(file_map_id: string, favor: boolean) {
 	}
 }
 
+// 删除记录
+async function deleteFileMap(file_map_id: string) {
+	try {
+		return await FileMapModel.destroy({ where: { file_map_id } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const FileMapService = {
 	createFileMap,
 	findFileMap,
 	updateFavor,
+	deleteFileMap,
 };

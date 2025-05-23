@@ -3,6 +3,7 @@ import { UserService } from "../../Service/User";
 import { getUseridFromToken, md5 } from "../../Utils";
 import { FileMapService } from "../../Service/FileMap";
 import { WorkerBookService } from "../../Service/WorkerBook";
+import { WorkerSheetService } from "../../Service/WorkerSheet";
 
 /**
  * @description 创建工作簿
@@ -106,6 +107,39 @@ async function getFileList(req: Request, res: Response) {
 }
 
 /**
+ * 删除文件 deleteFile
+ */
+async function deleteFile(req: Request, res: Response) {
+	// 需要几个东西实现删除 filemapid 删除映射表 gridkey 删除文件 --> worker_sheet_id 删除相应的 sheet 记录（celldata、chart、image ....）
+	const { filemapid, gridKey } = req.body;
+	if (!filemapid || !gridKey) {
+		res.status(400).json({ code: 400, message: "filemapid | gridKey 参数缺失" });
+		return;
+	}
+
+	await FileMapService.deleteFileMap(filemapid);
+
+	// 删除 worker book 之前，需要查询关联的 worker sheet，
+	const workerSheet = await WorkerSheetService.findWorkerSheetByGridKey(gridKey);
+	const worker_sheet_id = workerSheet?.worker_sheet_id;
+	if (!worker_sheet_id) {
+		res.status(400).json({ code: 400, message: "未查询到相关记录" });
+		return;
+	}
+
+	// 查到 worker sheet 后，要先删除关联的所有数据
+	await WorkerSheetService.deleteAllDataByWorkerSheetId(worker_sheet_id);
+
+	// 然后删除 worker Sheet 记录
+	await WorkerSheetService.deleteSheet(gridKey);
+
+	// 最后删除 workerBooks
+	await WorkerBookService.deleteWorkerBook(gridKey);
+
+	res.status(200).json({ code: 200, message: "删除成功" });
+}
+
+/**
  * 工作簿相关控制类 - WorkerBooks  Controller
  */
-export { createWorkerBook, getWorkerBook, getFileList };
+export { createWorkerBook, getWorkerBook, getFileList, deleteFile };

@@ -62,3 +62,12 @@ export const API_toggleFavor = (data: { favor: boolean; filemapid: string }) => 
 		data,
 	});
 };
+
+// 删除表格
+export const API_deleteFile = (data: { filemapid: string; gridKey: string }) => {
+	return fetch({
+		url: "/luckysheet/deleteFile",
+		method: "POST",
+		data,
+	});
+};

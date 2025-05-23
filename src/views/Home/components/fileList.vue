@@ -98,7 +98,7 @@
 import { message, theme } from "ant-design-vue";
 import { SheetListItem } from "../../../interface";
 import { ImportFile } from "../../../utils/ImportFile";
-import { API_toggleFavor } from "../../../axios/index";
+import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { API_createWorkerBook, API_getFileList } from "../../../axios";
 import { ref, h, onMounted, reactive, watch, computed, toRaw } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
@@ -165,15 +165,27 @@ async function toggleFavor(item: SheetListItem) {
 	}
 }
 
+// 删除文件
+async function handleDeleteFile(item: SheetListItem) {
+	try {
+		const { data } = await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
+		if (data.code === 200) message.success("删除成功");
+		getFileList();
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // 表格操作
-function handleSheetOperate(payload: { key: string }, item: SheetListItem) {
+async function handleSheetOperate(payload: { key: string }, item: SheetListItem) {
 	// open
 	// share
-	// favor
 	// export
 	// delete
 	if (payload.key === "favor") {
 		toggleFavor(item);
+	} else if (payload.key === "delete") {
+		handleDeleteFile(item);
 	}
 }
 

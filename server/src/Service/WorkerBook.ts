@@ -76,9 +76,19 @@ async function findAll() {
 	}
 }
 
+// 删除记录
+async function deleteWorkerBook(gridKey: string) {
+	try {
+		return await WorkerBookModel.destroy({ where: { gridKey } });
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const WorkerBookService = {
 	create,
 	update,
 	findOne,
 	findAll,
+	deleteWorkerBook,
 };
