@@ -53,3 +53,12 @@ export const API_getFileList = (data: { current: number; pageSize: number; filte
 		data,
 	});
 };
+
+// 切换收藏状态
+export const API_toggleFavor = (data: { favor: boolean; filemapid: string }) => {
+	return fetch({
+		url: "/filemap/setFavor",
+		method: "POST",
+		data,
+	});
+};

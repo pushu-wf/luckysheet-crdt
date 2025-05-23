@@ -42,6 +42,7 @@
 						<img src="/file-icon.png" alt="" />
 						<p>{{ item.workerbook.title }}</p>
 						<a-button
+							@click="toggleFavor(item)"
 							type="text"
 							:style="{ color: item.favor ? '#ffbb12' : null }"
 							:icon="h(item.favor ? StarFilled : StarOutlined)"></a-button>
@@ -53,7 +54,7 @@
 						<a-dropdown :trigger="['click']">
 							<EllipsisOutlined />
 							<template #overlay>
-								<a-menu @click="handleSheetOperate">
+								<a-menu @click="(payload) => handleSheetOperate(payload, item)">
 									<a-menu-item key="open">
 										<FileAddOutlined />
 										新窗口打开
@@ -65,7 +66,7 @@
 									</a-menu-item>
 									<a-menu-item key="favor">
 										<StarOutlined />
-										收藏表格
+										{{ item.favor ? "取消收藏" : "收藏表格" }}
 									</a-menu-item>
 									<a-menu-item key="export">
 										<CloudDownloadOutlined />
@@ -97,8 +98,9 @@
 import { message, theme } from "ant-design-vue";
 import { SheetListItem } from "../../../interface";
 import { ImportFile } from "../../../utils/ImportFile";
-import { ref, h, onMounted, reactive, watch, computed } from "vue";
+import { API_toggleFavor } from "../../../axios/index";
 import { API_createWorkerBook, API_getFileList } from "../../../axios";
+import { ref, h, onMounted, reactive, watch, computed, toRaw } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FileAddOutlined } from "@ant-design/icons-vue";
 import { PlusOutlined, BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
 
@@ -147,13 +149,32 @@ const pagination = {
 	},
 };
 
+// 切换收藏状态
+async function toggleFavor(item: SheetListItem) {
+	// API_toggleFavor
+	// 解析当前的 favor filemapid
+	const { file_map_id, favor } = toRaw(item);
+	try {
+		const { data } = await API_toggleFavor({ favor: !favor, filemapid: file_map_id });
+		if (data.code === 200) {
+			message.success(!favor ? "已收藏" : "已取消收藏");
+			item.favor = !favor;
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // 表格操作
-function handleSheetOperate(payload: { key: string }) {
+function handleSheetOperate(payload: { key: string }, item: SheetListItem) {
 	// open
 	// share
 	// favor
 	// export
 	// delete
+	if (payload.key === "favor") {
+		toggleFavor(item);
+	}
 }
 
 // 新建文件确认回调

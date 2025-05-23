@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 // 定义关联查询返回结果类型
 type UniFileMapItemResult = {
 	favor: boolean;
+	file_map_id: string;
 	OperatorUser: UserModelType;
 	OwnerUser: UserModelType;
 	WorkerBook: WorkerBookModel;
@@ -67,7 +68,7 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 							: undefined,
 				},
 			],
-			attributes: ["favor"],
+			attributes: ["favor", "file_map_id"],
 			where: searchParams,
 			limit,
 			offset,
@@ -78,6 +79,7 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 			const item = i.toJSON() as UniFileMapItemResult;
 			return {
 				favor: item.favor,
+				file_map_id: item.file_map_id,
 				operator: item.OperatorUser,
 				owner: item.OwnerUser,
 				workerbook: {
@@ -96,7 +98,17 @@ async function findFileMap(user_uuid: string, filterType: string, limit: number,
 	}
 }
 
+// 更新
+async function updateFavor(file_map_id: string, favor: boolean) {
+	try {
+		return await FileMapModel.update({ favor }, { where: { file_map_id } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const FileMapService = {
 	createFileMap,
 	findFileMap,
+	updateFavor,
 };

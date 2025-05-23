@@ -9,6 +9,7 @@ interface User {
 
 interface SheetListItem {
 	favor: boolean;
+	file_map_id: string;
 	operator: User;
 	checked: boolean; // 是否选中
 	owner: User;
