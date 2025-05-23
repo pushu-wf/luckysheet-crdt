@@ -16,7 +16,7 @@
 import { ref } from "vue";
 import { theme } from "ant-design-vue";
 import HeaderVue from "./components/Header.vue";
-import fileList from "./components/fileList.vue";
+import fileList from "./components/FileList.vue";
 import ButtonList from "./components/ButtonList.vue";
 
 const { token } = theme.useToken();
@@ -29,7 +29,7 @@ const fileListRef = ref<typeof fileList>();
 // 更新数据列表
 function updateFileList() {
 	if (!fileListRef.value) return;
-	fileListRef.value.getFileList();
+	fileListRef.value.queryFileList();
 }
 </script>
 

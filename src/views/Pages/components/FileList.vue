@@ -74,12 +74,12 @@
 </template>
 
 <script setup lang="ts">
-import { message, Modal, theme } from "ant-design-vue";
-import { API_getFileList, API_renameFile } from "../../../axios";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { SheetListItem } from "../../../interface";
-import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
+import { message, Modal, theme } from "ant-design-vue";
+import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
+import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
@@ -114,7 +114,7 @@ const pagination = {
 	total: 0,
 	onChange: (page: number) => {
 		pagination.current = page || 1;
-		getFileList();
+		queryFileList();
 	},
 };
 
@@ -161,7 +161,9 @@ async function toggleFavor(item: SheetListItem) {
 	}
 }
 
-// 重命名文件
+/**
+ * @description 重命名文件 - modal 确认事件回调
+ */
 async function renameConfirm() {
 	if (!renameInputValue.value) return message.warn("请输入文件名称");
 
@@ -182,7 +184,9 @@ async function renameConfirm() {
 	}
 }
 
-// 删除文件
+/**
+ * @description 删除文件
+ */
 async function handleDeleteFile(item: SheetListItem) {
 	Modal.confirm({
 		title: "温馨提示?",
@@ -195,7 +199,7 @@ async function handleDeleteFile(item: SheetListItem) {
 			try {
 				const { data } = await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
 				if (data.code === 200) message.success("删除成功");
-				getFileList();
+				queryFileList();
 			} catch (error) {
 				console.error(error);
 			}
@@ -203,7 +207,9 @@ async function handleDeleteFile(item: SheetListItem) {
 	});
 }
 
-// 表格操作 - 分享 | 删除 | 收藏 ....
+/**
+ * @description 文件操作 - 菜单点击事件回调 重命名 | 分享 | 收藏 | 导出 | 删除
+ */
 async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) {
 	// @ts-ignore
 	const { key } = e!;
@@ -223,14 +229,16 @@ async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) 
 	}
 }
 
-// 请求文件列表
-async function getFileList() {
+/**
+ * @description 获取文件列表
+ */
+async function queryFileList() {
 	try {
 		loading.value = true;
 		fileList.length = 0;
 		pagination.total = 0;
 
-		const { data } = await API_getFileList({
+		const { data } = await API_queryFileList({
 			current: pagination.current,
 			pageSize: pagination.pageSize,
 			filterType: filterType,
@@ -246,10 +254,10 @@ async function getFileList() {
 	}
 }
 
-onMounted(getFileList);
+onMounted(queryFileList);
 
 // 向外暴露接口
-defineExpose({ getFileList });
+defineExpose({ queryFileList });
 </script>
 
 <style lang="less" scoped>
