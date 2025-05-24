@@ -69,7 +69,7 @@ const filterTypes = [
 const filterType = ref("all");
 watch(
 	() => filterType.value,
-	() => emit("updateFileList", { filterType: filterType.value })
+	() => emit("updateFileList", filterType.value)
 );
 
 // 定义文件多选操作

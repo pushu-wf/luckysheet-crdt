@@ -63,7 +63,7 @@
 	</a-list>
 
 	<!-- 重命名弹窗 -->
-	<a-modal v-model:open="renameModalVisible" title="重命名文件" okText="重命名" cancelText="取消" @ok="renameConfirm">
+	<a-modal v-model:open="renameModalVisible" title="重命名文件" okText="确认" cancelText="取消" @ok="renameConfirm">
 		<a-input
 			placeholder="请输入工作簿名称"
 			ref="renameInputRef"
@@ -82,9 +82,7 @@ import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
-
-// 有些数据需要外部传入
-const { filterType } = defineProps({ filterType: { type: String, default: "all" } });
+import { writeToClipboard } from "../../../utils";
 
 const emit = defineEmits(["updateCheckedNumber"]);
 
@@ -172,6 +170,18 @@ async function toggleFavor(item: SheetListItem) {
 }
 
 /**
+ * @description 分享文件
+ */
+async function handleShareFile(item: SheetListItem) {
+	// 写入粘贴板
+	try {
+		writeToClipboard("description 分享文件");
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+/**
  * @description 重命名文件 - modal 确认事件回调
  */
 async function renameConfirm() {
@@ -250,9 +260,7 @@ async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) 
 	// @ts-ignore
 	const { key } = e!;
 
-	// share
 	// export
-
 	if (key === "favor") toggleFavor(item);
 	else if (key === "delete") handleDeleteFile(item);
 	else if (key === "rename") {
@@ -262,7 +270,7 @@ async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) 
 		nextTick(() => {
 			renameInputRef.value.focus();
 		});
-	}
+	} else if (key === "share") handleShareFile(item);
 }
 
 /**
@@ -280,7 +288,7 @@ async function handleOuterFileOperate(operation: string) {
 /**
  * @description 获取文件列表
  */
-async function queryFileList() {
+async function queryFileList(filterType: string = "all") {
 	try {
 		loading.value = true;
 		fileList.length = 0;

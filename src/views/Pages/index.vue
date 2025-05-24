@@ -33,9 +33,9 @@ function handleOuterFileOperate(operation: string) {
 }
 
 // 更新数据列表
-function updateFileList() {
+function updateFileList(filterType: string) {
 	if (!fileListRef.value) return;
-	fileListRef.value.queryFileList();
+	fileListRef.value.queryFileList(filterType);
 }
 </script>
 

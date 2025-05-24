@@ -27,4 +27,21 @@ function md5(password: string): string {
 function getUserInfo() {
 	return localForage.getItem("userInfo");
 }
-export { getLoadUrl, getRandom, md5, isDev, getUserInfo };
+
+// 将内容写入粘贴板
+function writeToClipboard(text: string) {
+	if (window.navigator.clipboard) {
+		navigator.clipboard.writeText(text);
+	} else {
+		const textarea = document.createElement("textarea");
+		textarea.style.position = "absolute";
+		textarea.style.left = "-9999px";
+		textarea.value = text;
+		document.body.appendChild(textarea);
+		textarea.select();
+		document.execCommand("copy");
+		document.body.removeChild(textarea);
+	}
+}
+
+export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard };
