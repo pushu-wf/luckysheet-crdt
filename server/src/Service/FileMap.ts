@@ -28,7 +28,7 @@ async function createFileMap(filemap: FileMapModelType) {
 /**
  * 查找文件
  */
-async function findFileMap(user_uuid: string, filterType: string, limit: number, offset: number) {
+async function getFileList(user_uuid: string, filterType: string, limit: number, offset: number) {
 	// 处理查询条件
 	const searchParams =
 		filterType === "favor"
@@ -116,9 +116,49 @@ async function deleteFileMap(file_map_id: string) {
 	}
 }
 
+// 受邀获取信息
+async function getInviteInfo(file_map_id: string) {
+	try {
+		return await FileMapModel.findOne({
+			where: { file_map_id },
+			include: [
+				{
+					model: UserModel,
+					attributes: ["username"],
+					as: "OperatorUser",
+				},
+				{
+					model: UserModel,
+					attributes: ["username"],
+					as: "OwnerUser",
+				},
+				{
+					model: WorkerBookModel,
+					as: "WorkerBook",
+					attributes: ["title", "gridKey"],
+				},
+			],
+			attributes: [],
+		});
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+// 是否已经存在文件映射
+async function hasFileMap(gridKey: string, operator: string) {
+	try {
+		return await FileMapModel.findOne({ where: { gridKey, operator } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const FileMapService = {
-	createFileMap,
-	findFileMap,
+	hasFileMap,
+	getFileList,
 	updateFavor,
 	deleteFileMap,
+	createFileMap,
+	getInviteInfo,
 };

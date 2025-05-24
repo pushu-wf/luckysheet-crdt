@@ -44,4 +44,27 @@ function writeToClipboard(text: string) {
 	}
 }
 
-export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard };
+// 将字符串编码为 Base64
+function encode(str: string) {
+	const encoder = new TextEncoder();
+	const utf8Uint8Array = encoder.encode(str);
+	let binaryString = "";
+	for (let i = 0; i < utf8Uint8Array.length; i++) {
+		binaryString += String.fromCharCode(utf8Uint8Array[i]);
+	}
+	return btoa(binaryString);
+}
+
+// 将 Base64 字符串解码为原始字符串
+function decode(str: string) {
+	const decodedString = atob(str);
+	const length = decodedString.length;
+	const arrayBuffer = new Uint8Array(length);
+	for (let i = 0; i < length; i++) {
+		arrayBuffer[i] = decodedString.charCodeAt(i);
+	}
+	const decoder = new TextDecoder("utf-8");
+	return decoder.decode(arrayBuffer);
+}
+
+export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard, encode, decode };

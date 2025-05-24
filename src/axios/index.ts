@@ -80,3 +80,21 @@ export const API_renameFile = (data: { gridKey: string; newName: string }) => {
 		data: { gridKey: data.gridKey, title: data.newName },
 	});
 };
+
+// 获取邀请信息
+export const API_getInviteInfo = (filemapid: string) => {
+	return fetch({
+		url: "/filemap/getInviteInfo",
+		method: "POST",
+		data: { filemapid },
+	});
+};
+
+// 同意邀请
+export const API_acceptInvite = (data: { gridKey: string; owner: string }) => {
+	return fetch({
+		url: "/filemap/acceptInvite",
+		method: "POST",
+		data,
+	});
+};

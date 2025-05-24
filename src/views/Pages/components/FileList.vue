@@ -82,7 +82,7 @@ import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { writeToClipboard } from "../../../utils";
+import { encode, writeToClipboard } from "../../../utils";
 
 const emit = defineEmits(["updateCheckedNumber"]);
 
@@ -173,9 +173,14 @@ async function toggleFavor(item: SheetListItem) {
  * @description 分享文件
  */
 async function handleShareFile(item: SheetListItem) {
+	// 将参数进行编码
+	const filemapid = encode(item.file_map_id);
+	const URL = `${window.location.origin}/invite/${encode(filemapid)}`;
+
 	// 写入粘贴板
 	try {
-		writeToClipboard("description 分享文件");
+		writeToClipboard(URL);
+		message.success("已复制到粘贴板");
 	} catch (error) {
 		console.error(error);
 	}
@@ -259,18 +264,18 @@ async function handleBatchDeleteFile() {
 async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) {
 	// @ts-ignore
 	const { key } = e!;
-
-	// export
 	if (key === "favor") toggleFavor(item);
 	else if (key === "delete") handleDeleteFile(item);
-	else if (key === "rename") {
+	else if (key === "share") handleShareFile(item);
+	else if (key === "export") {
+	} else if (key === "rename") {
 		renameModalVisible.value = true;
 		renameInputValue.value = item.workerbook.title;
 		renameGridKey.value = item.workerbook.gridKey;
 		nextTick(() => {
 			renameInputRef.value.focus();
 		});
-	} else if (key === "share") handleShareFile(item);
+	}
 }
 
 /**

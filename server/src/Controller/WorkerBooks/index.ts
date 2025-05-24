@@ -101,7 +101,7 @@ async function getFileList(req: Request, res: Response) {
 	const limit = pageSize;
 	const offset = (current - 1) * pageSize;
 
-	const data = await FileMapService.findFileMap(user_uuid, filterType, limit, offset);
+	const data = await FileMapService.getFileList(user_uuid, filterType, limit, offset);
 
 	res.json({ code: 200, message: "获取文件列表成功", data });
 }

@@ -1,4 +1,5 @@
 // router
+import { message } from "ant-design-vue";
 import { localForage } from "../localforage";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -20,6 +21,10 @@ const routes = [
 		path: "/excel",
 		component: () => import("../views/Excel/index.vue"),
 	},
+	{
+		path: "/invite/:filemapid",
+		component: () => import("../views/Invite/index.vue"),
+	},
 ];
 
 // 路由实例
@@ -31,6 +36,8 @@ router.beforeEach((to, _from, next) => {
 	if (to.path === "/login" || token) {
 		next();
 	} else {
+		localForage.clear();
+		message.error("请先登录");
 		next("/login");
 	}
 });

@@ -34,8 +34,7 @@
 					ref="registerFormRef"
 					@goto-login="formState = 'login'"
 					@open-rrivacy-modal="privacyModalRef.show()"
-					v-if="formState === 'register'"
-				/>
+					v-if="formState === 'register'" />
 				<LoginForm @goto-register="formState = 'register'" v-else-if="formState === 'login'" />
 			</transition>
 		</div>

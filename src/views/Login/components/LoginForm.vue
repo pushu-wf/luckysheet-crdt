@@ -86,6 +86,12 @@ async function loginHandle() {
 		// 存储用户信息
 		localForage.setItem("userInfo", data.user);
 		message.success("登录成功");
+
+		// 判断是否从邀请页面而来
+		if (router.currentRoute.value.redirectedFrom) {
+			// 跳转到邀请页面
+			return router.push(router.currentRoute.value.redirectedFrom.path);
+		}
 		// 跳转到首页
 		router.push("/home");
 	} catch (error) {
