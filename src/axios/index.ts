@@ -98,3 +98,12 @@ export const API_acceptInvite = (data: { gridKey: string; owner: string }) => {
 		data,
 	});
 };
+
+// 验证密码是否正确 - 用于修改密码处验证旧密码
+export const API_verifyPassword = (password: string) => {
+	return fetch({
+		url: "/user/verifyPassword",
+		method: "POST",
+		data: { password },
+	});
+};

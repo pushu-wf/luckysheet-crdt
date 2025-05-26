@@ -6,6 +6,7 @@ import { reactive, ref, Ref } from "vue";
 import { FormInstance } from "ant-design-vue";
 import type { Rule } from "ant-design-vue/es/form";
 import VerificationCodeVue from "../components/VerificationCode.vue";
+import { checkPasswordStrength } from "../utils";
 
 export const useAntFormHook = () => {
 	// 验证码实例对象 - 指向一个页面 vue 组件实例对象
@@ -27,9 +28,12 @@ export const useAntFormHook = () => {
 		// 账号
 		userid: [{ required: true, message: "账号不能为空", trigger: "blur" }],
 		// 密码
-		password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
+		password: [{ required: true, trigger: "blur", validator: checkPasswordStrength }],
 		// 确认密码
-		checkpassword: [{ required: true, trigger: "blur", validator: validatorCheckPassword }],
+		checkpassword: [
+			{ required: true, trigger: "blur", validator: validatorCheckPassword },
+			{ required: true, trigger: "blur", validator: checkPasswordStrength },
+		],
 		// 阅读协议
 		read: [{ required: true, validator: () => (form.read ? Promise.resolve() : Promise.reject("请阅读并同意协议")) }],
 		// 邮箱 - 目前不做严格的正则校验哈，大家有兴趣可以自行添加
@@ -37,6 +41,11 @@ export const useAntFormHook = () => {
 		// 验证码
 		code: [{ required: true, validator: validatorCode, trigger: "blur" }],
 	});
+
+	// 取消登录验证密码强度
+	function cancelPasswordStrength() {
+		formRules.password[0].validator = () => Promise.resolve();
+	}
 
 	/** 重置表单 */
 	function resetForm(formRef: Ref<FormInstance | undefined>) {
@@ -88,5 +97,6 @@ export const useAntFormHook = () => {
 		resetForm,
 		validateForm,
 		setVarificationCode,
+		cancelPasswordStrength,
 	};
 };

@@ -57,7 +57,7 @@ const { token } = theme.useToken();
 const emit = defineEmits(["gotoRegister", "forgetPassword"]);
 
 // 结构登陆表单 hooks
-const { form, formRules, resetForm, validateForm, setVarificationCode } = useAntFormHook();
+const { form, formRules, resetForm, validateForm, setVarificationCode, cancelPasswordStrength } = useAntFormHook();
 
 // 表单 dom ref 做表单校验
 const formRef = ref<FormInstance>();
@@ -101,7 +101,7 @@ async function loginHandle() {
 }
 
 // 请一定记住要初始化验证码实例对象，否则会报错
-onMounted(() => (resetForm(formRef), setVarificationCode(verificationCode.value)));
+onMounted(() => (resetForm(formRef), setVarificationCode(verificationCode.value), cancelPasswordStrength()));
 </script>
 
 <style lang="less" scoped>

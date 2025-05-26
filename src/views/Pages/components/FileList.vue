@@ -68,6 +68,7 @@
 			placeholder="请输入工作簿名称"
 			ref="renameInputRef"
 			allowClear
+			autofocus
 			v-model:value="renameInputValue"
 			@pressEnter="renameConfirm" />
 	</a-modal>

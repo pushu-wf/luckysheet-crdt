@@ -78,3 +78,27 @@ export async function updateUser(req: Request, res: Response) {
 		res.status(500).json({ code: 500, message: "更新失败" });
 	}
 }
+
+// 验证密码是否正确
+export async function verifyPassword(req: Request, res: Response) {
+	const { password } = req.body;
+	if (!password) {
+		res.status(400).json({ code: 400, message: "密码不能为空" });
+		return;
+	}
+
+	// 不然校验密码
+	const userid = getUseridFromToken(req);
+	if (!userid) {
+		res.status(400).json({ code: 400, message: "Invalid token" });
+		return;
+	}
+
+	const user = await UserService.findOne(userid, md5(password));
+	if (user) {
+		res.status(200).json({ code: 200, message: "密码正确" });
+	} else {
+		// 请注意，此处的 statis 设置未 200 是避免前端密码校验时，被拦截器拦截，从而弹窗提示，也可以设置 400 对业务上没有影响
+		res.status(200).json({ code: 400, message: "密码错误" });
+	}
+}

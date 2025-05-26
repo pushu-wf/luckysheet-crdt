@@ -35,11 +35,18 @@
 	</div>
 
 	<!-- 新建文件弹窗 -->
-	<a-modal v-model:open="createFileVisible" title="创建工作簿" okText="创建" cancelText="取消" @ok="createFileConfirm">
+	<a-modal
+		v-model:open="createFileVisible"
+		title="创建工作簿"
+		okText="创建"
+		cancelText="取消"
+		@ok="createFileConfirm"
+		@cancel="createFileName = ''">
 		<a-input
 			placeholder="请输入工作簿名称"
 			ref="createFileNameRef"
 			allowClear
+			autofocus
 			v-model:value="createFileName"
 			@pressEnter="createFileConfirm" />
 	</a-modal>

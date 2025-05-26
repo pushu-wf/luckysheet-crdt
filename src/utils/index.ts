@@ -1,5 +1,6 @@
 import { MD5 } from "crypto-js";
 import { localForage } from "../localforage";
+import { Rule } from "ant-design-vue/es/form/interface";
 
 // 获取当前环境是否为 开发环境
 const isDev = () => {
@@ -67,4 +68,15 @@ function decode(str: string) {
 	return decoder.decode(arrayBuffer);
 }
 
-export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard, encode, decode };
+// 验证密码强度
+function checkPasswordStrength(_rule: Rule, value: string) {
+	// 密码匹配正则实现：8-16位，至少1个大写字母，1个小写字母，1个数字
+	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,12}$/;
+	return new Promise((resolve, reject) => {
+		if (!value) reject("请输入密码");
+		else if (!regex.test(value)) reject("密码未符合强度要求：8-16位，至少1个大写字母，1个小写字母，1个数字");
+		else resolve("密码验证通过");
+	});
+}
+
+export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard, encode, decode, checkPasswordStrength };
