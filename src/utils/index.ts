@@ -75,4 +75,15 @@ function checkPasswordStrength(_rule: Rule, value: string) {
 	});
 }
 
-export { getLoadUrl, getRandom, md5, isDev, writeToClipboard, encode, decode, checkPasswordStrength };
+/**
+ * 将用户传入的字符串及关键词进行处理，返回高亮关键词 html,
+ * @example
+ * 	getHighlightHtml("hello world", "world") => "hello <span class='highlight'>world</span>"
+ */
+function getHighlightHtml(str: string, keyword: string) {
+	if (!keyword) return str;
+	const reg = new RegExp(keyword, "ig");
+	return str.replace(reg, `<b style="color:#ff4d4f;font-weight:900">${keyword}</b>`);
+}
+
+export { getLoadUrl, getRandom, md5, isDev, writeToClipboard, encode, decode, checkPasswordStrength, getHighlightHtml };

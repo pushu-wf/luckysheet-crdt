@@ -58,6 +58,8 @@ watch(
 // 用户信息弹窗 用于调用 open 方法打开弹窗
 const userInfoModalRef = ref();
 
+const helpModalRef = ref();
+
 // 用户头像 名称通过解析 store 实现更新
 const { getUserName, parseAvatar } = useUserStore();
 
@@ -66,6 +68,7 @@ function handleOperate(payload: { key: string }) {
 	if (payload.key === "userInfo") {
 		userInfoModalRef.value.open();
 	} else if (payload.key === "help") {
+		helpModalRef.value.open();
 	} else if (payload.key === "logout") {
 		// 清空 storage
 		localForage.clear();

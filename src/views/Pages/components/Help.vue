@@ -33,5 +33,7 @@
 import { ref } from "vue";
 import { ExportOutlined, GithubOutlined, YoutubeOutlined, ChromeOutlined } from "@ant-design/icons-vue";
 
-const helpModalVisible = ref(true);
+const helpModalVisible = ref(false);
+
+defineExpose({ open: () => (helpModalVisible.value = true) });
 </script>

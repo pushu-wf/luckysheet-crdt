@@ -15,12 +15,12 @@
 				<a-checkbox v-model:checked="item.checked"></a-checkbox>
 				<span class="sheet-filename">
 					<img src="/file-icon.png" alt="" />
-					<p>{{ item.workerbook.title }}</p>
+					<p v-html="getHighlightHtml(item.workerbook.title, searchKeyWord)"></p>
 					<a-button
 						@click="toggleFavor(item)"
 						type="text"
 						:style="{ color: item.favor ? '#ffbb12' : null }"
-						:icon="h(item.favor ? StarFilled : StarOutlined)"></a-button>
+						:icon="h(item.favor ? StarFilled : StarOutlined)" />
 				</span>
 				<span class="sheet-createtime">{{ item.workerbook.createAt }}</span>
 				<span class="sheet-updatetime">{{ item.workerbook.updatedAt }}</span>
@@ -79,7 +79,7 @@ import { MenuProps } from "ant-design-vue/es/menu";
 import { useUserStore } from "../../../store/User";
 import { SheetListItem } from "../../../interface";
 import { message, Modal, theme } from "ant-design-vue";
-import { encode, writeToClipboard } from "../../../utils";
+import { encode, getHighlightHtml, writeToClipboard } from "../../../utils";
 import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
