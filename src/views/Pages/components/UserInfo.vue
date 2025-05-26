@@ -5,7 +5,7 @@
 			<!-- 左右布局 -->
 			<div class="user-info-left">
 				<div class="user-info-avatar">
-					<a-avatar style="background-color: #87d068" :size="80" @click="avatarModalVisible = true" :src="AVATAR" />
+					<a-avatar :size="80" @click="avatarModalVisible = true" :src="parseAvatar()" />
 					<h2>{{ USERNAME }}</h2>
 				</div>
 				<div class="user-info-form">
@@ -29,7 +29,7 @@
 				</div>
 				<div class="user-info-btns">
 					<a-button @click="resetUserInfoForm">重置</a-button>
-					<a-button style="margin-left: 10px" type="primary" @click="updateUserInfo(emit)">修改</a-button>
+					<a-button style="margin-left: 10px" type="primary" @click="updateUserInfo">修改</a-button>
 				</div>
 			</div>
 			<div class="user-info-right">
@@ -63,7 +63,7 @@
 	</a-modal>
 
 	<!-- 上传图片模态框 -->
-	<a-modal v-model:open="avatarModalVisible" title="上传头像" cancelText="取消" okText="上传" @ok="() => handleUpload(emit)">
+	<a-modal v-model:open="avatarModalVisible" title="上传头像" cancelText="取消" okText="上传" @ok="handleUpload">
 		<div class="user-avatar-upload">
 			<a-upload
 				v-model:file-list="uploadList"
@@ -99,18 +99,21 @@
 
 <script setup lang="ts">
 import { h } from "vue";
+import { useUserStore } from "../../../store/User";
 import { FormOutlined, PlusOutlined } from "@ant-design/icons-vue";
 import { usePasswordHook, useAvatarHook, useUserInfoHook } from "../config";
 
-// 解析头像上传相关 hook 参数
-const { beforeUpload, avatarModalVisible, uploadList, avatarPreview, handleUpload } = useAvatarHook();
-// 解析修改密码相关 hook 参数
-const { passwordForm, passwordRules, resetForm, updatePassword, passwordModalVisible, passwordFormRef } = usePasswordHook();
+// 解析 user store
+const { parseAvatar } = useUserStore();
 
 // 解析用户信息相关 hook 参数
-const { userInfoModalVisible, USERNAME, userInfoForm, resetUserInfoForm, updateUserInfo, AVATAR } = useUserInfoHook();
+const { userInfoModalVisible, userInfoForm, resetUserInfoForm, updateUserInfo, USERNAME } = useUserInfoHook();
 
-const emit = defineEmits(["updateUserName", "updateAvatar"]);
+// 解析头像上传相关 hook 参数
+const { beforeUpload, avatarModalVisible, uploadList, avatarPreview, handleUpload } = useAvatarHook();
+
+// 解析修改密码相关 hook 参数
+const { passwordForm, passwordRules, resetForm, updatePassword, passwordModalVisible, passwordFormRef } = usePasswordHook();
 
 defineExpose({ open: () => (userInfoModalVisible.value = true) });
 </script>

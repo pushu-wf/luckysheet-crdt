@@ -76,14 +76,17 @@
 
 <script setup lang="ts">
 import { MenuProps } from "ant-design-vue/es/menu";
+import { useUserStore } from "../../../store/User";
 import { SheetListItem } from "../../../interface";
 import { message, Modal, theme } from "ant-design-vue";
+import { encode, writeToClipboard } from "../../../utils";
 import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { encode, writeToClipboard } from "../../../utils";
+
+const { userInfo } = useUserStore();
 
 const emit = defineEmits(["updateCheckedNumber"]);
 
@@ -140,6 +143,9 @@ watch(
 	},
 	{ deep: true }
 );
+
+// 监听修改用户名事件，需要重新刷新文件列表
+watch(() => userInfo.username, queryFileList);
 
 /**
  * @description 工具函数 - 获取当前文件列表被选中的元素

@@ -3,60 +3,49 @@
  */
 
 import { reactive, ref, Ref, toRaw } from "vue";
-import { localForage } from "../../../localforage";
+import { useUserStore } from "../../../store/User";
 import { FormInstance, message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/es/form/interface";
-import { checkPasswordStrength, getUserInfo, md5 } from "../../../utils";
+import { checkPasswordStrength, md5 } from "../../../utils";
 import { API_updateUser, API_uploadAvatar, API_verifyPassword } from "../../../axios";
-
-type Emit = (event: "updateUserName" | "updateAvatar", ...args: unknown[]) => void;
 
 /**
  * @description 导出用户信息 modal 相关 hooks
  */
 export const useUserInfoHook = () => {
+	const userStore = useUserStore();
+
 	// 个人信息modal
 	const userInfoModalVisible = ref(false);
 
-	// 定义静态页面 UserName
-	const USERNAME = ref(getUserInfo().username);
-	// 定义静态头像
-	const AVATAR = ref(getUserInfo().avatar);
+	// 定义页面静态用户名
+	const USERNAME = ref(userStore.getUserName());
 
 	// 用户信息表单
-	const userInfoForm = reactive({ ...getUserInfo() });
+	const userInfoForm = reactive(JSON.parse(JSON.stringify(userStore.userInfo)));
 
 	// 重置表单
 	function resetUserInfoForm() {
 		// 重新获取数据，不然存在脏数据异常
-		const userInfo = getUserInfo();
-		Object.keys(userInfoForm).forEach((key) => {
-			userInfoForm[key] = userInfo[key];
-		});
+		const userInfo = userStore.userInfo;
+		userInfoForm.username = userInfo.username;
+		userInfoForm.email = userInfo.email;
 	}
 
 	// 更新用户信息 这个函数内，仅处理 username email
-	async function updateUserInfo(emit: Emit) {
+	async function updateUserInfo() {
 		const { username, email } = toRaw(userInfoForm);
 		// 如果没有变化则不需要请求
-		const userInfo = getUserInfo();
-		if (username === userInfo.username && email === userInfo.email) return;
+		if (username === userStore.userInfo.username && email === userStore.userInfo.email) return;
 
 		try {
 			const { data } = await API_updateUser({ username, email });
 
 			if (data.code === 200) {
-				const newUserInfo = Object.assign({}, userInfo, { username, email });
-				// 更新页面
 				USERNAME.value = username;
 				// 更新存储
-				localForage.setItem("userInfo", newUserInfo);
+				userStore.setUserInfo({ username, email });
 				message.success("更新成功");
-
-				// 更新用户名称后，可能会引起sheet list 文件拥有者变更，因此，需要重新获取文件列表
-				if (username === userInfo.username) return; // 避免重复更新
-
-				emit("updateUserName");
 			}
 		} catch (error) {
 			console.error(error);
@@ -64,12 +53,11 @@ export const useUserInfoHook = () => {
 	}
 
 	return {
-		userInfoModalVisible,
 		USERNAME,
 		userInfoForm,
+		userInfoModalVisible,
 		resetUserInfoForm,
 		updateUserInfo,
-		AVATAR,
 	};
 };
 
@@ -155,6 +143,8 @@ export const usePasswordHook = () => {
  * @description 导出头像上传相关 hooks
  */
 export const useAvatarHook = () => {
+	const userStore = useUserStore();
+
 	// 模态框状态
 	const avatarModalVisible = ref(false);
 
@@ -192,7 +182,7 @@ export const useAvatarHook = () => {
 	}
 
 	/** 手动上传头像 */
-	async function handleUpload(emit: Emit) {
+	async function handleUpload() {
 		if (!uploadList.length) return;
 		// 将头像上传到服务器
 		const formData = new FormData();
@@ -203,13 +193,9 @@ export const useAvatarHook = () => {
 			if (data.code === 200) {
 				message.success("上传成功");
 				// 更新用户信息
-				const userInfo = getUserInfo();
-				const newUserInfo = { ...userInfo, avatar: data.avatar };
-				localForage.setItem("userInfo", newUserInfo);
+				userStore.setUserInfo({ avatar: data.avatar });
 				// 关闭modal
 				avatarModalVisible.value = false;
-				// 触发事件更新头像
-				emit("updateAvatar");
 			}
 		} catch (error) {
 			console.error(error);

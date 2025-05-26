@@ -11,8 +11,8 @@
 		</a-input>
 		<a-dropdown arrow trigger="click" placement="bottomRight">
 			<div class="user-avatar">
-				<span class="username">{{ username }}</span>
-				<a-avatar style="cursor: pointer" :src="avatar" />
+				<span class="username">{{ getUserName() }}</span>
+				<a-avatar style="cursor: pointer" :src="parseAvatar()" />
 			</div>
 			<template #overlay>
 				<a-menu @click="handleOperate">
@@ -25,44 +25,35 @@
 		</a-dropdown>
 	</div>
 	<!-- 个人信息弹窗 -->
-	<UserInfo ref="userInfoModalRef" @updateUserName="updateUserName" @updateAvatar="updateAvatar" />
+	<UserInfo ref="userInfoModalRef" />
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
 import router from "../../../router";
 import { theme } from "ant-design-vue";
 import UserInfo from "./UserInfo.vue";
-import { getUserInfo } from "../../../utils";
+import { useUserStore } from "../../../store/User";
 import { localForage } from "../../../localforage";
 import { SearchOutlined } from "@ant-design/icons-vue";
-import { imageUrlHandle } from "../../../utils/LuckysheetImage";
 
 const emit = defineEmits(["search", "updateFileList"]);
 
 // 文件搜索关键词
 const searchKey = ref("");
 
+const { token } = theme.useToken();
+
 watch(
 	() => searchKey.value,
 	() => emit("search", searchKey.value)
 );
 
+// 用户信息弹窗 用于调用 open 方法打开弹窗
 const userInfoModalRef = ref();
-const { token } = theme.useToken();
-const userInfo = getUserInfo();
-const username = ref(userInfo.username);
-const avatar = ref(imageUrlHandle(userInfo.avatar));
 
-// 用户名更新
-function updateUserName() {
-	username.value = getUserInfo().username;
-	emit("updateFileList");
-}
-
-// 头像更新
-function updateAvatar() {
-	avatar.value = imageUrlHandle(getUserInfo().avatar);
-}
+// 用户头像 名称通过解析 store 实现更新
+const { getUserName, parseAvatar } = useUserStore();
 
 // 头像下拉菜单事件
 function handleOperate(payload: { key: string }) {

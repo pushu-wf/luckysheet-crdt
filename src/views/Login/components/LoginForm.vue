@@ -46,10 +46,13 @@ import router from "../../../router";
 import { API_login } from "../../../axios";
 import { onMounted, ref, toRaw } from "vue";
 import { localForage } from "../../../localforage";
-import { FormInstance, message, theme } from "ant-design-vue";
+import { useUserStore } from "../../../store/User";
 import { useAntFormHook } from "../../../hooks/login-form";
+import { FormInstance, message, theme } from "ant-design-vue";
 import VerificationCodeVue from "../../../components/VerificationCode.vue";
 import { QuestionCircleOutlined, UserOutlined, LockOutlined, CreditCardOutlined } from "@ant-design/icons-vue";
+// user store
+const userStore = useUserStore();
 
 // 使用 theme token 实现主题色
 const { token } = theme.useToken();
@@ -83,8 +86,9 @@ async function loginHandle() {
 
 		// 不然存储 token  到 localStorage
 		localForage.setItem("token", data.token);
-		// 存储用户信息
-		localForage.setItem("userInfo", data.user);
+
+		// 用户信息不能存储到  localStorage 易于修改,应该使用 pinia 存储
+		userStore.setUserInfo(data.user);
 		message.success("登录成功");
 
 		// 判断是否从邀请页面而来

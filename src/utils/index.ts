@@ -1,5 +1,4 @@
 import { MD5 } from "crypto-js";
-import { localForage } from "../localforage";
 import { Rule } from "ant-design-vue/es/form/interface";
 
 // 获取当前环境是否为 开发环境
@@ -22,11 +21,6 @@ const getLoadUrl = (gridKey: string) => {
 //  md5 加密
 function md5(password: string): string {
 	return MD5(password).toString();
-}
-
-// 获取用户信息
-function getUserInfo() {
-	return localForage.getItem("userInfo");
 }
 
 // 将内容写入粘贴板
@@ -81,4 +75,4 @@ function checkPasswordStrength(_rule: Rule, value: string) {
 	});
 }
 
-export { getLoadUrl, getRandom, md5, isDev, getUserInfo, writeToClipboard, encode, decode, checkPasswordStrength };
+export { getLoadUrl, getRandom, md5, isDev, writeToClipboard, encode, decode, checkPasswordStrength };
