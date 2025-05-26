@@ -86,4 +86,12 @@ function getHighlightHtml(str: string, keyword: string) {
 	return str.replace(reg, `<b style="color:#ff4d4f;font-weight:900">${keyword}</b>`);
 }
 
-export { getLoadUrl, getRandom, md5, isDev, writeToClipboard, encode, decode, checkPasswordStrength, getHighlightHtml };
+// 禁止右键事件
+function disableContextMenu(container: HTMLElement | string) {
+	if (typeof container === "string") {
+		container = document.querySelector(container) as HTMLElement;
+	}
+	container.addEventListener("contextmenu", (e) => e.preventDefault());
+}
+
+export { getLoadUrl, getRandom, md5, isDev, writeToClipboard, encode, decode, checkPasswordStrength, getHighlightHtml, disableContextMenu };

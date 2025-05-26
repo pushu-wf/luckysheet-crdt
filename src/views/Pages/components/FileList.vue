@@ -11,11 +11,11 @@
 			</div>
 		</template>
 		<template #renderItem="{ item }">
-			<a-list-item class="sheet-item">
+			<a-list-item class="sheet-item" @dblclick="handleDoubleClickRow(item)">
 				<a-checkbox v-model:checked="item.checked"></a-checkbox>
 				<span class="sheet-filename">
 					<img src="/file-icon.png" alt="" />
-					<p v-html="getHighlightHtml(item.workerbook.title, searchKeyWord)"></p>
+					<p v-html="getHighlightHtml(item.workerbook.title, searchKeyWord)" @click="handleDoubleClickRow(item)" />
 					<a-button
 						@click="toggleFavor(item)"
 						type="text"
@@ -79,12 +79,13 @@ import { MenuProps } from "ant-design-vue/es/menu";
 import { useUserStore } from "../../../store/User";
 import { SheetListItem } from "../../../interface";
 import { message, Modal, theme } from "ant-design-vue";
-import { encode, getHighlightHtml, writeToClipboard } from "../../../utils";
 import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
+import { encode, getHighlightHtml, writeToClipboard } from "../../../utils";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import router from "../../../router";
 
 const { userInfo } = useUserStore();
 
@@ -246,7 +247,7 @@ async function handleDeleteFile(item: SheetListItem) {
 }
 
 /**
- * @description 批量删除文件
+ * @description 批量删除文件 - buttonList 按钮触发
  */
 async function handleBatchDeleteFile() {
 	const checkedArray = getCheckedFileList();
@@ -267,6 +268,14 @@ async function handleBatchDeleteFile() {
 		message.error("删除失败");
 	}
 	queryFileList();
+}
+
+/**
+ * @description 双击行打开文件 goto excel page
+ */
+async function handleDoubleClickRow(record: SheetListItem) {
+	const { gridKey } = toRaw(record.workerbook);
+	router.push(`/excel/${gridKey}`);
 }
 
 /**

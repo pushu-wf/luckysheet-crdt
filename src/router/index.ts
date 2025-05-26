@@ -18,7 +18,7 @@ const routes = [
 		component: () => import("../views/Pages/index.vue"),
 	},
 	{
-		path: "/excel",
+		path: "/excel/:gridKey",
 		component: () => import("../views/Excel/index.vue"),
 	},
 	{

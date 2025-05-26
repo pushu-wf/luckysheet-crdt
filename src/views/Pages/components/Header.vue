@@ -26,12 +26,6 @@
 			</template>
 		</a-dropdown>
 	</div>
-
-	<!-- 个人信息弹窗 -->
-	<UserInfo ref="userInfoModalRef" />
-
-	<!-- 获取帮助弹窗 -->
-	<Help ref="helpModalRef" />
 </template>
 <script setup lang="ts">
 import Help from "./Help.vue";

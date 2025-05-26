@@ -16,10 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { theme } from "ant-design-vue";
 import HeaderVue from "./components/Header.vue";
 import fileList from "./components/FileList.vue";
+import { disableContextMenu } from "../../utils";
 import ButtonList from "./components/ButtonList.vue";
 
 const { token } = theme.useToken();
@@ -42,6 +43,9 @@ function updateFileList(filterType: string) {
 	if (!fileListRef.value) return;
 	fileListRef.value.queryFileList(filterType);
 }
+
+// 此页面禁止右键菜单
+onMounted(() => disableContextMenu(".pages-box"));
 </script>
 
 <style lang="less" scoped>
