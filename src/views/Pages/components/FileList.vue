@@ -225,7 +225,7 @@ async function handleDeleteFile(item: SheetListItem) {
 		async onOk() {
 			try {
 				const { data } = await API_deleteFile({ filemapid: item.file_map_id, gridKey: item.workerbook.gridKey });
-				if (data.code === 200) message.success("删除成功");
+				if (data.code === 200) message.success(data.message || "删除成功");
 				queryFileList();
 			} catch (error) {
 				console.error(error);

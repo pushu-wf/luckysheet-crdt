@@ -117,13 +117,35 @@ async function deleteFile(req: Request, res: Response) {
 		return;
 	}
 
+	// 获取用户ID
+	const userid = getUseridFromToken(req);
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户不存在" });
+		return;
+	}
+
+	// 获取当前记录的信息
+	const filemap = await FileMapService.hasFileMap(gridKey, user_uuid);
+	if (!filemap) {
+		res.status(400).json({ code: 400, message: "未查询到相关记录" });
+		return;
+	}
+
+	// 删除文件映射记录
 	await FileMapService.deleteFileMap(filemapid);
+
+	// 判断该文件所有者是否当前操作人，如果不是，是不能删除文件实际内容的，只能删除映射表记录
+	if (filemap.owner !== user_uuid) {
+		res.status(200).json({ code: 200, message: "已删除相关记录，但您无权限删除该文件" });
+		return;
+	}
 
 	// 删除 worker book 之前，需要查询关联的 worker sheet，
 	const workerSheet = await WorkerSheetService.findWorkerSheetByGridKey(gridKey);
 	const worker_sheet_id = workerSheet?.worker_sheet_id;
 	if (!worker_sheet_id) {
-		res.status(400).json({ code: 400, message: "未查询到相关记录" });
+		res.status(400).json({ code: 400, message: "未查询到 Worker Book 相关记录" });
 		return;
 	}
 
