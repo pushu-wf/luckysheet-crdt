@@ -15,5 +15,8 @@ routes.post("/updateUser", Controller.updateUser);
 // 验证密码是否正确
 routes.post("/verifyPassword", Controller.verifyPassword);
 
+// 用户上传头像
+routes.post("/uploadAvatar", Controller.uploadAvatar);
+
 // 模块化的路由，直接调用 routes.use() 即可
 export const UserRouter = routes;

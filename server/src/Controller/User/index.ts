@@ -1,6 +1,13 @@
+import fs from "fs";
+import multer from "multer";
 import { Request, Response } from "express";
-import { createToken, getUseridFromToken, md5 } from "../../Utils";
+import { MULTER_CONFIG } from "../../Config";
 import { UserService } from "../../Service/User";
+import { createToken, getUseridFromToken, md5 } from "../../Utils";
+
+// 配置 Multer
+const { dest } = MULTER_CONFIG;
+const upload = multer({ dest }).single("userAvatar");
 
 /**
  * @description 注册用户
@@ -63,6 +70,12 @@ export async function updateUser(req: Request, res: Response) {
 		return;
 	}
 
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户不存在" });
+		return;
+	}
+
 	// 特别注意密码的处理方式，如果为空的话 会直接 md5('')导致密码变更
 	const updateData: { password?: string; username?: string; email?: string; avatar?: string } = {};
 	if (password) updateData.password = md5(password);
@@ -71,7 +84,7 @@ export async function updateUser(req: Request, res: Response) {
 	if (avatar) updateData.avatar = avatar;
 
 	// 执行更新操作
-	const data = await UserService.update({ userid, ...updateData });
+	const data = await UserService.update({ user_uuid, ...updateData });
 	if (data) {
 		res.json({ code: 200, message: "更新成功" });
 	} else {
@@ -101,4 +114,55 @@ export async function verifyPassword(req: Request, res: Response) {
 		// 请注意，此处的 statis 设置未 200 是避免前端密码校验时，被拦截器拦截，从而弹窗提示，也可以设置 400 对业务上没有影响
 		res.status(200).json({ code: 400, message: "密码错误" });
 	}
+}
+
+// 用户上传头像
+export async function uploadAvatar(req: Request, res: Response) {
+	upload(req, res, async () => {
+		const { file } = req;
+
+		// 如果没有解析到 file 对象，则直接返回 400
+		if (!file) {
+			res.status(400).json({ code: 400, message: "请选择文件" });
+			return;
+		}
+
+		const { filename, originalname } = <Express.Multer.File>file;
+
+		/**
+		 * 处理文件路径：
+		 *  将原始路径 Snipaste_2024-10-10_09-46-01.png
+		 *  转换成 85d6d8c593b7239406ce2c13099c6110.png
+		 *  保留后缀，方便用户以静态资源访问
+		 */
+		const suffix = originalname.split(".").pop();
+		const oldpath = `${MULTER_CONFIG.dest}/${filename}`;
+		const newpath = `${MULTER_CONFIG.dest}/${filename}.${suffix}`;
+
+		// 重命名文件
+		fs.renameSync(oldpath, newpath);
+
+		const avatar = `/uploads/${filename}.${suffix}`;
+
+		// 同步修改用户信息表 avatar 字段
+		const userid = getUseridFromToken(req);
+		if (!userid) {
+			res.status(400).json({ code: 400, message: "Invalid token" });
+			return;
+		}
+
+		const user_uuid = await UserService.getUserUUID(userid);
+		if (!user_uuid) {
+			res.status(400).json({ code: 400, message: "用户不存在" });
+			return;
+		}
+
+		const updateUserAvatar = await UserService.update({ user_uuid, avatar });
+		if (!updateUserAvatar) {
+			res.status(400).json({ code: 400, message: "更新用户头像失败" });
+			return;
+		}
+
+		res.json({ code: 200, message: "Success to upload.", avatar });
+	});
 }

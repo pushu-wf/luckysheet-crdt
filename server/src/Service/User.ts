@@ -37,7 +37,7 @@ async function getUserUUID(userid: string) {
 // 更新字段
 async function update(user: UserModelType) {
 	try {
-		return await UserModel.update(user, { where: { userid: user.userid } });
+		return await UserModel.update(user, { where: { user_uuid: user.user_uuid } });
 	} catch (error) {
 		logger.error(error);
 	}

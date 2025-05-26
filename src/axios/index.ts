@@ -108,10 +108,19 @@ export const API_verifyPassword = (password: string) => {
 	});
 };
 
-// 修改用户信息 - username email avatar password
-export const API_updateUser = (data: { username?: string; email?: string; avatar?: string; password?: string }) => {
+// 修改用户信息 - username email password
+export const API_updateUser = (data: { username?: string; email?: string; password?: string }) => {
 	return fetch({
 		url: "/user/updateUser",
+		method: "POST",
+		data,
+	});
+};
+
+// 上传用户头像
+export const API_uploadAvatar = (data: FormData) => {
+	return fetch({
+		url: "/user/uploadAvatar",
 		method: "POST",
 		data,
 	});

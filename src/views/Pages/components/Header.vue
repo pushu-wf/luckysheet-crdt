@@ -12,11 +12,7 @@
 		<a-dropdown arrow trigger="click" placement="bottomRight">
 			<div class="user-avatar">
 				<span class="username">{{ username }}</span>
-				<a-avatar style="cursor: pointer">
-					<template #icon>
-						<UserOutlined />
-					</template>
-				</a-avatar>
+				<a-avatar style="cursor: pointer" :src="avatar" />
 			</div>
 			<template #overlay>
 				<a-menu @click="handleOperate">
@@ -29,7 +25,7 @@
 		</a-dropdown>
 	</div>
 	<!-- 个人信息弹窗 -->
-	<UserInfo ref="userInfoModalRef" @updateUserName="updateUserName" />
+	<UserInfo ref="userInfoModalRef" @updateUserName="updateUserName" @updateAvatar="updateAvatar" />
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
@@ -38,7 +34,8 @@ import { theme } from "ant-design-vue";
 import UserInfo from "./UserInfo.vue";
 import { getUserInfo } from "../../../utils";
 import { localForage } from "../../../localforage";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
+import { imageUrlHandle } from "../../../utils/LuckysheetImage";
 
 const emit = defineEmits(["search", "updateFileList"]);
 
@@ -52,12 +49,19 @@ watch(
 
 const userInfoModalRef = ref();
 const { token } = theme.useToken();
-const username = ref(getUserInfo().username);
+const userInfo = getUserInfo();
+const username = ref(userInfo.username);
+const avatar = ref(imageUrlHandle(userInfo.avatar));
 
 // 用户名更新
 function updateUserName() {
 	username.value = getUserInfo().username;
 	emit("updateFileList");
+}
+
+// 头像更新
+function updateAvatar() {
+	avatar.value = imageUrlHandle(getUserInfo().avatar);
 }
 
 // 头像下拉菜单事件

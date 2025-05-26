@@ -6,7 +6,7 @@ import { DataTypes, InferAttributes, Model, Sequelize } from "sequelize";
 
 export class UserModel extends Model {
 	declare user_uuid?: string; // 有默认值 非必传
-	declare userid: string;
+	declare userid?: string;
 	declare password?: string;
 	declare username?: string;
 	declare email?: string;

@@ -1,16 +1,12 @@
 <template>
-	<a-modal v-model:open="modalVisible" title="" width="100%" :footer="null" :closable="false" wrap-class-name="full-modal">
-		<a-page-header title="个人信息" sub-title="温馨提示: 页面部分数据为虚拟数据" @back="modalVisible = false" />
+	<a-modal v-model:open="userInfoModalVisible" title="" width="100%" :footer="null" :closable="false" wrap-class-name="full-modal">
+		<a-page-header title="个人信息" sub-title="温馨提示: 页面部分数据为虚拟数据" @back="userInfoModalVisible = false" />
 		<div class="user-info-container">
 			<!-- 左右布局 -->
 			<div class="user-info-left">
 				<div class="user-info-avatar">
-					<a-avatar style="background-color: #87d068" :size="80" @click="uploadImageModalVisible = true">
-						<template #icon>
-							<UserOutlined />
-						</template>
-					</a-avatar>
-					<h2>{{ staticUserName }}</h2>
+					<a-avatar style="background-color: #87d068" :size="80" @click="avatarModalVisible = true" :src="AVATAR" />
+					<h2>{{ USERNAME }}</h2>
 				</div>
 				<div class="user-info-form">
 					<a-form layout="vertical" :model="userInfoForm">
@@ -25,7 +21,7 @@
 								<a-input placeholder="******" disabled type="password" style="width: calc(100% - 34px)" />
 								<a-tooltip>
 									<template #title>修改密码</template>
-									<a-button @click="passwordVisible = true" :icon="h(FormOutlined)" />
+									<a-button @click="passwordModalVisible = true" :icon="h(FormOutlined)" />
 								</a-tooltip>
 							</a-input-group>
 						</a-form-item>
@@ -33,7 +29,7 @@
 				</div>
 				<div class="user-info-btns">
 					<a-button @click="resetUserInfoForm">重置</a-button>
-					<a-button style="margin-left: 10px" type="primary" @click="updateUserInfo">修改</a-button>
+					<a-button style="margin-left: 10px" type="primary" @click="updateUserInfo(emit)">修改</a-button>
 				</div>
 			</div>
 			<div class="user-info-right">
@@ -47,11 +43,11 @@
 
 	<!-- 修改密码模态框 -->
 	<a-modal
-		v-model:open="passwordVisible"
+		v-model:open="passwordModalVisible"
 		title="修改密码"
 		cancelText="取消"
 		okText="确定"
-		@ok="updatePassword"
+		@ok="() => updatePassword(passwordFormRef)"
 		@cancel="() => resetForm(passwordFormRef)">
 		<a-form layout="vertical" :model="passwordForm" ref="passwordFormRef" :rules="passwordRules">
 			<a-form-item name="password">
@@ -67,94 +63,56 @@
 	</a-modal>
 
 	<!-- 上传图片模态框 -->
-	<a-modal v-model:open="uploadImageModalVisible" title="上传头像" cancelText="取消" okText="上传"> </a-modal>
+	<a-modal v-model:open="avatarModalVisible" title="上传头像" cancelText="取消" okText="上传" @ok="() => handleUpload(emit)">
+		<div class="user-avatar-upload">
+			<a-upload
+				v-model:file-list="uploadList"
+				name="avatar"
+				list-type="picture-card"
+				class="avatar-uploader"
+				:show-upload-list="false"
+				:before-upload="beforeUpload">
+				<img v-if="avatarPreview" :src="avatarPreview" alt="avatar" style="width: 100%; height: fit-content" />
+				<div v-else>
+					<plus-outlined></plus-outlined>
+					<div class="ant-upload-text">Upload</div>
+				</div>
+			</a-upload>
+			<a-divider type="vertical" style="height: 90px" />
+
+			<!-- 头像预览 -->
+			<div class="avatar-preview">
+				<div class="circle">
+					<a-avatar :size="48" :src="avatarPreview" />
+					<a-avatar :size="32" :src="avatarPreview" />
+					<a-avatar :size="28" :src="avatarPreview" />
+				</div>
+				<div class="square">
+					<a-avatar shape="square" :size="48" :src="avatarPreview" />
+					<a-avatar shape="square" :size="32" :src="avatarPreview" />
+					<a-avatar shape="square" :size="28" :src="avatarPreview" />
+				</div>
+			</div>
+		</div>
+	</a-modal>
 </template>
 
 <script setup lang="ts">
-import { message } from "ant-design-vue";
-import { updatePasswordHook } from "../config";
-import { h, reactive, ref, toRaw } from "vue";
-import { API_updateUser } from "../../../axios";
-import { getUserInfo, md5 } from "../../../utils";
-import { localForage } from "../../../localforage";
-import { UserOutlined, FormOutlined } from "@ant-design/icons-vue";
+import { h } from "vue";
+import { FormOutlined, PlusOutlined } from "@ant-design/icons-vue";
+import { usePasswordHook, useAvatarHook, useUserInfoHook } from "../config";
 
-const { passwordForm, passwordRules, resetForm, validateForm } = updatePasswordHook();
+// 解析头像上传相关 hook 参数
+const { beforeUpload, avatarModalVisible, uploadList, avatarPreview, handleUpload } = useAvatarHook();
+// 解析修改密码相关 hook 参数
+const { passwordForm, passwordRules, resetForm, updatePassword, passwordModalVisible, passwordFormRef } = usePasswordHook();
 
-const emit = defineEmits(["updateUserName"]);
+// 解析用户信息相关 hook 参数
+const { userInfoModalVisible, USERNAME, userInfoForm, resetUserInfoForm, updateUserInfo, AVATAR } = useUserInfoHook();
 
-// 个人信息弹窗
-const modalVisible = ref(true);
+const emit = defineEmits(["updateUserName", "updateAvatar"]);
 
-// 修改密码弹窗
-const passwordVisible = ref(false);
-
-// 上传头像弹窗
-const uploadImageModalVisible = ref(false);
-
-// 用户表单信息
-const userInfo = getUserInfo();
-const userInfoForm = reactive({ ...userInfo });
-
-// 静态数据 - h2 展示用
-const staticUserName = ref(toRaw(userInfo.username));
-
-// 修改密码表单
-const passwordFormRef = ref();
-
-// 重置表单
-function resetUserInfoForm() {
-	// 重新获取数据，不然存在脏数据异常
-	const userInfo = getUserInfo();
-	Object.keys(userInfoForm).forEach((key) => {
-		userInfoForm[key] = userInfo[key];
-	});
-}
-
-// 更新用户信息 这个函数内，仅处理 username email
-async function updateUserInfo() {
-	const { username, email } = toRaw(userInfoForm);
-	// 如果没有变化则不需要请求
-	const userInfo = getUserInfo();
-	if (username === userInfo.username && email === userInfo.email) return;
-	try {
-		const { data } = await API_updateUser({ username, email });
-
-		if (data.code === 200) {
-			const newUserInfo = Object.assign({}, userInfo, { username, email });
-			// 更新页面
-			staticUserName.value = username;
-			// 更新存储
-			localForage.setItem("userInfo", newUserInfo);
-			message.success("更新成功");
-
-			// 更新用户名称后，可能会引起sheet list 文件拥有者变更，因此，需要重新获取文件列表
-			if (username === userInfo.username) return; // 避免重复更新
-			emit("updateUserName");
-		}
-	} catch (error) {}
-}
-
-// 修改密码
-async function updatePassword() {
-	try {
-		const validata = await validateForm(passwordFormRef);
-		if (!validata) return;
-
-		const { newPassword } = toRaw(passwordForm);
-
-		const { data } = await API_updateUser({ password: md5(newPassword) });
-		if (data.code === 200) {
-			message.success("密码修改成功");
-			// 关闭弹窗
-			passwordVisible.value = false;
-		}
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-defineExpose({ open: () => (modalVisible.value = true) });
+defineExpose({ open: () => (userInfoModalVisible.value = true) });
 </script>
 
 <style lang="less" scoped>
@@ -211,6 +169,28 @@ defineExpose({ open: () => (modalVisible.value = true) });
 		img {
 			width: 100%;
 			height: 100%;
+		}
+	}
+}
+
+.user-avatar-upload {
+	display: flex;
+	align-items: center;
+	.ant-upload-wrapper {
+		width: auto;
+	}
+	.avatar-preview {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		& > * {
+			& > * {
+				margin-right: 10px;
+			}
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
 		}
 	}
 }
