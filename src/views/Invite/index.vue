@@ -41,7 +41,7 @@ async function ok() {
 	// 发送请求 - 同意加入
 	try {
 		const { data } = await API_acceptInvite({ gridKey: inviteInfo.gridKey, owner: inviteInfo.fileOwner });
-		if (data === 200) message.success("加入成功");
+		if (data.code === 200) message.success("加入成功");
 	} catch (error) {
 		console.error(error);
 	}

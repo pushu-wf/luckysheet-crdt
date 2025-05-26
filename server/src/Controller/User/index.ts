@@ -22,7 +22,7 @@ export async function register(req: Request, res: Response) {
 	}
 
 	// 不然执行创建用户操作
-	const newUser = await UserService.create({ userid, password: md5(password), username: userid });
+	const newUser = await UserService.create({ userid, password: md5(password), username: `User-${userid}` });
 	if (newUser?.dataValues) res.json({ code: 200, message: "用户注册成功" });
 	else res.status(400).json({ code: 400, message: "用户注册失败，请稍后重试！" });
 }

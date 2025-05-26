@@ -180,7 +180,7 @@ async function handleShareFile(item: SheetListItem) {
 	// 写入粘贴板
 	try {
 		writeToClipboard(URL);
-		message.success("已复制到粘贴板");
+		message.success("分享链接已复制到粘贴板");
 	} catch (error) {
 		console.error(error);
 	}
@@ -374,8 +374,12 @@ defineExpose({ queryFileList, handleOuterFileOperate });
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			cursor: pointer;
+			transition: all 0.3s;
+			border-bottom: solid 1px transparent;
+
 			&:hover {
 				color: #1890ff;
+				border-bottom-color: #1890ff;
 			}
 		}
 	}

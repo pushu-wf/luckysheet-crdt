@@ -64,6 +64,13 @@ export async function acceptInvite(req: Request, res: Response) {
 		return;
 	}
 
+	// 通过 userid 查询 user_uuid
+	const owner_user_uuid = await UserService.getUserUUID(owner);
+	if (!owner_user_uuid) {
+		res.status(500).json({ code: 500, message: "获取用户信息失败" });
+		return;
+	}
+
 	// 不然判断是否已经存在 grid Key user_uuid  - 不能重复加入
 	const isExist = await FileMapService.hasFileMap(gridKey, user_uuid);
 	if (isExist) {
@@ -71,7 +78,7 @@ export async function acceptInvite(req: Request, res: Response) {
 		return;
 	} else {
 		// 不然就插入
-		const data = await FileMapService.createFileMap({ gridKey, operator: user_uuid, owner });
+		const data = await FileMapService.createFileMap({ gridKey, operator: user_uuid, owner: owner_user_uuid });
 		if (data) {
 			res.json({ code: 200, message: "加入成功" });
 		} else {
