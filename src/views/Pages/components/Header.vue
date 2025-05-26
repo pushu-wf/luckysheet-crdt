@@ -16,26 +16,32 @@
 			</div>
 			<template #overlay>
 				<a-menu @click="handleOperate">
-					<a-menu-item key="userInfo">个人信息</a-menu-item>
-					<a-menu-item key="help">获取帮助</a-menu-item>
+					<a-menu-item key="userInfo"> <UserOutlined style="margin-right: 10px" /> 个人信息</a-menu-item>
+					<a-menu-item key="help"> <QuestionCircleOutlined style="margin-right: 10px" />获取帮助</a-menu-item>
 					<a-divider />
-					<a-menu-item key="logout" :style="{ color: token.colorError }">退出系统</a-menu-item>
+					<a-menu-item key="logout" :style="{ color: token.colorError }">
+						<LogoutOutlined style="margin-right: 10px" />退出系统
+					</a-menu-item>
 				</a-menu>
 			</template>
 		</a-dropdown>
 	</div>
+
 	<!-- 个人信息弹窗 -->
 	<UserInfo ref="userInfoModalRef" />
+
+	<!-- 获取帮助弹窗 -->
+	<Help ref="helpModalRef" />
 </template>
 <script setup lang="ts">
+import Help from "./Help.vue";
 import { ref, watch } from "vue";
-import { storeToRefs } from "pinia";
 import router from "../../../router";
-import { theme } from "ant-design-vue";
 import UserInfo from "./UserInfo.vue";
+import { theme } from "ant-design-vue";
 import { useUserStore } from "../../../store/User";
 import { localForage } from "../../../localforage";
-import { SearchOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined, UserOutlined, QuestionCircleOutlined, LogoutOutlined } from "@ant-design/icons-vue";
 
 const emit = defineEmits(["search", "updateFileList"]);
 

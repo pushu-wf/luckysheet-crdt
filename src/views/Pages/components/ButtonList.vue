@@ -11,15 +11,12 @@
 			已选择 <code>{{ checkedNumber }}</code> 个文件
 		</span>
 		<a-button
-			v-for="item in outerFileOperateBtns"
-			:type="item.type"
-			@click="emit('handleOuterFileOperate', item.operation)"
+			@click="emit('handleOuterFileOperate', 'exportFile')"
 			size="small"
 			:disabled="!checkedNumber"
-			:style="{ marginLeft: item.marginLeft }"
-			:danger="item.type === 'primary' ? true : false"
-			:icon="h(item.icon)">
-			{{ item.label }}
+			style="margin-left: auto"
+			:icon="h(CloudDownloadOutlined)">
+			导出
 		</a-button>
 		<a-popconfirm
 			:disabled="!checkedNumber"
@@ -78,13 +75,6 @@ watch(
 	() => filterType.value,
 	() => emit("updateFileList", filterType.value)
 );
-
-// 定义文件多选操作
-const outerFileOperateBtns = [
-	{ label: "分享", marginLeft: "auto", type: "default", icon: BranchesOutlined, operation: "share" },
-	{ label: "导出", marginLeft: "10px", type: "default", icon: CloudDownloadOutlined, operation: "export" },
-	// { label: "删除", marginLeft: "10px", type: "primary", icon: DeleteOutlined, operation: "delete" },
-];
 
 // 新建文件弹窗
 const createFileVisible = ref(false);
