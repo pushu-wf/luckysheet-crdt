@@ -62,7 +62,7 @@ const { token } = theme.useToken();
 // 定义按钮组列表
 const filterTypes = [
 	{ name: "全部", value: "all" },
-	{ name: "最近", value: "recent" },
+	{ name: "我的", value: "mine" },
 	{ name: "共享", value: "share" },
 	{ name: "收藏", value: "favor" },
 ];

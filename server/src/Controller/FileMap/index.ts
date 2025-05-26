@@ -2,11 +2,10 @@
  * 文件映射表路由
  */
 
-// 设置收藏状态
-import { getUseridFromToken, isEmpty } from "../../Utils";
 import { Request, Response } from "express";
-import { FileMapService } from "../../Service/FileMap";
 import { UserService } from "../../Service/User";
+import { FileMapService } from "../../Service/FileMap";
+import { getUseridFromToken, isEmpty } from "../../Utils";
 
 export async function setFavor(req: Request, res: Response) {
 	// 需要获取 filemapid favor

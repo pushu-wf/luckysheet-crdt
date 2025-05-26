@@ -31,16 +31,13 @@ async function createFileMap(filemap: FileMapModelType) {
 async function getFileList(user_uuid: string, filterType: string, limit: number, offset: number) {
 	// 处理查询条件
 	const searchParams =
-		filterType === "favor"
+		filterType === "favor" // 获取收藏文件时，favor 为 true
 			? { operator: { [Op.eq]: user_uuid }, favor: { [Op.is]: true } }
-			: filterType === "share"
-			? {
-					operator: { [Op.eq]: user_uuid },
-					owner: { [Op.ne]: user_uuid }, // 获取分享文件时，owner 不是 user_uuid
-			  }
-			: {
-					operator: { [Op.eq]: user_uuid },
-			  };
+			: filterType === "share" // 获取分享文件时，owner 不是 user_uuid
+			? { operator: { [Op.eq]: user_uuid }, owner: { [Op.ne]: user_uuid } }
+			: filterType === "mine" // 获取我的文件时，需要当前操作人是我 所有者是我
+			? { operator: { [Op.eq]: user_uuid }, owner: { [Op.eq]: user_uuid } }
+			: { operator: { [Op.eq]: user_uuid } };
 	try {
 		const { count, rows } = await FileMapModel.findAndCountAll({
 			include: [
@@ -57,15 +54,6 @@ async function getFileList(user_uuid: string, filterType: string, limit: number,
 				{
 					model: WorkerBookModel,
 					as: "WorkerBook",
-					// 如果是查询最近的7天记录，则需要 WorkerBookModel updateAt 字段在7天内
-					where:
-						filterType === "recently"
-							? {
-									updatedAt: {
-										[Op.gt]: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-									},
-							  }
-							: undefined,
 				},
 			],
 			attributes: ["favor", "file_map_id"],
