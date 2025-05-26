@@ -1,5 +1,5 @@
 <template>
-	<a-list bordered :pagination="pagination" :data-source="fileList">
+	<a-list bordered :pagination="pagination" :data-source="fileList.filter((i) => i.workerbook.title.includes(searchKeyWord))">
 		<template #header>
 			<div class="sheet-header">
 				<a-checkbox @change="toggleCheckedAll" v-model:checked="checkedAll"></a-checkbox>
@@ -85,6 +85,10 @@ import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCir
 import { encode, writeToClipboard } from "../../../utils";
 
 const emit = defineEmits(["updateCheckedNumber"]);
+
+const { searchKeyWord } = defineProps({
+	searchKeyWord: { type: String, default: "" },
+});
 
 const { token } = theme.useToken();
 

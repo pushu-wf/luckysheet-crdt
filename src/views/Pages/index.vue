@@ -1,10 +1,13 @@
 <template>
 	<div class="pages-box">
-		<HeaderVue />
+		<HeaderVue @search="(value: string) => (searchKeyWord = value)" />
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
 			<ButtonList :checkedNumber="checkedNumber" @updateFileList="updateFileList" @handleOuterFileOperate="handleOuterFileOperate" />
-			<fileList @updateCheckedNumber="(number:number) => (checkedNumber = number)" ref="fileListRef" />
+			<fileList
+				ref="fileListRef"
+				@updateCheckedNumber="(number: number) => (checkedNumber = number)"
+				:searchKeyWord="searchKeyWord" />
 		</div>
 		<div class="pages-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
@@ -20,6 +23,8 @@ import fileList from "./components/FileList.vue";
 import ButtonList from "./components/ButtonList.vue";
 
 const { token } = theme.useToken();
+
+const searchKeyWord = ref("");
 
 // 当前有几个文件被选中
 const checkedNumber = ref(0);
