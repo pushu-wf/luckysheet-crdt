@@ -70,11 +70,13 @@ function decode(str: string) {
 
 // 验证密码强度
 function checkPasswordStrength(_rule: Rule, value: string) {
-	// 密码匹配正则实现：8-16位，至少1个大写字母，1个小写字母，1个数字
-	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,12}$/;
+	// 密码匹配正则实现： 6,12 位，含大小写字母、数字、特殊字符
+	const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/;
+	const tips = "密码未符合强度要求：6-12位，含大小写字母、数字、特殊字符";
+
 	return new Promise((resolve, reject) => {
 		if (!value) reject("请输入密码");
-		else if (!regex.test(value)) reject("密码未符合强度要求：8-16位，至少1个大写字母，1个小写字母，1个数字");
+		else if (!regex.test(value)) reject(tips);
 		else resolve("密码验证通过");
 	});
 }

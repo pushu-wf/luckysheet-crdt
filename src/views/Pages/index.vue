@@ -1,6 +1,6 @@
 <template>
 	<div class="pages-box">
-		<HeaderVue @search="(value: string) => (searchKeyWord = value)" />
+		<HeaderVue @search="(value: string) => (searchKeyWord = value)" @updateFileList="updateFileList" />
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
 			<ButtonList :checkedNumber="checkedNumber" @updateFileList="updateFileList" @handleOuterFileOperate="handleOuterFileOperate" />

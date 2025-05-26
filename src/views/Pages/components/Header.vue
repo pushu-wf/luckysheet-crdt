@@ -29,7 +29,7 @@
 		</a-dropdown>
 	</div>
 	<!-- 个人信息弹窗 -->
-	<UserInfo ref="userInfoModalRef" />
+	<UserInfo ref="userInfoModalRef" @updateUserName="updateUserName" />
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
@@ -40,7 +40,7 @@ import { getUserInfo } from "../../../utils";
 import { localForage } from "../../../localforage";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons-vue";
 
-const emit = defineEmits(["search"]);
+const emit = defineEmits(["search", "updateFileList"]);
 
 // 文件搜索关键词
 const searchKey = ref("");
@@ -52,7 +52,13 @@ watch(
 
 const userInfoModalRef = ref();
 const { token } = theme.useToken();
-const { username } = getUserInfo();
+const username = ref(getUserInfo().username);
+
+// 用户名更新
+function updateUserName() {
+	username.value = getUserInfo().username;
+	emit("updateFileList");
+}
 
 // 头像下拉菜单事件
 function handleOperate(payload: { key: string }) {

@@ -107,3 +107,12 @@ export const API_verifyPassword = (password: string) => {
 		data: { password },
 	});
 };
+
+// 修改用户信息 - username email avatar password
+export const API_updateUser = (data: { username?: string; email?: string; avatar?: string; password?: string }) => {
+	return fetch({
+		url: "/user/updateUser",
+		method: "POST",
+		data,
+	});
+};

@@ -390,7 +390,7 @@ defineExpose({ queryFileList, handleOuterFileOperate });
 	}
 
 	.sheet-owner {
-		width: 80px;
+		width: 220px;
 	}
 
 	.sheet-operator {
