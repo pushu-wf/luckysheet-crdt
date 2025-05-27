@@ -1,6 +1,7 @@
-import { defineStore } from "pinia";
-import { imageUrlHandle } from "../utils/LuckysheetImage";
 import { reactive } from "vue";
+import { decode, encode } from "../utils";
+import { defineStore, StateTree } from "pinia";
+import { imageUrlHandle } from "../utils/LuckysheetImage";
 
 // 定义用户信息完整类型
 export type UserInfo = {
@@ -34,11 +35,19 @@ export const useUserStore = defineStore(
 
 		return { userInfo, getUserName, parseAvatar, setUserInfo };
 	},
-
 	{
 		persist: {
 			key: "pinia_store_userInfo",
 			storage: sessionStorage,
+			// 自定义序列化方法
+			serializer: {
+				deserialize: (str: string) => {
+					return JSON.parse(decode(decode(str)));
+				},
+				serialize: (value: StateTree) => {
+					return encode(encode(JSON.stringify(value)));
+				},
+			},
 		},
 	}
 );
