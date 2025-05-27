@@ -134,3 +134,12 @@ export const API_importFile = (data: FormData) => {
 		data,
 	});
 };
+
+// 校验用户是否有sheet 编辑权限
+export const API_checkSheetEditPermission = (data: { filemapid: string }) => {
+	return fetch({
+		url: "/filemap/checkSheetEditPermission",
+		method: "POST",
+		data,
+	});
+};

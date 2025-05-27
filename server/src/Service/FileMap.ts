@@ -142,6 +142,24 @@ async function hasFileMap(gridKey: string, operator: string) {
 	}
 }
 
+// 通过 FileMapID 获取记录
+async function getFileMapByID(file_map_id: string) {
+	try {
+		return await FileMapModel.findOne({ where: { file_map_id } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+// 判断用户是否有某文件编辑权限
+async function checkFileEditPermission(user_uuid: string, gridKey: string) {
+	try {
+		return await FileMapModel.findOne({ where: { gridKey, operator: user_uuid } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const FileMapService = {
 	hasFileMap,
 	getFileList,
@@ -149,4 +167,6 @@ export const FileMapService = {
 	deleteFileMap,
 	createFileMap,
 	getInviteInfo,
+	getFileMapByID,
+	checkFileEditPermission,
 };

@@ -288,9 +288,9 @@ async function handleBatchDeleteFile() {
 /**
  * @description 双击行打开文件 goto excel page
  */
-async function handleDoubleClickRow(record: SheetListItem) {
-	const { gridKey } = toRaw(record.workerbook);
-	router.push(`/excel/${gridKey}`);
+async function handleDoubleClickRow(item: SheetListItem) {
+	const { file_map_id } = toRaw(item);
+	router.push(`/excel/${encode(encode(file_map_id))}`);
 }
 
 /**

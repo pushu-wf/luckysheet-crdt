@@ -4,9 +4,9 @@
 
 <script setup lang="ts">
 import router from "../../router";
-import { getLoadUrl } from "../../utils";
+import { decode, getLoadUrl } from "../../utils";
 import { useUserStore } from "../../store/User";
-import { API_getWorkerBook } from "../../axios";
+import { API_checkSheetEditPermission, API_getWorkerBook } from "../../axios";
 import { onBeforeUnmount, onMounted } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
@@ -85,10 +85,22 @@ async function initLuckysheet(gridKey: string) {
 // 获取router参数
 onMounted(async () => {
 	// 从 router 获取参数
-	const { gridKey } = router.currentRoute.value.params;
-	if (!gridKey) return;
+	const { filemapid } = router.currentRoute.value.params;
+	if (!filemapid) return;
 
-	initLuckysheet(<string>gridKey);
+	// 被加密两次
+	const file_map_id = decode(decode(<string>filemapid));
+
+	// 并非简单初始化，需要请求接口获取 gridKey 并判断当前用户是否有文件编辑权限
+	try {
+		const { data } = await API_checkSheetEditPermission({ filemapid: file_map_id });
+		if (data.code === 200) {
+			initLuckysheet(data.gridKey);
+		}
+	} catch (error) {
+		console.error(error);
+		router.push("/404");
+	}
 });
 
 onBeforeUnmount(() => {

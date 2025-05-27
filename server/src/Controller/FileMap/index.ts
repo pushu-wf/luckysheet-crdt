@@ -85,3 +85,42 @@ export async function acceptInvite(req: Request, res: Response) {
 		}
 	}
 }
+
+/**
+ * @description 判断用户是否有文件编辑权限
+ */
+export async function checkSheetEditPermission(req: Request, res: Response) {
+	const { filemapid } = req.body;
+	if (!filemapid) {
+		res.status(400).json({ code: 400, message: "filemapid 缺失" });
+		return;
+	}
+
+	// 获取用户ID
+	const userid = getUseridFromToken(req);
+	if (!userid) {
+		res.status(400).json({ code: 400, message: "用户不存在" });
+		return;
+	}
+
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户不存在" });
+		return;
+	}
+
+	// 不然请求当前 filemapid --> gridKey  --> user_uuid 是否存在 user_uuid && gridKey 的记录
+	const filemap = await FileMapService.getFileMapByID(filemapid);
+	if (!filemap) {
+		res.status(400).json({ code: 400, message: "文件不存在" });
+		return;
+	}
+
+	// 校验当前用户是否有此文件的编辑权限
+	const permission = await FileMapService.checkFileEditPermission(user_uuid, filemap.gridKey);
+	if (!permission) {
+		res.status(400).json({ code: 400, message: "您没有权限编辑此文件" });
+	} else {
+		res.json({ code: 200, gridKey: filemap.gridKey });
+	}
+}

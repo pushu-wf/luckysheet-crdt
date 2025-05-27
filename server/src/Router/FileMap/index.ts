@@ -13,5 +13,8 @@ routes.post("/getInviteInfo", Controller.getInviteInfo);
 // 同意邀请
 routes.post("/acceptInvite", Controller.acceptInvite);
 
+// 判断用户是否有文件编辑权限
+routes.post("/checkSheetEditPermission", Controller.checkSheetEditPermission);
+
 // 模块化的路由，直接调用 routes.use() 即可
 export const FileMapRouter = routes;
