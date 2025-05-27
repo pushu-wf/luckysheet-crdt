@@ -30,6 +30,7 @@ const routes = [
 		path: "/invite/:filemapid",
 		component: () => import("../views/Invite/index.vue"),
 	},
+	{ path: "/:pathMatch(.*)*", redirect: "/404" },
 ];
 
 // 路由实例
