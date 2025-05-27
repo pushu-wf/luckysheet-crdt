@@ -1,7 +1,7 @@
 // router
 import { message } from "ant-design-vue";
 import { localForage } from "../localforage";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import Modal from "ant-design-vue/es/modal/Modal";
 
 // 路由配置
@@ -9,6 +9,10 @@ const routes = [
 	{
 		path: "/",
 		redirect: "/home",
+	},
+	{
+		path: "/404",
+		component: () => import("../views/404.vue"),
 	},
 	{
 		path: "/login",
@@ -29,14 +33,14 @@ const routes = [
 ];
 
 // 路由实例
-const router = createRouter({ routes, history: createWebHistory() });
+const router = createRouter({ routes, history: createWebHashHistory() });
 
 // 拦截路由
 router.beforeEach((to, _from, next) => {
 	Modal.destroyAll();
 
 	const token = localForage.getItem("token");
-	if (to.path === "/login" || token) {
+	if (to.path === "/login" || to.path === "/404" || token) {
 		next();
 	} else {
 		localForage.clear();

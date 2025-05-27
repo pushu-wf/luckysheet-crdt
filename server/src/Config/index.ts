@@ -59,6 +59,8 @@ const StaticSourceList = [
 	path.resolve(__dirname, "../../public/dist"),
 	path.resolve(__dirname, "../../public/uploads"),
 	path.resolve(__dirname, "../../public/dist/assets"),
+	path.resolve(__dirname, "../../public/dist/expendPlugins"),
+	path.resolve(__dirname, "../../public/dist/lib"),
 ];
 
 // 统一导出配置对象

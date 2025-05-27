@@ -9,9 +9,11 @@ import { logger } from "../../Utils/Logger";
 export function initToken(app: express.Application) {
 	app.use(async (req, res, next) => {
 		// 请求的路径白名单 "/luckysheet/loadSheetData"
-		const whiteList = ["/", "/user/login", "/user/register", "/login", "/home", "/excel"];
+		const whiteList = ["/", "/user/login", "/user/register"];
+
 		// 静态资源
-		const staticPath = ["/lib", "/favicon.ico", "/assets", "/public", "/expendPlugins"];
+		const staticPath = ["/lib", "/favicon.ico", "/assets", "/public", "/expendPlugins", "/uploads"];
+
 		const path = req.path;
 
 		// 静态资源路径不需要校验token
@@ -20,6 +22,7 @@ export function initToken(app: express.Application) {
 			return;
 		}
 
+		// 白名单不校验
 		if (whiteList.includes(path)) {
 			next();
 			return;
@@ -29,7 +32,9 @@ export function initToken(app: express.Application) {
 		const token = req.headers.authorization;
 
 		if (!token) {
-			res.status(401).json({ code: 401, message: "token 缺失" });
+			// res.status(401).json({ code: 401, message: "token 缺失" });
+			// 可以实现重定向
+			res.redirect("/home");
 			return;
 		}
 

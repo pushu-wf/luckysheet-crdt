@@ -11,6 +11,7 @@ import { onBeforeUnmount, onMounted } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
 import { localForage } from "../../localforage";
+import { message } from "ant-design-vue";
 
 const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
@@ -33,9 +34,11 @@ async function initLuckysheet(gridKey: string) {
 		// 自定义菜单
 		menuHandler: {
 			customs: [
+				{ value: "divider" },
 				{
-					label: "测试",
-					value: "demo",
+					label: "返回首页",
+					value: "back",
+					callback: () => router.push("/home"),
 				},
 			],
 		},
@@ -47,6 +50,13 @@ async function initLuckysheet(gridKey: string) {
 
 		// 定义请求是否成功
 		const isSuccess = data.code === 200;
+
+		// 这里有可能请求数据为空，表示当前 gridkey 没有关联的数据
+		if (!data.data) {
+			router.push("/404");
+			message.error("当前 gridkey 没有关联的数据,请检查后重试！");
+			return;
+		}
 
 		/**
 		 * 兼容无数据库服务场景
