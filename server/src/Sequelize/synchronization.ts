@@ -15,6 +15,7 @@ import { WorkerBookModel } from "./Models/WorkerBook";
 import { BorderInfoModel } from "./Models/BorderInfo";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
+import { CalcChainModel } from "./Models/CalcChain";
 
 (async () => {
 	const { port, host, database, user, password } = SQL_CONFIG;
@@ -33,6 +34,7 @@ import { HiddenAndLenModel } from "./Models/HiddenAndLen";
 		WorkerBookModel.registerModule(sequelize);
 		FileMapModel.registerModule(sequelize);
 		WorkerSheetModel.registerModule(sequelize);
+		CalcChainModel.registerModule(sequelize);
 		CellDataModel.registerModule(sequelize);
 		MergeModel.registerModule(sequelize);
 		BorderInfoModel.registerModule(sequelize);

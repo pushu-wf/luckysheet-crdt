@@ -16,7 +16,7 @@ async function findAll(worker_sheet_id: string) {
 /**
  * 根据传入的 sheetid rc 判断是否存在记录
  */
-async function findOne(worker_sheet_id: string, r: number, c: number) {
+async function hasCellData(worker_sheet_id: string, r: number, c: number) {
 	try {
 		return await CellDataModel.findOne({
 			where: { worker_sheet_id, r, c },
@@ -32,7 +32,7 @@ async function findOne(worker_sheet_id: string, r: number, c: number) {
  * @param info
  * @returns
  */
-async function update(info: CellDataModelType) {
+async function updateCellData(info: CellDataModelType) {
 	try {
 		return await CellDataModel.update(info, {
 			where: { cell_data_id: info.cell_data_id },
@@ -135,8 +135,8 @@ async function addCellDataRC(payload: { worker_sheet_id: string; index: number; 
 
 export const CellDataService = {
 	findAll,
-	findOne,
-	update,
+	hasCellData,
+	updateCellData,
 	create,
 	deleteCellData,
 	updateCellDataRC,

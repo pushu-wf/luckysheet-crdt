@@ -25,7 +25,6 @@
  *
  * 注意一点，对象中的i为当前sheet的index值，而不是order
  */
-import { V, CG, RV, DRC, ARC, SHA, CHART, MERGE, CRDTDataType } from "../../Interface/WebSocket";
 import { isEmpty } from "../../Utils";
 import { logger } from "../../Utils/Logger";
 import { ImageService } from "../../Service/Image";
@@ -40,6 +39,8 @@ import { CellDataModelType } from "../../Sequelize/Models/CellData";
 import { BorderInfoModelType } from "../../Sequelize/Models/BorderInfo";
 import { WorkerSheetModelType } from "../../Sequelize/Models/WorkerSheet";
 import { HiddenAndLenModelType } from "../../Sequelize/Models/HiddenAndLen";
+import { V, CG, RV, DRC, ARC, SHA, CHART, MERGE, CRDTDataType } from "../../Interface/WebSocket";
+import { CalcChainService } from "../../Service/CalcChain";
 
 /**
  * 协同消息映射的操作
@@ -88,7 +89,7 @@ async function v(data: string) {
 		const cts = JSON.stringify(v.ct.s);
 
 		// 判断表内是否存在当前记录
-		const exist = await CellDataService.findOne(i, r, c);
+		const exist = await CellDataService.hasCellData(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -115,7 +116,7 @@ async function v(data: string) {
 
 		// 如果存在则更新
 		if (exist) {
-			await CellDataService.update({
+			await CellDataService.updateCellData({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
@@ -135,7 +136,7 @@ async function v(data: string) {
 		const ctt = v.ct.t;
 
 		// 判断表内是否存在当前记录
-		const exist = await CellDataService.findOne(i, r, c);
+		const exist = await CellDataService.hasCellData(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -162,7 +163,7 @@ async function v(data: string) {
 
 		// 如果存在则更新
 		if (exist) {
-			await CellDataService.update({
+			await CellDataService.updateCellData({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
@@ -176,7 +177,7 @@ async function v(data: string) {
 	// {"t":"v","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"v":null,"bg":"#ff0000"},"r":3,"c":2}
 	else if (v && v.v === null) {
 		// 判断 i r c 是否存在
-		const exist = await CellDataService.findOne(i, r, c);
+		const exist = await CellDataService.hasCellData(i, r, c);
 
 		const info: CellDataModelType = {
 			worker_sheet_id: i,
@@ -199,7 +200,7 @@ async function v(data: string) {
 
 		if (exist) {
 			// 如果存在则更新 - 注意全量的样式数据
-			await CellDataService.update({
+			await CellDataService.updateCellData({
 				cell_data_id: exist.cell_data_id,
 				...info,
 			});
@@ -215,8 +216,24 @@ async function v(data: string) {
 
 	// 场景四： 删除单元格内容
 	// {"t":"v","i":"e73f971d-606f-4b04-bcf1-98550940e8e3","v":{"ct":{"fa":"General","t":"n"}},"r":5,"c":0}
-	else if (v && !v.v && !v.m) {
+	else if (v && typeof v === "object" && !v.v && !v.m) {
 		await CellDataService.deleteCellData(i, r, c); // 删除记录
+	}
+
+	// 场景五：公式链操作时，会直接生成数值
+	// {"t":"v","i":"61f708fc-b159-4950-afab-176a81f4e1f6","v":6,"r":0,"c":2}
+	else if (v && typeof v === "number") {
+		// console.log(" ==> 监听到了");
+		// 更新 r c 的value 值
+		const cell = await CellDataService.hasCellData(i, r, c);
+		await CellDataService.updateCellData({
+			cell_data_id: cell?.cell_data_id,
+			worker_sheet_id: i,
+			r,
+			c,
+			v: v,
+			m: v,
+		});
 	}
 }
 
@@ -277,7 +294,7 @@ async function rv(data: string) {
 			// "range":{"row":[4,4],"column":[0,1]}}
 			if ((item && item.v === null) || (item && item.v && item.m)) {
 				// i r c 先判断是否存在记录，存在则更新，不存在则创建
-				const exist = await CellDataService.findOne(i, r, c);
+				const exist = await CellDataService.hasCellData(i, r, c);
 
 				// 检查 item 是否为 null 或 undefined
 				const cellInfo = {
@@ -303,7 +320,7 @@ async function rv(data: string) {
 
 				if (exist) {
 					// 如果存在则更新 - 注意全量的样式数据
-					await CellDataService.update({
+					await CellDataService.updateCellData({
 						cell_data_id: exist.cell_data_id,
 						...cellInfo,
 						bg: cellInfo.bg,
@@ -532,9 +549,42 @@ async function all(data: string) {
 	}
 }
 
-// 函数链操作
+// 函数链操作 r c index func color parent children times
 async function fc(data: string) {
 	console.log("==> fc", data);
+	// console.log("==> fc", data);
+	// https://dream-num.github.io/LuckysheetDocs/zh/guide/operate.html#%E5%87%BD%E6%95%B0%E9%93%BE%E6%93%8D%E4%BD%9C
+	// fc {"t":"fc","i":"4298e271-548d-4207-a826-ecececceef6f","v":"{\"r\":0,\"c\":2,\"index\":\"4298e271-548d-4207-a826-ecececceef6f\"}","op":"add","pos":0}
+	//  {"t":"fc","i":"4298e271-548d-4207-a826-ecececceef6f","v":"{\"r\":6,\"c\":2,\"index\":\"4298e271-548d-4207-a826-ecececceef6f\",\"func\":[true,122,\"=A7+B7\"]}","op":"add","pos":0}
+	logger.info("[CRDT DATA]:", data);
+	const { t, i, v, op } = <CRDTDataType<string>>JSON.parse(data);
+	if (t !== "fc") return logger.error("t is not fc.");
+	if (isEmpty(i)) return logger.error("i is undefined.");
+
+	// 请注意，此处的 v 是字符串
+	const item = JSON.parse(v);
+	const { r, c, index, func } = item;
+
+	// 如果是 del 直接删除记录
+	// {"t":"fc","i":"61f708fc-b159-4950-afab-176a81f4e1f6","v":null,"op":"del","pos":0}
+	if (op === "del") {
+		await CalcChainService.deleteCalcChain(index, r, c);
+		return;
+	}
+
+	// 判断是否存在该记录
+	const calcChain = await CalcChainService.findOne(index, r, c);
+	// 存在则更新，不存在则创建
+	if (calcChain) {
+		await CalcChainService.update(calcChain.calcchain_id!, JSON.stringify(func));
+	} else {
+		await CalcChainService.create({
+			worker_sheet_id: index,
+			r,
+			c,
+			func: JSON.stringify(func),
+		});
+	}
 }
 
 // 删除的该行，可能会引起其他的一些变化，因此，也会触发 all 事件类型

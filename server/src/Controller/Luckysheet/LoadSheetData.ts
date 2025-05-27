@@ -5,6 +5,7 @@ import {
 	type BorderInfoType,
 	type CellDataItemType,
 	type WorkerSheetItemType,
+	CalcChainType,
 } from "../../Interface/luckysheet";
 import { DB } from "../../Sequelize";
 import { logger } from "../../Utils/Logger";
@@ -14,6 +15,7 @@ import { MergeService } from "../../Service/Merge";
 import { ChartService } from "../../Service/Chart";
 import { CellDataService } from "../../Service/CellData";
 import { BorderInfoService } from "../../Service/Border";
+import { CalcChainService } from "../../Service/CalcChain";
 import { getEmptySheetsData, getURLQuery } from "../../Utils";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
 import { HiddenAndLenService } from "../../Service/HiddenAndLen";
@@ -75,6 +77,9 @@ export async function loadSheetData(req: Request, res: Response) {
 
 			// 8. 查询 image 数据
 			await parseImages(worker_sheet_id, currentSheetData);
+
+			// 9. 解析 calcChain 公式链
+			await parseCalcChain(worker_sheet_id, currentSheetData);
 
 			result.push(currentSheetData);
 		}
@@ -337,6 +342,31 @@ async function parseCharts(worker_sheet_id: string, currentSheetData: WorkerShee
 		});
 
 		currentSheetData.chart = result;
+		return Promise.resolve();
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+/**
+ * parseCalcChain 解析公式连
+ */
+async function parseCalcChain(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
+	try {
+		const result: CalcChainType[] = [];
+		const charts = await CalcChainService.findAll(worker_sheet_id);
+		charts?.forEach((chart) => {
+			const data = chart.dataValues;
+			result.push({
+				r: data.r,
+				c: data.c,
+				index: data.worker_sheet_id,
+				func: JSON.parse(data.func),
+				color: "w",
+			});
+		});
+
+		currentSheetData.calcChain = result;
 		return Promise.resolve();
 	} catch (error) {
 		logger.error(error);

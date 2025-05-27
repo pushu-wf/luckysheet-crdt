@@ -16,6 +16,7 @@ import { BorderInfoModel } from "./Models/BorderInfo";
 import { WorkerBookModel } from "./Models/WorkerBook";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
+import { CalcChainModel } from "./Models/CalcChain";
 
 class DataBase {
 	private _connected: boolean = false; // 连接状态
@@ -93,6 +94,7 @@ class DataBase {
 		WorkerBookModel.registerModule(this._sequelize);
 		FileMapModel.registerModule(this._sequelize);
 		WorkerSheetModel.registerModule(this._sequelize);
+		CalcChainModel.registerModule(this._sequelize);
 		CellDataModel.registerModule(this._sequelize);
 		MergeModel.registerModule(this._sequelize);
 		BorderInfoModel.registerModule(this._sequelize);

@@ -32,6 +32,7 @@ type WorkerSheetItemType = {
 	};
 	chart: ChartType[]; //图表配置
 	images: ImagesType[]; //图片
+	calcChain?: CalcChainType[]; //公式链
 
 	/**
 	 * 下列属性非必选
@@ -45,7 +46,6 @@ type WorkerSheetItemType = {
 	scrollLeft?: number; //左右滚动条位置
 	scrollTop?: number; //上下滚动条位置
 	luckysheet_select_save?: []; //选中的区域
-	calcChain?: []; //公式链
 	isPivotTable?: false; //是否数据透视表
 	filter?: []; //筛选配置
 	luckysheet_alternateformat_save?: []; //交替颜色
@@ -224,11 +224,21 @@ type ChartType = {
 	chartOptions: object;
 };
 
+// 公式链
+type CalcChainType = {
+	r: number; //行数
+	c: number; //列数
+	index: string; //工作表id
+	func: [boolean, number | string, string]; //公式信息，包含公式计算结果和公式字符串
+	color: "w"; //"w"：采用深度优先算法 "b":普通计算
+};
+
 export {
 	type ChartType,
 	type MergeType,
 	type RowLenType,
 	type ImagesType,
+	type CalcChainType,
 	type ColumnLenType,
 	type RowHiddenType,
 	type ColHiddenType,
