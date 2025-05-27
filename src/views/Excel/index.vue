@@ -10,6 +10,7 @@ import { API_getWorkerBook } from "../../axios";
 import { onBeforeUnmount, onMounted } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
+import { localForage } from "../../localforage";
 
 const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
@@ -27,6 +28,9 @@ async function initLuckysheet(gridKey: string) {
 		loadUrl: "",
 		updateUrl: "", // 协同服务转发服务
 		plugins: ["chart", "vchart", "fileImport", "fileExport"],
+		// 添加请求头
+		requestHeaders: { authorization: localForage.getItem("token") },
+		// 自定义菜单
 		menuHandler: {
 			customs: [
 				{
@@ -85,6 +89,9 @@ onBeforeUnmount(() => {
 
 <style lang="less" scoped>
 #luckysheet-container {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;

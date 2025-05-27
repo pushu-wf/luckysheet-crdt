@@ -10,6 +10,7 @@
 		"db": "tsc && node build/Sequelize/synchronization.js"
 	},
 	"dependencies": {
+		"cors": "^2.8.5",
 		"crypto-js": "^4.2.0",
 		"dayjs": "^1.11.13",
 		"express": "^4.21.1",
@@ -22,6 +23,7 @@
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
+		"@types/cors": "^2.8.18",
 		"@types/crypto-js": "^4.2.2",
 		"@types/express": "^5.0.0",
 		"@types/jsonwebtoken": "^9.0.9",
