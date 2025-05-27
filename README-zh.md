@@ -12,6 +12,12 @@
 
 ---
 
+**项目分支：**
+
+-   `master`: 稳定版，提供可选数据库服务，提供完整功能实现；
+-   `master-alpha`: 开发版，提供可选数据库服务，提供完整功能实现；
+-   `master-vue`: 稳定版，提供用户系统、文件系统，提供完整功能实现，依赖数据库服务；
+
 ## 项目说明
 
 1. 本项目基于 [Luckysheet](https://github.com/mengshukeji/Luckysheet) 源码修改，**请遵循原作者开源协议**，同时，**请不要删除或修改源码头部版权声明**。
@@ -21,14 +27,8 @@
 5. 项目支持 **可选数据库服务**，没有数据库的用户数据无法持久化存储，协同功能并不受影响，**⚠️`仅对 master、master-alpha` 分支有效，master-vue 依赖数据库功能实现用户系统**。
 6. 项目使用 **[Sequelize](https://www.sequelize.cn/)** 作为 ORM 数据服务技术，支持 mysql、sqlite、postgres、mssql 等数据库，方便用户快速迁移。
 7. 项目使用 **Typescript** 作为主要开发语言，提供完整的类型提示，规范代码，提高开发效率。
-8. **项目分支：**
-
-    - `master`: 稳定版，提供可选数据库服务，提供完整功能实现；
-    - `master-alpha`: 开发版，提供可选数据库服务，提供完整功能实现；
-    - `master-vue`: 稳定版，提供用户系统、文件系统，提供完整功能实现，依赖数据库服务；
-
-9. 个人精力有限，**存在 BUG 及功能未完善之处**，请提交 [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) ，我会及时处理；
-10. 也欢迎大家 fork 项目，提交 pr ，一起完善项目；
+8. 个人精力有限，**存在 BUG 及功能未完善之处**，请提交 [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) ，我会及时处理；
+9. 也欢迎大家 fork 项目，提交 pr ，一起完善项目；
 
 ## 收费声明
 
