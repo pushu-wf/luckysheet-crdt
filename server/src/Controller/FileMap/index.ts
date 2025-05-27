@@ -59,14 +59,14 @@ export async function acceptInvite(req: Request, res: Response) {
 	// 通过 userid 获取user_uuid
 	const user_uuid = await UserService.getUserUUID(userid);
 	if (!user_uuid) {
-		res.status(500).json({ code: 500, message: "获取用户信息失败" });
+		res.status(500).json({ code: 500, message: "获取邀请者信息失败" });
 		return;
 	}
 
 	// 通过 userid 查询 user_uuid
 	const owner_user_uuid = await UserService.getUserUUID(owner);
 	if (!owner_user_uuid) {
-		res.status(500).json({ code: 500, message: "获取用户信息失败" });
+		res.status(500).json({ code: 500, message: "获取文件拥有者信息失败" });
 		return;
 	}
 

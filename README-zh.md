@@ -6,11 +6,11 @@
 
 简体中文 | [English](./README.md)
 
----
-
 <p align="center">
   <img src='/public/result/result.gif' />
 </p>
+
+---
 
 ## 项目说明
 
@@ -18,10 +18,15 @@
 2. 本项目以 **Apache2.0 协议开源**，请放心使用，同时，本项目也将回馈于 Luksysheet 社区，丰富社区生态，再次感谢 @[Luckysheet](https://github.com/mengshukeji/Luckysheet) 团队 ❤️
 3. 项目为 **Luckysheet 协同增强版（全功能实现）**，意在**提供协同实现思路、数据存储服务、协同演示**等，项目基于 [Luckysheet](https://github.com/mengshukeji/Luckysheet) 实现，感谢原作者开源。
 4. 本项目主要**实现协同功能**模块，对其他内容不做修改，功能使用上并无影响；
-5. 项目支持 **可选数据库服务**，没有数据库的用户数据无法持久化存储，协同功能并不受影响。
+5. 项目支持 **可选数据库服务**，没有数据库的用户数据无法持久化存储，协同功能并不受影响，**⚠️`仅对 master、master-alpha` 分支有效，master-vue 依赖数据库功能实现用户系统**。
 6. 项目使用 **[Sequelize](https://www.sequelize.cn/)** 作为 ORM 数据服务技术，支持 mysql、sqlite、postgres、mssql 等数据库，方便用户快速迁移。
 7. 项目使用 **Typescript** 作为主要开发语言，提供完整的类型提示，规范代码，提高开发效率。
-8. **项目有 `master` 分支和 `master-alpha` 分支，最新发布的特性，会在 alpha 上进行测试，稳定后会合并到 master 上。**
+8. **项目分支：**
+
+    - `master`: 稳定版，提供可选数据库服务，提供完整功能实现；
+    - `master-alpha`: 开发版，提供可选数据库服务，提供完整功能实现；
+    - `master-vue`: 稳定版，提供用户系统、文件系统，提供完整功能实现，依赖数据库服务；
+
 9. 个人精力有限，**存在 BUG 及功能未完善之处**，请提交 [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) ，我会及时处理；
 10. 也欢迎大家 fork 项目，提交 pr ，一起完善项目；
 
@@ -140,7 +145,7 @@ npm run db
 | 单元格操作             | ✅️ 单个单元格操作 ✅️ 范围单元格操作                                                      |                                                                                                    |
 | config 操作            | ✅️ 行隐藏 ✅️ 列隐藏 ✅️ 修改行高 ✅️ 修改列宽                                            |                                                                                                    |
 | 通用保存               | ✅️ 修改工作表名称 ✅️ 修改工作表颜色 ✅️ 合并单元格                                       | ❌️ 冻结行列 ❌️ 筛选范围 ❌️ 筛选的具体设置 ❌️ 交替颜色 ❌️ 条件格式 ❌️ 数据透视表 ❌️ 动态数组 |
-| 函数链操作             |                                                                                            | ❌️ 函数链操作                                                                                     |
+| 函数链操作             | ✅️ 函数链操作                                                                             |                                                                                                    |
 | 行列操作               | ✅️ 删除行或列 ✅️ 增加行或列                                                              |                                                                                                    |
 | 筛选操作               |                                                                                            | ❌️ 清除筛选 ❌️ 恢复筛选                                                                          |
 | sheet 操作             | ✅️ 新建 sheet ✅️ 复制 sheet ✅️ 删除 sheet ✅️ 删除 sheet 后恢复操作 ✅️ 调整 sheet 位置 |                                                                                                    |
@@ -189,23 +194,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart 图表设置</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+       <p align="center">
+       <img src='/public/result/chartmix-vchart.png' />
+       </p>
+       <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+       <p align="center">
+       <img src='/public/result/vchart.gif' />
+       </p>
+       <span style="font-weight:900">vchart 图表设置</span>
+       <p align="center">
+       <img src='/public/result/vchart-setting.gif' />
+       </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+       <p align="center">
+       <img src='/public/result/chartmix-update-data-crdt.gif' />
+       </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
@@ -334,6 +339,55 @@ menuHandler: {
 ```
 
 3. 打包输出即可正常使用 iconfont 图标
+
+### 7️⃣ 自定义请求头
+
+很多人反映，应该在请求表格数据接口时，添加 cookies、token 等信息，以实现用户身份权限校验，目前已实现，具体配置如下：
+
+```ts
+const options = {
+	// ... other config,
+	// 添加请求头
+	requestHeaders: {
+		authorization: localForage.getItem("token"),
+		"x-requested-with": "XMLHttpRequest",
+		"custom-name": "custom-value",
+		// ... other headers
+	},
+};
+```
+
+**具体实现方案：`源码/src/core.js`**
+
+```ts
+// 修改 $post 方法，改为 $ajax() 以实现添加请求头的功能
+$.ajax({
+	url: server.loadUrl,
+	type: "POST",
+	data: { gridKey: server.gridKey },
+	beforeSend(xhr) {
+		if (!extendsetting.requestHeaders) return;
+		for (let key in extendsetting.requestHeaders) {
+			xhr.setRequestHeader(key, extendsetting.requestHeaders[key]);
+		}
+	},
+	timeout: 15000,
+	success: function (d) {},
+	error: function (error) {},
+});
+```
+
+## Master-Vue 开箱即用版
+
+本项目作为`luckysheet-crdt`的一个分支，附属于 `luckysheet-crdt`，仅作为 vue 版本的示例，提供完整的用户系统(登录、注册、修改信息)、文件系统(创建、修改、删除、协同、分享...)，项目截图如下：
+
+<p align="center">
+  <img src='/public/result/master-vue-login.png' />
+  <img src='/public/result/master-vue-home.png' />
+  <img src='/public/result/master-vue-invite.png' />
+  <img src='/public/result/master-vue-userinfo.png' />
+  <img src='/public/result/master-vue-btns.png' />
+</p>
 
 ## 常见问题
 

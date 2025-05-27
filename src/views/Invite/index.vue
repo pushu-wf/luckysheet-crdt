@@ -29,6 +29,7 @@ const visible = ref(true);
 const inviteInfo = reactive({
 	fileName: "",
 	fileOwner: "",
+	fileOwnerId: "",
 	fileInvitor: "",
 	gridKey: "",
 });
@@ -40,7 +41,7 @@ function cancel() {
 async function ok() {
 	// 发送请求 - 同意加入
 	try {
-		const { data } = await API_acceptInvite({ gridKey: inviteInfo.gridKey, owner: inviteInfo.fileOwner });
+		const { data } = await API_acceptInvite({ gridKey: inviteInfo.gridKey, owner: inviteInfo.fileOwnerId });
 		if (data.code === 200) message.success("加入成功");
 	} catch (error) {
 		console.error(error);
@@ -62,6 +63,7 @@ onMounted(async () => {
 			inviteInfo.fileInvitor = data.data.OperatorUser.username;
 			inviteInfo.fileName = data.data.WorkerBook.title;
 			inviteInfo.fileOwner = data.data.OwnerUser.username;
+			inviteInfo.fileOwnerId = data.data.OwnerUser.userid;
 			inviteInfo.gridKey = data.data.WorkerBook.gridKey;
 		}
 	} catch (error) {

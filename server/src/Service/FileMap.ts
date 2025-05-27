@@ -112,12 +112,12 @@ async function getInviteInfo(file_map_id: string) {
 			include: [
 				{
 					model: UserModel,
-					attributes: ["username"],
+					attributes: ["username", "userid"],
 					as: "OperatorUser",
 				},
 				{
 					model: UserModel,
-					attributes: ["username"],
+					attributes: ["username", "userid"],
 					as: "OwnerUser",
 				},
 				{

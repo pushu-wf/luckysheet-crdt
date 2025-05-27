@@ -6,11 +6,11 @@
 
 [简体中文](./README-zh.md) | English
 
----
-
 <p align="center">
   <img src='/public/result/result.gif' alt='result' />
 </p>
+
+---
 
 ## DESCRIPTION
 
@@ -18,10 +18,15 @@
 2. This project is open sourced under the **Apache 2.0 protocol**, so please feel free to use it. At the same time, this project will also contribute to the Luksysheet community, enriching the community ecosystem. Thank you again to the @[Luckysheet](https://github.com/mengshukeji/Luckysheet) team ❤️
 3. The project is **Luckysheet Collaborative Enhanced Edition (fully functional implementation)**, aiming to provide collaborative implementation ideas, data storage services, collaborative demonstrations, etc. The project is based on [Luckysheet](https://github.com/mengshukeji/Luckysheet) Implemented, thank you to the original author for open-source.
 4. This project mainly implements the collaborative function module, which has no impact on other content. The parts modified based on the source code are all reflected in the `Luckysheet source` folder.
-5. The project supports **optional database services**. User data without a database cannot be persistently stored, and collaborative functionality is not affected.
+5. The project supports **optional database services**. User data without a database cannot be persistently stored, and collaborative functionality is not affected，**⚠️Only valid for `master and master-alpha` branches, `master-vue` relies on database functionality to implement user systems**.
 6. Project Use **[Sequelize](https://www.sequelize.cn/)** As an ORM data service technology, it supports databases such as MySQL, SQLite, PostgreSQL, and MSSQL, making it easy for users to quickly migrate.
 7. The project uses **Typescript** as the main development language, providing complete type prompts, standardizing code, and improving development efficiency.
-8. **The project has a `master` branch and a `master-alpha` branch. The latest released features will be tested on alpha and will be merged into master after stabilization**
+8. **Project branches:**
+
+    - Master: Stable version, providing optional database services and complete functionality implementation;
+    - Master alpha: Development version, providing optional database services and complete functionality implementation;
+    - Master Vue: Stable version, providing user system, file system, complete functional implementation, relying on database services;
+
 9. My personal energy is limited, and there are bugs and incomplete functions. Please submit an [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) and I will handle it promptly;
 10. Welcome everyone to fork the project, submit PR, and work together to improve the project.
 
@@ -138,7 +143,7 @@ npm run db
 | Cell operation           | ✅️ Single cell operation ✅️ Range cell operation                                                                                 |                                                                                                                                                                     |
 | Config operation         | ✅️ Line hidden ✅️ Column hidden ✅️ Modify row height ✅️ Modify column width                                                    |                                                                                                                                                                     |
 | Universal save           | ✅️ Change worksheet name ✅️ Change worksheet color ✅️ Merge cell                                                                | ❌️ Freeze rows and columns ❌️ Filter scope ❌️ Specific settings for filtering ❌️ Alternating colors ❌️ Conditional formatting ❌️ PivotTable ❌️ Dynamic array |
-| Function chain operation |                                                                                                                                    | ❌️ Function chain operation                                                                                                                                        |
+| Function chain operation | ✅️ Function chain operation                                                                                                       |                                                                                                                                                                     |
 | Row and column operation | ✅️ Delete rows or columns ✅️ Add rows or columns                                                                                 |                                                                                                                                                                     |
 | Filter operations        |                                                                                                                                    | ❌️ Clear filter ❌️ Restore filter                                                                                                                                 |
 | Sheet operations         | ✅️ Add sheet ✅️ Copy sheet ✅️ Delete sheet ✅️ Restore sheet ✅️ Adjust the position of the sheet Switch to the specified sheet |                                                                                                                                                                     |
@@ -332,6 +337,55 @@ menuHandler: {
 ```
 
 3. Package and output to use iconfont icon normally
+
+### 7️⃣ Custom request header
+
+Many people have reported that cookies, tokens, and other information should be added when requesting table data interfaces to verify user identity and permissions. This has been implemented and the specific configuration is as follows：
+
+```ts
+const options = {
+	// ... other config,
+	// 添加请求头
+	requestHeaders: {
+		authorization: localForage.getItem("token"),
+		"x-requested-with": "XMLHttpRequest",
+		"custom-name": "custom-value",
+		// ... other headers
+	},
+};
+```
+
+**Specific implementation plan:`源码/src/core.js`**
+
+```ts
+// Modify the $post method to $ajax () to implement the function of adding request headers
+$.ajax({
+	url: server.loadUrl,
+	type: "POST",
+	data: { gridKey: server.gridKey },
+	beforeSend(xhr) {
+		if (!extendsetting.requestHeaders) return;
+		for (let key in extendsetting.requestHeaders) {
+			xhr.setRequestHeader(key, extendsetting.requestHeaders[key]);
+		}
+	},
+	timeout: 15000,
+	success: function (d) {},
+	error: function (error) {},
+});
+```
+
+## Master-Vue Ready to use version out of the box
+
+This project, as a branch of 'luckysheet crdt', is attached to 'luckysheet crdt' and serves only as an example for the Vue version. It provides a complete user system (login, registration, information modification) and file system (create, modify, delete, collaborate, share...). The project screenshot is as follows:
+
+<p align="center">
+  <img src='/public/result/master-vue-login.png' />
+  <img src='/public/result/master-vue-home.png' />
+  <img src='/public/result/master-vue-invite.png' />
+  <img src='/public/result/master-vue-userinfo.png' />
+  <img src='/public/result/master-vue-btns.png' />
+</p>
 
 ## frequently asked questions
 
