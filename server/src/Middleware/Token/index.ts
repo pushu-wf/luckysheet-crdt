@@ -9,11 +9,13 @@ import { logger } from "../../Utils/Logger";
 export function initToken(app: express.Application) {
 	app.use(async (req, res, next) => {
 		// 请求的路径白名单 "/luckysheet/loadSheetData"
-		const whiteList = ["/", "/user/login", "/user/register"];
+		const whiteList = ["/", "/user/login", "/user/register", "/login", "/home", "/excel"];
+		// 静态资源
+		const staticPath = ["/lib", "/favicon.ico", "/assets", "/public", "/expendPlugins"];
 		const path = req.path;
 
 		// 静态资源路径不需要校验token
-		if (path.startsWith("/lib") || path.startsWith("/assets") || path.startsWith("/public")) {
+		if (staticPath.some((item) => path.startsWith(item))) {
 			next();
 			return;
 		}
