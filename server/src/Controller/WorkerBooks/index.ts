@@ -1,9 +1,21 @@
+import multer from "multer";
 import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { getUseridFromToken, md5 } from "../../Utils";
 import { FileMapService } from "../../Service/FileMap";
 import { WorkerBookService } from "../../Service/WorkerBook";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
+
+// 配置 Multer
+const upload = multer({
+	// 参考： https://blog.csdn.net/weixin_64684095/article/details/146179154
+	storage: multer.diskStorage({
+		filename: function (req, file, cb) {
+			file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
+			cb(null, file.originalname);
+		},
+	}),
+}).single("file");
 
 /**
  * @description 创建工作簿
@@ -176,7 +188,51 @@ async function renameFile(req: Request, res: Response) {
 	res.status(200).json({ code: 200, message: "重命名成功" });
 }
 
-/**
- * 工作簿相关控制类 - WorkerBooks  Controller
- */
-export { createWorkerBook, getWorkerBook, getFileList, deleteFile, renameFile };
+// 文件导入实现
+async function importFile(req: Request, res: Response) {
+	// 这里是通过 FormData 实现文件上传的，先解析文件
+	upload(req, res, async () => {
+		const { file } = req;
+
+		// 如果没有解析到 file 对象，则直接返回 400
+		if (!file) {
+			res.status(400).json({ code: 400, message: "请选择文件" });
+			return;
+		}
+
+		// 获取原始文件名
+		const { originalname } = <Express.Multer.File>file;
+		if (!originalname) {
+			res.status(500).json({ code: 500, message: "文件名解析失败" });
+			return;
+		}
+
+		// 这里并不是真实的保存文件到服务端，而是借助 multer 能力实现文件识别，因此此处并不配置 dest
+
+		// 获取当前用户操作 userid
+		const userid = getUseridFromToken(req);
+		if (!userid) {
+			res.status(400).json({ code: 400, message: "Invalid token" });
+			return;
+		}
+
+		// 解析 user_uuid
+		const user_uuid = await UserService.getUserUUID(userid);
+		if (!user_uuid) {
+			res.status(400).json({ code: 400, message: "用户不存在" });
+			return;
+		}
+
+		// Step 1 新增 FileMap 记录 - 依赖 gridKey
+
+		// Step 2 新增 WorkerBooks 记录 - 使用 gridKey
+
+		// Step 3 根据解析的文件格式，新增 workerSheet - 依赖 worker_book_id
+
+		// Step 4 根据 sheet 创建 celldata merge 等其他记录 - 依赖 worker_sheet_id
+
+		res.json({ code: 200, message: "Success to upload." });
+	});
+}
+
+export { createWorkerBook, getWorkerBook, getFileList, deleteFile, renameFile, importFile };

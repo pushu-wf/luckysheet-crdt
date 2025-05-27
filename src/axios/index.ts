@@ -125,3 +125,12 @@ export const API_uploadAvatar = (data: FormData) => {
 		data,
 	});
 };
+
+// 文件导入由服务端实现
+export const API_importFile = (data: FormData) => {
+	return fetch({
+		url: "/luckysheet/importFile",
+		method: "POST",
+		data,
+	});
+};
