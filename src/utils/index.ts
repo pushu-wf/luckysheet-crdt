@@ -15,7 +15,7 @@ const getRandom = () => {
 
 // 获取 loadUrl 地址
 const getLoadUrl = (gridKey: string) => {
-	return `${isDev() ? "/api/" : "/"}loadSheetData?gridkey=${gridKey}`;
+	return `${isDev() ? "/api/" : "/"}luckysheet/loadSheetData?gridkey=${gridKey}`;
 };
 
 //  md5 加密
