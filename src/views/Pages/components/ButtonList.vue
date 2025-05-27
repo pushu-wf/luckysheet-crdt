@@ -11,12 +11,12 @@
 			已选择 <code>{{ checkedNumber }}</code> 个文件
 		</span>
 		<a-button
-			@click="emit('handleOuterFileOperate', 'exportFile')"
+			@click="emit('handleOuterFileOperate', 'favor')"
 			size="small"
 			:disabled="!checkedNumber"
 			style="margin-left: auto"
-			:icon="h(CloudDownloadOutlined)">
-			导出
+			:icon="h(StarOutlined)">
+			收藏
 		</a-button>
 		<a-popconfirm
 			:disabled="!checkedNumber"
@@ -26,7 +26,6 @@
 			arrowPointAtCenter
 			placement="left"
 			@confirm="emit('handleOuterFileOperate', 'delete')">
-			<template #icon><question-circle-outlined style="color: red" /></template>
 			<a-button style="margin-left: 10px" :disabled="!checkedNumber" type="primary" size="small" danger> 批量删除 </a-button>
 		</a-popconfirm>
 	</div>
@@ -43,7 +42,6 @@
 			placeholder="请输入工作簿名称"
 			ref="createFileNameRef"
 			allowClear
-			autofocus
 			v-model:value="createFileName"
 			@pressEnter="createFileConfirm" />
 	</a-modal>
@@ -53,7 +51,7 @@
 import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
 import { API_createWorkerBook } from "../../../axios";
-import { PlusOutlined, CloudUploadOutlined, BranchesOutlined, CloudDownloadOutlined, QuestionCircleOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, StarOutlined, CloudUploadOutlined, BranchesOutlined, QuestionCircleOutlined } from "@ant-design/icons-vue";
 
 // 选中几个文件
 const { checkedNumber } = defineProps({ checkedNumber: { type: Number, default: 0 } });

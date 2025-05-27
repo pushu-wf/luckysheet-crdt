@@ -68,7 +68,6 @@
 			placeholder="请输入工作簿名称"
 			ref="renameInputRef"
 			allowClear
-			autofocus
 			v-model:value="renameInputValue"
 			@pressEnter="renameConfirm" />
 	</a-modal>
@@ -178,6 +177,22 @@ async function toggleFavor(item: SheetListItem) {
 		}
 	} catch (error) {
 		console.error(error);
+	}
+}
+
+/**
+ * @description 批量收藏文件 - 仅做收藏
+ */
+async function batchFavorFile() {
+	// 获取被选中的元素, 并过滤掉已收藏的元素
+	const checkedFileList = getCheckedFileList().filter((i) => !i.favor);
+	try {
+		await Promise.all(checkedFileList.map((i) => API_toggleFavor({ favor: true, filemapid: i.file_map_id })));
+		message.success("已收藏");
+		queryFileList();
+	} catch (error) {
+		console.error(error);
+		message.error("收藏失败");
 	}
 }
 
@@ -308,6 +323,7 @@ async function handleOuterFileOperate(operation: string) {
 	const checkedArray = getCheckedFileList();
 	if (!checkedArray.length) return message.warn("没有文件被选中");
 	if (operation === "delete") handleBatchDeleteFile();
+	if (operation === "favor") batchFavorFile();
 }
 
 /**
