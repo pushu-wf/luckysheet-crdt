@@ -21,26 +21,25 @@
 	</head>
 
 	<body>
-		<div id="luckysheet" style="margin: 0px;padding: 0px;position: absolute;width: 100%;height: 100%;left: 0px;top: 0px;"></div>
+		<div id="luckysheet" style="margin: 0px; padding: 0px; position: absolute; width: 100%; height: 100%; left: 0px; top: 0px"></div>
 
 		<script>
-			$(function() {
-				const id = Math.random()
-					.toString(16)
-					.slice(2, 8);
+			$(function () {
+				const id = Math.random().toString(16).slice(2, 8);
 				const username = `user_${id}`;
 
 				const options = {
-					container: 'luckysheet',
-					lang: 'zh',
+					container: "luckysheet",
+					lang: "zh",
 					// showinfobar: false,
-					plugins: ['fileImport', 'vchart', 'chart'],
+					plugins: ["fileImport", "vchart", "chart"],
 					data: [sheetChart],
-
+					requestHeaders: {
+						"Custom-userid": "123",
+					},
 					// allowUpdate: true, // 配置协同功能
-					// loadUrl:
-					// 	"http://localhost:9000/loadSheetData?gridkey=gridkey_demo",
-					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=gridkey_demo`, // 协同服务转发服务
+					// loadUrl: "http://localhost:9000/luckysheet/loadSheetData?gridkey=deeccd89d8aa2bf8ca7655bd1b1b222b",
+					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=deeccd89d8aa2bf8ca7655bd1b1b222b`, // 协同服务转发服务
 
 					menuHandler: {
 						// 隐藏内置菜单
@@ -52,18 +51,18 @@
 
 							{
 								order: 0,
-								label: '自定义菜单',
-								value: 'newFile',
+								label: "自定义菜单",
+								value: "newFile",
 								callback: () => {
-									console.log('==> 自定义菜单');
-								}
+									console.log("==> 自定义菜单");
+								},
 							},
 							{
 								order: 0,
-								value: 'divider'
-							}
-						]
-					}
+								value: "divider",
+							},
+						],
+					},
 				};
 				options.loading = {
 					image: () => {
@@ -71,7 +70,7 @@
 					<circle cx="50" cy="50" r="20" fill="none"></circle>
 					</svg>`;
 					},
-					imageClass: 'loadingAnimation'
+					imageClass: "loadingAnimation",
 				};
 				luckysheet.create(options);
 			});
