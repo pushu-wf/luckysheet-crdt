@@ -4,6 +4,7 @@
 
 import path from "path";
 import dayjs from "dayjs";
+import multer from "multer";
 
 /**
  * HTTP 服务 与 websocket服务 共用一个端口
@@ -39,13 +40,8 @@ const LOGGER_CONFIG = {
 	filename: `luckysheet.${dayjs().format("YYYY-MM-DD")}.log`,
 };
 
-/**
- * 导出文件上传 Multer 配置对象
- */
-const MULTER_CONFIG = {
-	single: "image", // 这个是前端 new FormData() 对象的 key 值，即上传文件的 key 值
-	dest: path.resolve(__dirname, "../../public/uploads"),
-};
+// 静态资源存放地址
+const UploadDest = path.resolve(__dirname, "../../public/uploads");
 
 // 静态资源地址 打包后 web 的入口文件
 const ENTRY_URL = path.resolve(__dirname, "../../public/dist/index.html");
@@ -54,7 +50,7 @@ const ENTRY_URL = path.resolve(__dirname, "../../public/dist/index.html");
 const JWT_SECRET = "luckysheet_crdt_jsonwebtoken_secret";
 
 // 配置静态资源目录
-const StaticSourceList = [
+const STATIC_SOURCE_LIST = [
 	path.resolve(__dirname, "../../public"),
 	path.resolve(__dirname, "../../public/dist"),
 	path.resolve(__dirname, "../../public/uploads"),
@@ -63,5 +59,32 @@ const StaticSourceList = [
 	path.resolve(__dirname, "../../public/dist/lib"),
 ];
 
+// 配置 Lucky sheet图片上传 Multer 配置对象
+const LuckySheetMuter = multer({ dest: UploadDest }).single("image");
+
+// 导出 用户头像上传 Multer 配置对象
+const UserAvatarMulter = multer({ dest: UploadDest }).single("userAvatar");
+
+// 导出 文件导入 Multer 配置对象
+const FileImportMulter = multer({
+	storage: multer.diskStorage({
+		filename: function (req, file, callback) {
+			file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
+			callback(null, file.originalname);
+		},
+	}),
+}).single("file");
+
 // 统一导出配置对象
-export { ENTRY_URL, SQL_CONFIG, SERVER_PORT, LOGGER_CONFIG, MULTER_CONFIG, JWT_SECRET, StaticSourceList };
+export {
+	ENTRY_URL,
+	SQL_CONFIG,
+	JWT_SECRET,
+	UploadDest,
+	SERVER_PORT,
+	LOGGER_CONFIG,
+	LuckySheetMuter,
+	UserAvatarMulter,
+	FileImportMulter,
+	STATIC_SOURCE_LIST,
+};

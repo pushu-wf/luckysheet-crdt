@@ -1,17 +1,12 @@
 import fs from "fs";
-import multer from "multer";
 import { Request, Response } from "express";
-import { MULTER_CONFIG } from "../../Config";
-
-// 配置 Multer
-const { dest, single } = MULTER_CONFIG;
-const upload = multer({ dest }).single(single);
+import { LuckySheetMuter, UploadDest } from "../../Config";
 
 /**
  * Luckysheet 自定义图片上传方法
  */
 export async function uploadImage(req: Request, res: Response) {
-	upload(req, res, async () => {
+	LuckySheetMuter(req, res, async () => {
 		const { file } = req;
 
 		// 如果没有解析到 file 对象，则直接返回 400
@@ -29,8 +24,8 @@ export async function uploadImage(req: Request, res: Response) {
 		 *  保留后缀，方便用户以静态资源访问
 		 */
 		const suffix = originalname.split(".").pop();
-		const oldpath = `${MULTER_CONFIG.dest}/${filename}`;
-		const newpath = `${MULTER_CONFIG.dest}/${filename}.${suffix}`;
+		const oldpath = `${UploadDest}/${filename}`;
+		const newpath = `${UploadDest}/${filename}.${suffix}`;
 
 		// 重命名文件
 		fs.renameSync(oldpath, newpath);

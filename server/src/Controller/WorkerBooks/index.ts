@@ -1,21 +1,10 @@
-import multer from "multer";
 import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { getUseridFromToken, md5 } from "../../Utils";
 import { FileMapService } from "../../Service/FileMap";
 import { WorkerBookService } from "../../Service/WorkerBook";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
-
-// 配置 Multer
-const upload = multer({
-	// 参考： https://blog.csdn.net/weixin_64684095/article/details/146179154
-	storage: multer.diskStorage({
-		filename: function (req, file, cb) {
-			file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
-			cb(null, file.originalname);
-		},
-	}),
-}).single("file");
+import { FileImportMulter } from "../../Config";
 
 /**
  * @description 创建工作簿
@@ -191,7 +180,7 @@ async function renameFile(req: Request, res: Response) {
 // 文件导入实现
 async function importFile(req: Request, res: Response) {
 	// 这里是通过 FormData 实现文件上传的，先解析文件
-	upload(req, res, async () => {
+	FileImportMulter(req, res, async () => {
 		const { file } = req;
 
 		// 如果没有解析到 file 对象，则直接返回 400
