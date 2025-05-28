@@ -12,6 +12,8 @@ export class FileMapModel extends Model {
 	declare operator: string; // 文件操作者
 	declare gridKey: string; // 关联的 gridKey
 	declare favor?: boolean; // 是否收藏
+	declare editable?: boolean; // 是否可编辑
+
 	// 注册模型
 	static registerModule(sequelize: Sequelize) {
 		FileMapModel.init(
@@ -55,6 +57,12 @@ export class FileMapModel extends Model {
 					allowNull: false,
 					comment: "是否收藏",
 					defaultValue: false,
+				},
+				editable: {
+					type: DataTypes.BOOLEAN,
+					allowNull: false,
+					comment: "是否可编辑",
+					defaultValue: true, // 仅在分享文件时，明确设置了仅查看权限时，被设置为 false
 				},
 			},
 			{

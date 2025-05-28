@@ -91,7 +91,7 @@ export const API_getInviteInfo = (filemapid: string) => {
 };
 
 // 同意邀请
-export const API_acceptInvite = (data: { gridKey: string; owner: string }) => {
+export const API_acceptInvite = (data: { gridKey: string; owner: string; editable: boolean }) => {
 	return fetch({
 		url: "/filemap/acceptInvite",
 		method: "POST",

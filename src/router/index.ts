@@ -27,7 +27,7 @@ const routes = [
 		component: () => import("../views/Excel/index.vue"),
 	},
 	{
-		path: "/invite/:filemapid",
+		path: "/invite/:payload",
 		component: () => import("../views/Invite/index.vue"),
 	},
 	{ path: "/:pathMatch(.*)*", redirect: "/404" },

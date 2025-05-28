@@ -43,7 +43,7 @@ export async function getInviteInfo(req: Request, res: Response) {
 
 // 同意邀请
 export async function acceptInvite(req: Request, res: Response) {
-	const { gridKey, owner } = req.body;
+	const { gridKey, owner, editable } = req.body;
 	if (!gridKey || !owner) {
 		res.status(400).json({ code: 400, message: "gridKey | owner 缺失" });
 		return;
@@ -77,7 +77,7 @@ export async function acceptInvite(req: Request, res: Response) {
 		return;
 	} else {
 		// 不然就插入
-		const data = await FileMapService.createFileMap({ gridKey, operator: user_uuid, owner: owner_user_uuid });
+		const data = await FileMapService.createFileMap({ gridKey, operator: user_uuid, owner: owner_user_uuid, editable });
 		if (data) {
 			res.json({ code: 200, message: "加入成功" });
 		} else {

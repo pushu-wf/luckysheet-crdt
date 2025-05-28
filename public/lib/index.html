@@ -37,6 +37,11 @@
 					requestHeaders: {
 						"Custom-userid": "123",
 					},
+					hook: {
+						cellEditBefore() {
+							return false;
+						},
+					},
 					cellRightClickConfig: {
 						customs: [
 							{

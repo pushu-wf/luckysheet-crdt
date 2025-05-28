@@ -71,16 +71,20 @@
 			v-model:value="renameInputValue"
 			@pressEnter="renameConfirm" />
 	</a-modal>
+
+	<!-- 分享文件弹窗 -->
+	<ShareFile :item="ShareFileItem" v-if="ShareFileItem" ref="ShareFileRef" @close="ShareFileItem = null" />
 </template>
 
 <script setup lang="ts">
+import ShareFile from "./ShareFile.vue";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { useUserStore } from "../../../store/User";
 import { SheetListItem } from "../../../interface";
 import { message, Modal, theme } from "ant-design-vue";
+import { encode, getHighlightHtml } from "../../../utils";
 import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
-import { encode, getHighlightHtml, writeToClipboard } from "../../../utils";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
@@ -112,6 +116,10 @@ const renameInputRef = ref();
 const renameInputValue = ref("");
 // 当前重命名的 gridKey
 const renameGridKey = ref("");
+
+// 分享文件项
+const ShareFileItem = ref<SheetListItem | null>(null);
+const ShareFileRef = ref();
 
 // 分页器
 const pagination = {
@@ -200,17 +208,9 @@ async function batchFavorFile() {
  * @description 分享文件
  */
 async function handleShareFile(item: SheetListItem) {
-	// 将参数进行编码
-	const filemapid = encode(item.file_map_id);
-	const URL = `${window.location.origin}/invite/${encode(filemapid)}`;
-
-	// 写入粘贴板
-	try {
-		writeToClipboard(URL);
-		message.success("分享链接已复制到粘贴板");
-	} catch (error) {
-		console.error(error);
-	}
+	// 打开弹窗实现数据展示
+	ShareFileItem.value = item;
+	nextTick(() => ShareFileRef.value.open());
 }
 
 /**

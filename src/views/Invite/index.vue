@@ -6,6 +6,9 @@
 				<div class="right">
 					<div class="title">{{ inviteInfo.fileName }}</div>
 					<div class="owner">所有人： {{ inviteInfo.fileOwner }}</div>
+					<div>
+						<a-tag :color="inviteInfo.editable ? '#87d068' : '#f50'">{{ inviteInfo.editable ? "可编辑" : "仅查看" }}</a-tag>
+					</div>
 				</div>
 			</div>
 			<div class="description">
@@ -32,6 +35,7 @@ const inviteInfo = reactive({
 	fileOwnerId: "",
 	fileInvitor: "",
 	gridKey: "",
+	editable: true,
 });
 
 function cancel() {
@@ -41,7 +45,11 @@ function cancel() {
 async function ok() {
 	// 发送请求 - 同意加入
 	try {
-		const { data } = await API_acceptInvite({ gridKey: inviteInfo.gridKey, owner: inviteInfo.fileOwnerId });
+		const { data } = await API_acceptInvite({
+			gridKey: inviteInfo.gridKey,
+			owner: inviteInfo.fileOwnerId,
+			editable: inviteInfo.editable,
+		});
 		if (data.code === 200) message.success("加入成功");
 	} catch (error) {
 		console.error(error);
@@ -52,13 +60,15 @@ async function ok() {
 
 onMounted(async () => {
 	// 从 router 获取参数
-	const { filemapid } = router.currentRoute.value.params;
-	if (!filemapid) return;
+	const { payload } = router.currentRoute.value.params;
+	if (!payload) return;
 	// 需要进行两次转码
-	const fileMapID = decode(decode(<string>filemapid));
+	const { filemapid, editable } = JSON.parse(decode(decode(<string>payload)));
+	inviteInfo.editable = editable;
+	console.log(" ==> ", editable);
 	// 请求 filemap 信息，即可获取到相关邀请者、所有者、文件名称信息
 	try {
-		const { data } = await API_getInviteInfo(fileMapID);
+		const { data } = await API_getInviteInfo(filemapid);
 		if (data.code === 200) {
 			inviteInfo.fileInvitor = data.data.OperatorUser.username;
 			inviteInfo.fileName = data.data.WorkerBook.title;
@@ -85,7 +95,7 @@ onMounted(async () => {
 			padding-left: 20px;
 			display: flex;
 			flex-direction: column;
-			justify-content: center;
+			justify-content: space-evenly;
 			.title {
 				font-size: 20px;
 				font-weight: bold;
