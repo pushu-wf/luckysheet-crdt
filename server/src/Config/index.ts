@@ -69,7 +69,7 @@ const UserAvatarMulter = multer({ dest: UploadDest }).single("userAvatar");
 const FileImportMulter = multer({
 	storage: multer.diskStorage({
 		filename: function (req, file, callback) {
-			file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
+			file.originalname = decodeURIComponent(file.originalname);
 			callback(null, file.originalname);
 		},
 	}),

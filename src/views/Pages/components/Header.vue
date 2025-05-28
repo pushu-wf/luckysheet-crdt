@@ -4,11 +4,17 @@
 			<img src="/logo.svg" alt="" />
 			<h1>Luckysheet-CRDT</h1>
 		</div>
+
 		<a-input v-model:value="searchKey" allowClear placeholder="搜索文件...">
 			<template #prefix>
 				<SearchOutlined />
 			</template>
 		</a-input>
+
+		<a-badge count="5">
+			<a-button type="text" :icon="h(BellOutlined)" />
+		</a-badge>
+
 		<a-dropdown arrow trigger="click" placement="bottomRight">
 			<div class="user-avatar">
 				<span class="username">{{ getUserName() }}</span>
@@ -38,10 +44,10 @@ import Help from "./Help.vue";
 import router from "../../../router";
 import UserInfo from "./UserInfo.vue";
 import { theme } from "ant-design-vue";
-import { nextTick, ref, watch } from "vue";
+import { nextTick, ref, watch, h } from "vue";
 import { useUserStore } from "../../../store/User";
 import { localForage } from "../../../localforage";
-import { SearchOutlined, UserOutlined, QuestionCircleOutlined, LogoutOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined, UserOutlined, QuestionCircleOutlined, LogoutOutlined, BellOutlined } from "@ant-design/icons-vue";
 
 const emit = defineEmits(["search", "updateFileList"]);
 
@@ -85,6 +91,15 @@ function handleOperate(payload: { key: string }) {
 // 输入框前缀图标
 .ant-input-affix-wrapper .ant-input-prefix .anticon {
 	color: v-bind("token.colorTextQuaternary");
+}
+
+// 未读
+:deep .ant-badge-count {
+	min-width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .pages-header {

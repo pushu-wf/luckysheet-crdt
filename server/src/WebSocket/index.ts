@@ -26,7 +26,7 @@ export function createWebSocketServer(server: Server) {
 		const type = getURLQuery(req.url, "type");
 		const userid = getURLQuery(req.url, "userid");
 		const gridkey = getURLQuery(req.url, "gridkey");
-		const username = getURLQuery(req.url, "username");
+		const username = getURLQuery(req.url, "username"); // 中文解析异常 - 需要转码
 
 		logger.info(`luckysheet 协同用户连接成功 [ID: ${userid}].`);
 

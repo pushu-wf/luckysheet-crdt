@@ -33,19 +33,16 @@ function unzip(str: string): string {
  */
 function getURLQuery(url: string | undefined, key: string) {
 	if (!url) return "";
-	// 通过 ? 分割
 	const params = url.split("?")[1];
 	if (!params || !params.includes("=")) return "";
 
-	/**
-	 * 此时，拿到的参数对象为 params ==> type=luckysheet&userid=1&username=userA&t=111&g=
-	 */
 	const queryArr = params.split("&");
 	for (let i = 0; i < queryArr.length; i++) {
 		const item = queryArr[i];
 		const itemArr = item.split("=");
 		if (itemArr[0] === key) {
-			return itemArr[1];
+			// 添加 decodeURIComponent 支持中文解析
+			return itemArr.length > 1 ? decodeURIComponent(itemArr[1]) : "";
 		}
 	}
 	return "";

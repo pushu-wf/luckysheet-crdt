@@ -7,7 +7,7 @@ import router from "../../router";
 import { decode, getLoadUrl } from "../../utils";
 import { useUserStore } from "../../store/User";
 import { API_checkSheetEditPermission, API_getWorkerBook } from "../../axios";
-import { onBeforeUnmount, onMounted } from "vue";
+import { h, onBeforeUnmount, onMounted } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
 import { localForage } from "../../localforage";
@@ -15,6 +15,11 @@ import { message } from "ant-design-vue";
 
 const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
+
+// 申请编辑权限
+async function applyEditPermission(gridKey: string) {
+	console.log(" ==> 申请编辑权限");
+}
 
 // 初始化 luckysheet
 async function initLuckysheet(gridKey: string, editable: boolean = true) {
@@ -46,7 +51,27 @@ async function initLuckysheet(gridKey: string, editable: boolean = true) {
 		// hook 实现仅查看功能
 		hook: {
 			cellEditBefore() {
-				if (!editable) message.warn("您仅有查看权限！");
+				if (!editable)
+					message.warn({
+						content: () =>
+							h(
+								"span",
+								{
+									style: { userSelect: "none" },
+								},
+								[
+									h("span", null, "您仅有查看权限！"),
+									h(
+										"span",
+										{
+											style: { color: "#1890ff", cursor: "pointer" },
+											onClick: () => applyEditPermission(gridKey),
+										},
+										"可申请编辑权限"
+									),
+								]
+							),
+					});
 				return editable;
 			},
 		},
