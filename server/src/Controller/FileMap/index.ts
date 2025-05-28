@@ -121,6 +121,6 @@ export async function checkSheetEditPermission(req: Request, res: Response) {
 	if (!permission) {
 		res.status(400).json({ code: 400, message: "您没有权限编辑此文件" });
 	} else {
-		res.json({ code: 200, gridKey: filemap.gridKey });
+		res.json({ code: 200, gridKey: filemap.gridKey, editable: filemap.editable });
 	}
 }

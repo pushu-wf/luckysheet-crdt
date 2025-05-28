@@ -17,7 +17,7 @@ const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
 
 // 初始化 luckysheet
-async function initLuckysheet(gridKey: string) {
+async function initLuckysheet(gridKey: string, editable: boolean = true) {
 	const { userid, username } = userInfo;
 
 	const options = {
@@ -41,6 +41,14 @@ async function initLuckysheet(gridKey: string) {
 					callback: () => router.push("/home"),
 				},
 			],
+		},
+
+		// hook 实现仅查看功能
+		hook: {
+			cellEditBefore() {
+				if (!editable) message.warn("您仅有查看权限！");
+				return editable;
+			},
 		},
 	};
 
@@ -95,7 +103,7 @@ onMounted(async () => {
 	try {
 		const { data } = await API_checkSheetEditPermission({ filemapid: file_map_id });
 		if (data.code === 200) {
-			initLuckysheet(data.gridKey);
+			initLuckysheet(data.gridKey, data.editable);
 		}
 	} catch (error) {
 		console.error(error);
