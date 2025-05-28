@@ -6,7 +6,7 @@ interface CustomWebSocket extends WebSocket {
 		type: string; // 协同服务类型
 		userid: string;
 		username: string;
-		gridkey: string;
+		gridKey: string;
 	};
 }
 

@@ -1,5 +1,6 @@
 import { DB } from "../Sequelize";
 import { logger } from "../Utils/Logger";
+import { onlineUserList } from "./users";
 import { getURLQuery, unzip } from "../Utils";
 import { RawData, WebSocketServer } from "ws";
 import { IncomingMessage, Server } from "http";
@@ -25,13 +26,20 @@ export function createWebSocketServer(server: Server) {
 		/**  解析 request url 的参数，识别当前连接用户的 userid username gridkey type  属性 */
 		const type = getURLQuery(req.url, "type");
 		const userid = getURLQuery(req.url, "userid");
-		const gridkey = getURLQuery(req.url, "gridkey");
+		const gridKey = getURLQuery(req.url, "gridkey");
 		const username = getURLQuery(req.url, "username"); // 中文解析异常 - 需要转码
 
 		logger.info(`luckysheet 协同用户连接成功 [ID: ${userid}].`);
 
 		/** 将 url 参数添加到 client 上，方便后续使用 */
-		client.clientInfo = { userid, username, type, gridkey };
+		client.clientInfo = { userid, username, type, gridKey };
+
+		// 用户连接 websocket ，将其实例对象，添加到 onlineUserlist 中
+		try {
+			onlineUserList.addUser(client.clientInfo);
+		} catch (error) {
+			logger.error(error);
+		}
 
 		/** 监听消息 */
 		client.on("message", (d) => onmessage(d, client));
@@ -55,7 +63,7 @@ export function createWebSocketServer(server: Server) {
 			const data_str = unzip(data.toString());
 
 			// 2. 用户每次编辑，都会触发 message 事件，因此，在这里实现协同数据存储
-			if (DB.getConnectState()) databaseHandler(data_str, client.clientInfo.gridkey);
+			if (DB.getConnectState()) databaseHandler(data_str, client.clientInfo.gridKey);
 
 			// 3. 广播给 wss.clients 其他客户端 - 所有的权限校验、文件ID 等验证，均在 broadcastOtherClients 函数中处理
 			broadcastOtherClients(wss, client, data_str);
@@ -72,5 +80,7 @@ export function createWebSocketServer(server: Server) {
 	function onclose(client: CustomWebSocket) {
 		broadcastOtherClients(wss, client, "exit");
 		logger.warn("luckysheet 协同用户关闭连接");
+		// 关闭连接，移除 onlineUserList
+		onlineUserList.deleteUser(client.clientInfo);
 	}
 }

@@ -110,4 +110,12 @@ function getEmptySheetsData() {
 	]);
 }
 
-export { unzip, getURLQuery, isEmpty, md5, createToken, getUseridFromToken, getEmptySheetsData };
+/**
+ * 生成随机ID
+ */
+function generateKey() {
+	const key = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+	return md5(key);
+}
+
+export { unzip, getURLQuery, isEmpty, md5, createToken, getUseridFromToken, getEmptySheetsData, generateKey };
