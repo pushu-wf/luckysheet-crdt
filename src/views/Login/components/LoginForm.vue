@@ -101,6 +101,8 @@ async function loginHandle() {
 	} catch (error) {
 		console.error(error);
 		resetForm(formRef);
+		// 重置验证码
+		verificationCode.value?.generateCode();
 	}
 }
 

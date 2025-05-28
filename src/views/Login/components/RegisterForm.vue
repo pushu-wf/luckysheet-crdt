@@ -80,7 +80,9 @@ async function registerHandle() {
 		message.success("注册成功");
 		// 不然跳转到登录页 - 可以携带参数进行快捷登录
 		emit("gotoLogin", { userid, password });
-	} catch (error) {}
+	} catch (error) {
+		verificationCode.value?.generateCode();
+	}
 }
 
 // 请一定记住要初始化验证码实例对象，否则会报错

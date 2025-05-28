@@ -15,6 +15,7 @@ type User = {
 };
 
 class OnlineUserList {
+	// 应该使用 redis 实现存储的
 	onlineUserList: Map<string, User>;
 
 	constructor() {
@@ -27,7 +28,7 @@ class OnlineUserList {
 
 		let key = generateKey();
 
-		while (!this.onlineUserList.has(key)) {
+		while (this.onlineUserList.has(key)) {
 			key = generateKey();
 		}
 
