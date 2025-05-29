@@ -11,9 +11,10 @@
 			</template>
 		</a-input>
 
-		<a-badge count="5">
+		<!-- 消息中心 - 暂未实现 -->
+		<!-- <a-badge count="5">
 			<a-button type="text" :icon="h(BellOutlined)" />
-		</a-badge>
+		</a-badge> -->
 
 		<a-dropdown arrow trigger="click" placement="bottomRight">
 			<div class="user-avatar">
@@ -44,10 +45,10 @@ import Help from "./Help.vue";
 import router from "../../../router";
 import UserInfo from "./UserInfo.vue";
 import { theme } from "ant-design-vue";
-import { nextTick, ref, watch, h } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { useUserStore } from "../../../store/User";
 import { localForage } from "../../../localforage";
-import { SearchOutlined, UserOutlined, QuestionCircleOutlined, LogoutOutlined, BellOutlined } from "@ant-design/icons-vue";
+import { SearchOutlined, UserOutlined, QuestionCircleOutlined, LogoutOutlined } from "@ant-design/icons-vue";
 
 const emit = defineEmits(["search", "updateFileList"]);
 

@@ -5,6 +5,10 @@
 			<a-button type="text" :icon="h(MenuOutlined)" />
 			<template #overlay>
 				<a-menu @click="handleOperate">
+					<a-menu-item key="import-file"> 导入文件 </a-menu-item>
+					<a-menu-item key="export-file"> 导出文件 </a-menu-item>
+					<a-divider></a-divider>
+					<a-menu-item key="share-file"> 分享链接 </a-menu-item>
 					<a-menu-item key="back-home"> 返回首页 </a-menu-item>
 				</a-menu>
 			</template>
@@ -25,28 +29,29 @@
 			</template>
 		</a-input>
 
-		<!-- 头像组 -->
+		<!-- 头像组 - 暂未实现 -->
 		<a-dropdown placement="bottomRight" trigger="['click']">
 			<a-button type="text" style="margin-left: auto" :icon="h(UsergroupAddOutlined)" />
 			<template #overlay>
 				<a-menu>
-					<a-menu-item v-for="i in 4" style="margin: 4px 0">
+					<a-menu-item v-for="i in 3" style="margin: 4px 0">
 						<a-avatar size="small">
 							<template #icon>
 								<UserOutlined />
 							</template>
 						</a-avatar>
-						<span>用户——23123</span>
+						<span style="margin-left: 10px">暂未实现</span>
 					</a-menu-item>
 				</a-menu>
 			</template>
 		</a-dropdown>
 
-		<a-button type="text" style="margin-left: 16px" :icon="h(ShareAltOutlined)" />
+		<!-- 分享 - 暂未实现 -->
+		<a-button @click="message.warn('暂未实现')" type="text" style="margin-left: 16px" :icon="h(ShareAltOutlined)" />
 
-		<!-- 消息 -->
+		<!-- 消息 - 暂未实现 -->
 		<a-badge dot style="margin-left: 16px">
-			<a-button type="text" :icon="h(CommentOutlined)" />
+			<a-button @click="message.warn('暂未实现')" type="text" :icon="h(CommentOutlined)" />
 		</a-badge>
 	</div>
 	<div id="luckysheet-container"></div>
