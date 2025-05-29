@@ -14,7 +14,12 @@
 			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAAAgCAYAAADuW7E5AAAACXBIWXMAAC4jAAAuIwF4pT92AAAGgWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNi4wLWMwMDIgNzkuMTY0NDg4LCAyMDIwLzA3LzEwLTIyOjA2OjUzICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjIuMCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDI0LTEyLTE5VDE1OjAwOjUyKzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTEyLTE5VDE1OjAwOjUyKzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyNC0xMi0xOVQxNTowMDo1MiswODowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpkOWU2MWRlZi1kNmMzLTI5NDktYjY5NS04MTlmNjQwMTdiNTIiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDphMGRiNGE2Zi1kYzczLTJiNGQtYWVkZi04OWZhZWE5N2U4NGQiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpiMDAyODdkMi1iMTBjLTZmNGQtYTUzZS1iZWNhMGQxZjgyYzciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjcmVhdGVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOmIwMDI4N2QyLWIxMGMtNmY0ZC1hNTNlLWJlY2EwZDFmODJjNyIgc3RFdnQ6d2hlbj0iMjAyNC0xMi0xOVQxNTowMDo1MiswODowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDIyLjAgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDpkOWU2MWRlZi1kNmMzLTI5NDktYjY5NS04MTlmNjQwMTdiNTIiIHN0RXZ0OndoZW49IjIwMjQtMTItMTlUMTU6MDA6NTIrMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMi4wIChXaW5kb3dzKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPHBob3Rvc2hvcDpUZXh0TGF5ZXJzPiA8cmRmOkJhZz4gPHJkZjpsaSBwaG90b3Nob3A6TGF5ZXJOYW1lPSJMdWNreXNoZWV0IiBwaG90b3Nob3A6TGF5ZXJUZXh0PSJMdWNreXNoZWV0Ii8+IDwvcmRmOkJhZz4gPC9waG90b3Nob3A6VGV4dExheWVycz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz76Z2J7AAAJL0lEQVR4nO2cbYhjVxnHfzOMbq2rm5YWlNaaxVKwBptRfAGFzdTGwFpxppJCkWwzVesiyMw4MfXlXmaHez9oyOxk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"
 			alt="" />
 
-		<a-input v-model:value="fileName" style="width: 220px; margin-left: auto">
+		<a-input
+			v-model:value="fileName"
+			ref="fileNameRef"
+			@pressEnter="fileNameRef?.blur()"
+			@blur="updateFileName"
+			style="width: 220px; margin-left: auto">
 			<template #prefix>
 				<FileExcelOutlined />
 			</template>
@@ -56,16 +61,37 @@ import { decode, getLoadUrl } from "../../utils";
 import { h, onBeforeUnmount, onMounted, ref } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
-import { API_checkSheetEditPermission, API_getWorkerBook } from "../../axios";
-import { MenuOutlined, FileExcelOutlined, CommentOutlined, UsergroupAddOutlined, ShareAltOutlined } from "@ant-design/icons-vue";
+import { MenuOutlined, FileExcelOutlined, CommentOutlined } from "@ant-design/icons-vue";
+import { UsergroupAddOutlined, ShareAltOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { API_checkSheetEditPermission, API_getWorkerBook, API_renameFile } from "../../axios";
 
 const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
 
 // 当前文件名称
 const fileName = ref("");
+const fileNameRef = ref();
+
+// 当前文件的 gridKey
+const gridKey = ref("");
 
 const { token } = theme.useToken();
+
+/**
+ * @description 更新文件名称
+ */
+async function updateFileName() {
+	if (!fileName.value) return message.warn("请输入文件名称");
+
+	try {
+		const { data } = await API_renameFile({ gridKey: gridKey.value, newName: fileName.value });
+		if (data.code === 200) {
+			message.success("重命名成功");
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 /**
  * @description 无编辑权限提示
@@ -90,7 +116,7 @@ function noEditPermission(gridKey: string) {
  * @param gridKey
  */
 async function applyEditPermission(gridKey: string) {
-	console.log(" ==> 申请编辑权限");
+	console.log(" ==> 申请编辑权限", gridKey);
 }
 
 /**
@@ -178,6 +204,7 @@ onMounted(async () => {
 	try {
 		const { data } = await API_checkSheetEditPermission({ filemapid: file_map_id });
 		if (data.code === 200) {
+			gridKey.value = data.gridKey; // 记录当前 gridKey
 			initLuckysheet(data.gridKey, data.editable);
 		}
 	} catch (error) {
