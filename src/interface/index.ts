@@ -1,5 +1,5 @@
-// 定义sheet list 文件列表的接口返回数据类型
-interface User {
+// 定义sheet list 文件列表的接口返回数据类型 - 内部使用
+interface UserInfo {
 	userid: string;
 	username: string;
 	avatar: string | null;
@@ -9,9 +9,9 @@ interface User {
 interface SheetListItem {
 	favor: boolean;
 	file_map_id: string;
-	operator: User;
+	operator: UserInfo;
 	checked: boolean; // 是否选中
-	owner: User;
+	owner: UserInfo;
 	workerbook: {
 		gridKey: string;
 		title: string;
