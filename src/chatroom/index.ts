@@ -30,14 +30,14 @@ class ChatRoom {
 	// 错误重连次数
 	private retryCount: number = 0;
 
-	constructor() {
-		this.connect();
-	}
-
-	private connect() {
-		if ("webSocket" in window) {
+	/**
+	 * 连接 websocket 服务器
+	 * @param url
+	 */
+	public connect(url?: string) {
+		if ("WebSocket" in window) {
 			// 创建 websocket 连接
-			this.websocket = new WebSocket(`${WS_SERVER_URL}/chart`);
+			this.websocket = new WebSocket(url || `${WS_SERVER_URL}/chat`);
 			// 监听 websocket 连接成功
 			this.websocket.onopen = this.onopen.bind(this);
 			// 监听 websocket 连接失败
@@ -50,6 +50,31 @@ class ChatRoom {
 			message.warn("当前浏览器不支持 WebSocket");
 		}
 	}
+
+	/**
+	 * 发送消息
+	 * @param message
+	 * @returns
+	 */
+	public sendMessage(message: MessageType) {
+		if (this.websocket == null) return;
+		console.log(" ==> ", message);
+		this.websocket.send("message");
+	}
+
+	/**
+	 * 关闭连接
+	 * @returns
+	 */
+	public closeWebSocket() {
+		if (this.websocket == null) return;
+		this.websocket.close(1000);
+		this.websocket = null;
+		this.retryCount = 0;
+		console.info("[chat-room] websocket连接关闭");
+		if (this.retryTimer) clearInterval(this.retryTimer);
+	}
+
 	private onopen() {
 		if (!this.websocket) return;
 		console.info("[chat-room] websocket连接成功");
@@ -93,17 +118,6 @@ class ChatRoom {
 		const data = new Function("return " + result.data)();
 		// 再重新解密 即可得到 MessageType
 		console.log(" ==> ", data);
-	}
-
-	public sendMessage(message: MessageType) {
-		if (this.websocket == null) return;
-		console.log(" ==> ", message);
-		this.websocket.send("message");
-	}
-
-	public closeWebSocket() {
-		if (this.websocket == null) return;
-		this.websocket.close(1000);
 	}
 }
 

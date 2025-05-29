@@ -18,6 +18,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { theme } from "ant-design-vue";
+import { chatRoom } from "../../chatroom";
 import HeaderVue from "./components/Header.vue";
 import fileList from "./components/FileList.vue";
 import { disableContextMenu } from "../../utils";
@@ -44,8 +45,12 @@ function updateFileList(filterType: string) {
 	fileListRef.value.queryFileList(filterType);
 }
 
-// 此页面禁止右键菜单
-onMounted(() => disableContextMenu(".pages-box"));
+onMounted(() => {
+	// 连接聊天室
+	chatRoom.connect();
+	// 此页面禁止右键菜单
+	disableContextMenu(".pages-box");
+});
 </script>
 
 <style lang="less" scoped>
