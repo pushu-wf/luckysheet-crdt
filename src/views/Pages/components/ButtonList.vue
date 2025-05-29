@@ -4,7 +4,8 @@
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
 		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
-		<a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button>
+		<!-- 导入暂未实现 -->
+		<!-- <a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button> -->
 	</div>
 	<div class="choose-files">
 		<span v-show="checkedNumber">
@@ -48,11 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { ImportFile } from "../utils";
 import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
 import { API_createWorkerBook } from "../../../axios";
-import { PlusOutlined, StarOutlined, CloudUploadOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, StarOutlined } from "@ant-design/icons-vue";
 
 // 选中几个文件
 const { checkedNumber } = defineProps({ checkedNumber: { type: Number, default: 0 } });

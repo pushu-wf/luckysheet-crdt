@@ -1,7 +1,6 @@
 import { DB } from "../../Sequelize";
 import { IncomingMessage } from "http";
 import WebSocket, { RawData } from "ws";
-import { onlineUserList } from "../users";
 import { logger } from "../../Utils/Logger";
 import { databaseHandler } from "./database";
 import { getURLQuery, unzip } from "../../Utils";
@@ -24,11 +23,11 @@ export function connectLuckysheetServer(wss: WebSocket.Server, client: CustomWeb
 	client.clientInfo = { userid, username, type, gridKey };
 
 	// 用户连接 websocket ，将其实例对象，添加到 onlineUserlist 中
-	try {
-		onlineUserList.addUser(client.clientInfo);
-	} catch (error) {
-		logger.error(error);
-	}
+	// try {
+	// 	onlineUserList.addUser(client.clientInfo);
+	// } catch (error) {
+	// 	logger.error(error);
+	// }
 
 	/** 监听消息 */
 	client.on("message", (d) => onmessage(d, wss, client));
@@ -70,5 +69,5 @@ function onclose(wss: WebSocket.Server, client: CustomWebSocket) {
 	broadcastOtherClients(wss, client, "exit");
 	logger.warn("luckysheet 协同用户关闭连接");
 	// 关闭连接，移除 onlineUserList
-	onlineUserList.deleteUser(client.clientInfo);
+	// onlineUserList.deleteUser(client.clientInfo);
 }

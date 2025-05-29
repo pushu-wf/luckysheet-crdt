@@ -8,10 +8,10 @@ import LuckyExcel from "luckyexcel";
 import { logger } from "../../Utils/Logger";
 import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
-import { MergeService } from "../../Service/Merge";
+// import { MergeService } from "../../Service/Merge";
 import { FileMapService } from "../../Service/FileMap";
 import { ExportJson } from "../../Interface/LuckyExcel";
-import { CellDataService } from "../../Service/CellData";
+// import { CellDataService } from "../../Service/CellData";
 import { FileImportMulter, UploadDest } from "../../Config";
 import { WorkerBookService } from "../../Service/WorkerBook";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
@@ -254,7 +254,7 @@ async function importFile(req: Request, res: Response) {
 						// Step 3 根据解析的文件格式，新增 workerSheet - 依赖 worker_book_id
 						for (const sheet of sheets) {
 							// 每一个 sheet 是一条记录，创建 workerSheet
-							const { name, config, index, status, order, defaultColWidth, defaultRowHeight, celldata, calcChain } = sheet;
+							const { name, status, order, defaultColWidth, defaultRowHeight } = sheet;
 							// 创建 workerSheet 更多属性，请查阅 luckysheet 文档、luckyexcel 文档
 							const workerSheet = await WorkerSheetService.createSheet({
 								gridKey: workerBook.gridKey,
@@ -268,17 +268,19 @@ async function importFile(req: Request, res: Response) {
 
 							// Step 4 根据 sheet 创建 celldata merge 等其他记录 - 依赖 worker_sheet_id
 							if (workerSheet) {
-								const worker_sheet_id = workerSheet.worker_sheet_id;
+								// const { config, index, celldata, calcChain } = sheet;
+								console.log(" ==> ", workerSheet.worker_sheet_id);
+								// const worker_sheet_id = workerSheet.worker_sheet_id;
 
-								celldata.forEach();
-								calcChain.forEach();
+								// celldata.forEach();
+								// calcChain.forEach();
 
-								// 处理 合并 行高列宽 隐藏等
-								for (const key in config) {
-									if (Object.prototype.hasOwnProperty.call(config, key)) {
-										const element = config[key];
-									}
-								}
+								// // 处理 合并 行高列宽 隐藏等
+								// for (const key in config) {
+								// 	if (Object.prototype.hasOwnProperty.call(config, key)) {
+								// 		const element = config[key];
+								// 	}
+								// }
 								// // 创建 celldata
 								// await CellDataService.create();
 

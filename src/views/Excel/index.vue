@@ -5,11 +5,10 @@
 			<a-button type="text" :icon="h(MenuOutlined)" />
 			<template #overlay>
 				<a-menu @click="handleOperate">
-					<a-menu-item key="import-file"> 导入文件 </a-menu-item>
-					<a-menu-item key="export-file"> 导出文件 </a-menu-item>
+					<a-menu-item key="import-file"><CloudUploadOutlined /> 导入文件 </a-menu-item>
+					<a-menu-item key="export-file"><CloudDownloadOutlined /> 导出文件 </a-menu-item>
 					<a-divider></a-divider>
-					<a-menu-item key="share-file"> 分享链接 </a-menu-item>
-					<a-menu-item key="back-home"> 返回首页 </a-menu-item>
+					<a-menu-item key="back-home"><HomeOutlined /> 返回首页 </a-menu-item>
 				</a-menu>
 			</template>
 		</a-dropdown>
@@ -66,9 +65,9 @@ import { decode, getLoadUrl } from "../../utils";
 import { h, onBeforeUnmount, onMounted, ref } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
 import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
-import { MenuOutlined, FileExcelOutlined, CommentOutlined } from "@ant-design/icons-vue";
-import { UsergroupAddOutlined, ShareAltOutlined, UserOutlined } from "@ant-design/icons-vue";
 import { API_checkSheetEditPermission, API_getWorkerBook, API_renameFile } from "../../axios";
+import { UsergroupAddOutlined, ShareAltOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons-vue";
+import { MenuOutlined, FileExcelOutlined, CommentOutlined, CloudUploadOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
 
 const { userInfo } = useUserStore();
 const luckysheet = Reflect.get(window, "luckysheet");
@@ -103,6 +102,8 @@ async function updateFileName() {
  */
 function handleOperate(payload: { key: string }) {
 	if (payload.key === "back-home") router.push("/home");
+	else if (payload.key === "import-file") luckysheet.importFile();
+	else if (payload.key === "export-file") luckysheet.exportFile();
 }
 
 /**

@@ -43,10 +43,11 @@
 									<StarOutlined />
 									{{ item.favor ? "取消收藏" : "收藏表格" }}
 								</a-menu-item>
-								<a-menu-item key="export">
+								<!-- 导出文件暂未实现 -->
+								<!-- <a-menu-item key="export">
 									<CloudDownloadOutlined />
 									导出文件
-								</a-menu-item>
+								</a-menu-item> -->
 								<a-divider />
 								<a-menu-item key="delete" :style="{ color: token.colorError }">
 									<DeleteOutlined />
