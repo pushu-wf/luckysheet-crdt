@@ -18,6 +18,18 @@
 -   `Master alpha`: Development version, providing optional database services and complete functionality implementation;
 -   `Master Vue`: Stable version, providing user system, file system, complete functional implementation, relying on database services;
 
+## Master-Vue Ready to use version out of the box
+
+This project, as a branch of 'luckysheet crdt', is attached to 'luckysheet crdt' and serves only as an example for the Vue version. It provides a complete user system (login, registration, information modification) and file system (create, modify, delete, collaborate, share...). The project screenshot is as follows:
+
+<p align="center">
+  <img src='/public/result/master-vue-login.png' />
+  <img src='/public/result/master-vue-home.png' />
+  <img src='/public/result/master-vue-invite.png' />
+  <img src='/public/result/master-vue-userinfo.png' />
+  <img src='/public/result/master-vue-btns.png' />
+</p>
+
 ## DESCRIPTION
 
 1. This project is based on the [Luckysheet source code](https://github.com/mengshukeji/Luckysheet) modification. Please follow the original author's open source agreement, and do not delete or modify the source code header copyright statement。
@@ -374,18 +386,6 @@ $.ajax({
 	error: function (error) {},
 });
 ```
-
-## Master-Vue Ready to use version out of the box
-
-This project, as a branch of 'luckysheet crdt', is attached to 'luckysheet crdt' and serves only as an example for the Vue version. It provides a complete user system (login, registration, information modification) and file system (create, modify, delete, collaborate, share...). The project screenshot is as follows:
-
-<p align="center">
-  <img src='/public/result/master-vue-login.png' />
-  <img src='/public/result/master-vue-home.png' />
-  <img src='/public/result/master-vue-invite.png' />
-  <img src='/public/result/master-vue-userinfo.png' />
-  <img src='/public/result/master-vue-btns.png' />
-</p>
 
 ## frequently asked questions
 
