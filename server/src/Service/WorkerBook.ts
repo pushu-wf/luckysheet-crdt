@@ -8,11 +8,11 @@ import { WorkerBookModel, WorkerBookModelType } from "../Sequelize/Models/Worker
 import { WorkerSheetModel, WorkerSheetModelType } from "../Sequelize/Models/WorkerSheet";
 
 /**
- * 新增 workerBooks 记录
+ * 新增 workerBooks 记录 - 同步创建 worker sheet
  * @param info WorkerBookModelType
  * @returns
  */
-async function create(info: WorkerBookModelType) {
+async function createWidthSheet(info: WorkerBookModelType) {
 	try {
 		// 1. 先查询用户传递的 gridKey 是否存在记录
 		const exist = await findOne(info.gridKey);
@@ -34,6 +34,18 @@ async function create(info: WorkerBookModelType) {
 	} catch (error) {
 		logger.error(error);
 		return null;
+	}
+}
+
+/**
+ * 导入创建是不需要直接 create Sheet 的
+ * @param info
+ */
+async function createWorkerBook(info: WorkerBookModelType) {
+	try {
+		return await WorkerBookModel.create(info);
+	} catch (error) {
+		logger.error(error);
 	}
 }
 
@@ -86,9 +98,10 @@ async function deleteWorkerBook(gridKey: string) {
 }
 
 export const WorkerBookService = {
-	create,
+	createWidthSheet,
 	update,
 	findOne,
 	findAll,
 	deleteWorkerBook,
+	createWorkerBook,
 };

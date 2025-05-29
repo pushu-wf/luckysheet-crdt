@@ -46,8 +46,8 @@ function updateFileList(filterType: string) {
 }
 
 onMounted(() => {
-	// 连接聊天室
-	chatRoom.connect();
+	// 连接聊天室 - 暂未实现
+	// chatRoom.connect();
 	// 此页面禁止右键菜单
 	disableContextMenu(".pages-box");
 });

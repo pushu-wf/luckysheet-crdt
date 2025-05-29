@@ -66,14 +66,7 @@ const LuckySheetMuter = multer({ dest: UploadDest }).single("image");
 const UserAvatarMulter = multer({ dest: UploadDest }).single("userAvatar");
 
 // 导出 文件导入 Multer 配置对象
-const FileImportMulter = multer({
-	storage: multer.diskStorage({
-		filename: function (req, file, callback) {
-			file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
-			callback(null, file.originalname);
-		},
-	}),
-}).single("file");
+const FileImportMulter = multer({ dest: UploadDest }).single("file");
 
 // 统一导出配置对象
 export {

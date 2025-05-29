@@ -1,10 +1,21 @@
+// luckyexcel 没有相关 类型定义，所以这里使用 any
+import fs from "fs";
+import path from "path";
+
+// eslint-disable-next-line
+// @ts-ignore
+import LuckyExcel from "luckyexcel";
+import { logger } from "../../Utils/Logger";
 import { Request, Response } from "express";
-import { FileImportMulter } from "../../Config";
 import { UserService } from "../../Service/User";
-import { getUseridFromToken, md5 } from "../../Utils";
+import { MergeService } from "../../Service/Merge";
 import { FileMapService } from "../../Service/FileMap";
+import { ExportJson } from "../../Interface/LuckyExcel";
+import { CellDataService } from "../../Service/CellData";
+import { FileImportMulter, UploadDest } from "../../Config";
 import { WorkerBookService } from "../../Service/WorkerBook";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
+import { generateKey, getUseridFromToken, md5 } from "../../Utils";
 
 /**
  * @description 创建工作簿
@@ -25,14 +36,10 @@ async function createWorkerBook(req: Request, res: Response) {
 	}
 
 	// 创建一个 gridKey
-	const gridKey = md5(Math.random().toString().split(".")[1]);
+	const gridKey = md5(generateKey());
 
 	// 不然创建新的 worker books
-	const book = await WorkerBookService.create({
-		gridKey,
-		title: bookname,
-		lang: "zh",
-	});
+	const book = await WorkerBookService.createWidthSheet({ gridKey, title: bookname, lang: "zh" });
 
 	// 创建完工作簿后，需要创建一条文件映射表记录 owner = true
 	// 请求 user_uuid 作为外键
@@ -177,7 +184,9 @@ async function renameFile(req: Request, res: Response) {
 	res.status(200).json({ code: 200, message: "重命名成功" });
 }
 
-// 文件导入实现
+/**
+ * @description 文件导入实现  Buffer.from(file.originalname, "latin1").toString("utf-8");
+ */
 async function importFile(req: Request, res: Response) {
 	// 这里是通过 FormData 实现文件上传的，先解析文件
 	FileImportMulter(req, res, async () => {
@@ -190,13 +199,11 @@ async function importFile(req: Request, res: Response) {
 		}
 
 		// 获取原始文件名
-		const { originalname } = <Express.Multer.File>file;
+		const { originalname, filename } = <Express.Multer.File>file;
 		if (!originalname) {
 			res.status(500).json({ code: 500, message: "文件名解析失败" });
 			return;
 		}
-
-		// 这里并不是真实的保存文件到服务端，而是借助 multer 能力实现文件识别，因此此处并不配置 dest
 
 		// 获取当前用户操作 userid
 		const userid = getUseridFromToken(req);
@@ -212,15 +219,99 @@ async function importFile(req: Request, res: Response) {
 			return;
 		}
 
-		// Step 1 新增 FileMap 记录 - 依赖 gridKey
+		// 为导入的文件创建  gridKey
+		const gridKey = md5(generateKey());
 
-		// Step 2 新增 WorkerBooks 记录 - 使用 gridKey
+		// 转换 originname 防止中文乱码，并取消后缀名
+		const title = Buffer.from(originalname, "latin1").toString("utf-8").split(".xlsx")[0];
 
-		// Step 3 根据解析的文件格式，新增 workerSheet - 依赖 worker_book_id
+		// Step 1 新增 WorkerBooks 记录 - 使用 gridKey
+		const workerBook = await WorkerBookService.createWorkerBook({ gridKey, title, lang: "zh" });
+		if (!workerBook) {
+			res.status(500).json({ code: 500, message: "创建失败" }); // 创建失败
+			return;
+		}
 
-		// Step 4 根据 sheet 创建 celldata merge 等其他记录 - 依赖 worker_sheet_id
+		// Step 2 新增 FileMap 记录 - 依赖 gridKey
+		const filemap = await FileMapService.createFileMap({ owner: user_uuid, operator: user_uuid, gridKey });
+		if (!filemap) {
+			res.status(500).json({ code: 500, message: "创建映射表失败" }); // 创建失败
+			return;
+		}
 
-		res.json({ code: 200, message: "Success to upload." });
+		try {
+			const filePath = path.resolve(__dirname, `${UploadDest}/${filename}`);
+			// 读取一个xlsx文件
+			fs.readFile(filePath, (err, data) => {
+				if (err) throw err;
+
+				LuckyExcel.transformExcelToLucky(
+					data,
+					async ({ sheets }: ExportJson) => {
+						// 获取数据成功后，删除原工作表
+						deleteXlsx(filePath);
+
+						// Step 3 根据解析的文件格式，新增 workerSheet - 依赖 worker_book_id
+						for (const sheet of sheets) {
+							// 每一个 sheet 是一条记录，创建 workerSheet
+							const { name, config, index, status, order, defaultColWidth, defaultRowHeight, celldata, calcChain } = sheet;
+							// 创建 workerSheet 更多属性，请查阅 luckysheet 文档、luckyexcel 文档
+							const workerSheet = await WorkerSheetService.createSheet({
+								gridKey: workerBook.gridKey,
+								name,
+								order: Number(order),
+								status: Number(status),
+								// worker_sheet_id: index, // workersheerid 默认生成，不然怕重复
+								defaultColWidth,
+								defaultRowHeight,
+							});
+
+							// Step 4 根据 sheet 创建 celldata merge 等其他记录 - 依赖 worker_sheet_id
+							if (workerSheet) {
+								const worker_sheet_id = workerSheet.worker_sheet_id;
+
+								celldata.forEach();
+								calcChain.forEach();
+
+								// 处理 合并 行高列宽 隐藏等
+								for (const key in config) {
+									if (Object.prototype.hasOwnProperty.call(config, key)) {
+										const element = config[key];
+									}
+								}
+								// // 创建 celldata
+								// await CellDataService.create();
+
+								// // 创建 merge
+								// await MergeService.createMerge();
+
+								// // 创建 rowlen
+								// await WorkerSheetService.createRowlen(worker);
+							}
+						}
+
+						res.json({ code: 200, message: "Success to upload." });
+					},
+					(error: Error) => {
+						deleteXlsx(filePath);
+						// 删除原工作表
+						logger.error(error);
+					}
+				);
+			});
+		} catch (error) {
+			res.status(500).json({ code: 500, message: "文件解析失败" });
+			return logger.error(error);
+		}
+	});
+}
+
+// 辅助函数 - 删除原文件
+function deleteXlsx(filePath: string) {
+	fs.unlink(filePath, (err) => {
+		if (err) {
+			logger.error("Error deleting the file:", err);
+		}
 	});
 }
 
