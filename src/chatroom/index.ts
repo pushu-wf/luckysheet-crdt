@@ -35,6 +35,9 @@ class ChatRoom {
 	 * @param url
 	 */
 	public connect(url?: string) {
+		// 如果已经连接了则不处理
+		if (this.websocket) return;
+
 		if ("WebSocket" in window) {
 			// 创建 websocket 连接
 			this.websocket = new WebSocket(url || `${WS_SERVER_URL}/chat`);

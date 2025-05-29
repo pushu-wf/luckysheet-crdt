@@ -4,8 +4,8 @@
 		<a-dropdown trigger="['click']">
 			<a-button type="text" :icon="h(MenuOutlined)" />
 			<template #overlay>
-				<a-menu>
-					<a-menu-item> 返回首页 </a-menu-item>
+				<a-menu @click="handleOperate">
+					<a-menu-item key="back-home"> 返回首页 </a-menu-item>
 				</a-menu>
 			</template>
 		</a-dropdown>
@@ -91,6 +91,13 @@ async function updateFileName() {
 	} catch (error) {
 		console.error(error);
 	}
+}
+
+/**
+ * @description 左侧菜单事件
+ */
+function handleOperate(payload: { key: string }) {
+	if (payload.key === "back-home") router.push("/home");
 }
 
 /**

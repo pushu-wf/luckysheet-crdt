@@ -34,7 +34,7 @@ export function broadcastOtherClients(wss: WebSocket.Server, currentClient: Cust
 	 *  3. 当前用户的 userid 是否一致（同一用户不发送消息）
 	 */
 	wss.clients.forEach((conn) => {
-		const { type, gridKey, userid } = (<CustomWebSocket>conn).clientInfo;
+		const { type, gridKey, userid } = (<CustomWebSocket>conn).clientInfo || {};
 		if (type !== "luckysheet") return;
 		if (gridKey !== currentClient.clientInfo.gridKey) return;
 		if (userid === currentClient.clientInfo.userid) return;
