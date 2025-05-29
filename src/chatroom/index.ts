@@ -92,11 +92,13 @@ class ChatRoom {
 	private onmessage(result: MessageEvent) {
 		const data = new Function("return " + result.data)();
 		// 再重新解密 即可得到 MessageType
+		console.log(" ==> ", data);
 	}
 
 	public sendMessage(message: MessageType) {
 		if (this.websocket == null) return;
-		this.websocket.send(message);
+		console.log(" ==> ", message);
+		this.websocket.send("message");
 	}
 
 	public closeWebSocket() {
