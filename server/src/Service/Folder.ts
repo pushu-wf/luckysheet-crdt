@@ -1,9 +1,9 @@
+import dayjs from "dayjs";
 import { logger } from "../Utils/Logger";
-import { UniFileMapItemResult } from "./FileMap";
 import { FileMapModel } from "../Sequelize/Models/FileMap";
 import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
 import { FolderModel, FolderModelType } from "../Sequelize/Models/Folder";
-import dayjs from "dayjs";
+import { FileListResult } from "../Interface/FIleResult";
 
 // 创建文件夹
 async function createFolder(folderinfo: FolderModelType) {
@@ -47,16 +47,16 @@ async function findAllFileByFolderId(folderid: string | null, user_uuid: string)
 			attributes: ["favor", "file_map_id"],
 		});
 		return data.map((i) => {
-			const item = i.toJSON() as UniFileMapItemResult;
+			const item = i.toJSON() as FileListResult;
 			return {
 				favor: item.favor,
 				file_map_id: item.file_map_id,
 				workerbook: {
-					gridKey: item.WorkerBook.gridKey,
-					lang: item.WorkerBook.lang,
-					title: item.WorkerBook.title,
-					updatedAt: dayjs(item.WorkerBook.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
-					createAt: dayjs(item.WorkerBook.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+					gridKey: item.WorkerBook!.gridKey,
+					lang: item.WorkerBook!.lang,
+					title: item.WorkerBook!.title,
+					updatedAt: dayjs(item.WorkerBook!.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+					createAt: dayjs(item.WorkerBook!.createdAt).format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 		});

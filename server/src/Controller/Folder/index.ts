@@ -3,6 +3,9 @@ import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { getUseridFromToken } from "../../Utils";
 import { FolderService } from "../../Service/Folder";
+import { FileListResult, FolderListResult } from "../../Interface/FIleResult";
+
+// 定义
 
 // 创建文件夹
 async function createFolder(req: Request, res: Response) {
@@ -34,10 +37,14 @@ async function createFolder(req: Request, res: Response) {
 		res.status(500).json({ code: 500, message: "创建失败" });
 	}
 }
-async function updateFolder(req: Request, res: Response) {}
+async function updateFolder(req: Request, res: Response) {
+	console.log(" ==> updateFolder", req, res);
+}
 
 // 删除文件夹
-async function deleteFolder(req: Request, res: Response) {}
+async function deleteFolder(req: Request, res: Response) {
+	console.log(" ==> deleteFolder", req, res);
+}
 
 // 获取文件夹列表
 async function getFolderList(req: Request, res: Response) {
@@ -66,12 +73,23 @@ async function getFolderList(req: Request, res: Response) {
 	// 获取当前文件夹下的所有文件
 	const fileList = await FolderService.findAllFileByFolderId(folderid || null, user_uuid);
 
+	const data: FolderListResult[] = [];
+	folderList?.forEach((item) => {
+		data.push({
+			item,
+			type: "folder",
+		});
+	});
+	fileList?.forEach((item) => {
+		data.push({
+			item: <FileListResult>item,
+			type: "file",
+		});
+	});
+
 	res.json({
 		code: 200,
-		data: {
-			folderList,
-			fileList,
-		},
+		data,
 	});
 }
 

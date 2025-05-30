@@ -1,12 +1,9 @@
-/**
- * 文件映射表路由
- */
-
 import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { FileMapService } from "../../Service/FileMap";
 import { getUseridFromToken, isEmpty } from "../../Utils";
 
+// 设置收藏状态
 export async function setFavor(req: Request, res: Response) {
 	// 需要获取 filemapid favor
 	const { filemapid, favor } = req.body;

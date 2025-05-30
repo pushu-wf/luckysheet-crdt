@@ -1,18 +1,10 @@
+import dayjs from "dayjs";
 import { Op } from "sequelize";
 import { logger } from "../Utils/Logger";
+import { UserModel } from "../Sequelize/Models/User";
 import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
-import { UserModel, UserModelType } from "../Sequelize/Models/User";
 import { FileMapModel, FileMapModelType } from "../Sequelize/Models/FileMap";
-import dayjs from "dayjs";
-
-// 定义关联查询返回结果类型
-export type UniFileMapItemResult = {
-	favor: boolean;
-	file_map_id: string;
-	OperatorUser: UserModelType;
-	OwnerUser: UserModelType;
-	WorkerBook: WorkerBookModel;
-};
+import { FileListResult } from "../Interface/FIleResult";
 
 /**
  * 创建新的文件映射
@@ -64,18 +56,18 @@ async function getFileList(user_uuid: string, filterType: string, limit: number,
 		});
 		// 需要处理返回的数据
 		const list = rows.map((i) => {
-			const item = i.toJSON() as UniFileMapItemResult;
+			const item = i.toJSON() as FileListResult;
 			return {
 				favor: item.favor,
 				file_map_id: item.file_map_id,
 				operator: item.OperatorUser,
 				owner: item.OwnerUser,
 				workerbook: {
-					gridKey: item.WorkerBook.gridKey,
-					lang: item.WorkerBook.lang,
-					title: item.WorkerBook.title,
-					updatedAt: dayjs(item.WorkerBook.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
-					createAt: dayjs(item.WorkerBook.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+					gridKey: item.WorkerBook!.gridKey,
+					lang: item.WorkerBook!.lang,
+					title: item.WorkerBook!.title,
+					updatedAt: dayjs(item.WorkerBook!.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+					createAt: dayjs(item.WorkerBook!.createdAt).format("YYYY-MM-DD HH:mm:ss"),
 				},
 			};
 		});
