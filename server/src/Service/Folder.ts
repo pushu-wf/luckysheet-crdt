@@ -1,0 +1,74 @@
+import { logger } from "../Utils/Logger";
+import { UniFileMapItemResult } from "./FileMap";
+import { FileMapModel } from "../Sequelize/Models/FileMap";
+import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
+import { FolderModel, FolderModelType } from "../Sequelize/Models/Folder";
+import dayjs from "dayjs";
+
+// 创建文件夹
+async function createFolder(folderinfo: FolderModelType) {
+	try {
+		return FolderModel.create(folderinfo);
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+// 更新文件夹
+async function updateFolder() {}
+
+// 删除文件夹
+async function deleteFolder() {}
+
+// 查询当前文件夹ID 下的所有文件夹
+async function findAllFolderByParentId(parentid: string | null, user_uuid: string) {
+	try {
+		return FolderModel.findAll({
+			where: { parentid: parentid, owner: user_uuid },
+			attributes: ["folderid", "foldername", "updatedAt"],
+		});
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+// 查询当前文件夹ID 下的所有文件
+async function findAllFileByFolderId(folderid: string | null, user_uuid: string) {
+	try {
+		const data = await FileMapModel.findAll({
+			where: { folderid: folderid, operator: user_uuid },
+			include: [
+				{
+					model: WorkerBookModel,
+					as: "WorkerBook",
+					attributes: ["title", "gridKey"],
+				},
+			],
+			attributes: ["favor", "file_map_id"],
+		});
+		return data.map((i) => {
+			const item = i.toJSON() as UniFileMapItemResult;
+			return {
+				favor: item.favor,
+				file_map_id: item.file_map_id,
+				workerbook: {
+					gridKey: item.WorkerBook.gridKey,
+					lang: item.WorkerBook.lang,
+					title: item.WorkerBook.title,
+					updatedAt: dayjs(item.WorkerBook.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
+					createAt: dayjs(item.WorkerBook.createdAt).format("YYYY-MM-DD HH:mm:ss"),
+				},
+			};
+		});
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
+export const FolderService = {
+	createFolder,
+	updateFolder,
+	deleteFolder,
+	findAllFolderByParentId,
+	findAllFileByFolderId,
+};

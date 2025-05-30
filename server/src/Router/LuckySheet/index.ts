@@ -18,6 +18,9 @@ routes.post("/createWorkerBook", Controller.createWorkerBook);
 // 查询文件列表 - 全部 /  收藏 / 最近 / 共享
 routes.post("/getFileList", Controller.getFileList);
 
+// 查询文件 - 通过指定 folderid 查询 （查询文件夹列表）
+routes.post("/getFolderList", Controller.getFolderList);
+
 // 删除文件
 routes.post("/deleteFile", Controller.deleteFile);
 

@@ -6,7 +6,7 @@ import { FileMapModel, FileMapModelType } from "../Sequelize/Models/FileMap";
 import dayjs from "dayjs";
 
 // 定义关联查询返回结果类型
-type UniFileMapItemResult = {
+export type UniFileMapItemResult = {
 	favor: boolean;
 	file_map_id: string;
 	OperatorUser: UserModelType;

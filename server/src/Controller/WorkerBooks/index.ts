@@ -22,7 +22,7 @@ import { generateKey, getUseridFromToken, md5 } from "../../Utils";
  * @param { bookname: string  } bookname 工作簿名称
  */
 async function createWorkerBook(req: Request, res: Response) {
-	const { bookname } = req.body;
+	const { bookname, folderid } = req.body;
 
 	if (!bookname) {
 		res.status(400).json({ code: 400, message: "bookname 参数缺失" });
@@ -54,6 +54,7 @@ async function createWorkerBook(req: Request, res: Response) {
 		owner: user_uuid,
 		operator: user_uuid,
 		gridKey,
+		folderid, // 默认创建在根目录下，如果用户指定了文件夹，则需要将文件关联至某文件夹内
 	});
 
 	if (!filemap) {

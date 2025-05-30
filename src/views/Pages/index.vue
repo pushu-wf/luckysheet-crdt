@@ -3,11 +3,19 @@
 		<HeaderVue @search="(value: string) => (searchKeyWord = value)" @updateFileList="updateFileList" />
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
-			<ButtonList :checkedNumber="checkedNumber" @updateFileList="updateFileList" @handleOuterFileOperate="handleOuterFileOperate" />
+			<ButtonList
+				:isGrid="isGrid"
+				@update:isGrid="() => (isGrid = !isGrid)"
+				:checkedNumber="checkedNumber"
+				@updateFileList="updateFileList"
+				@handleOuterFileOperate="handleOuterFileOperate" />
 			<fileList
+				v-if="!isGrid"
 				ref="fileListRef"
 				@updateCheckedNumber="(number: number) => (checkedNumber = number)"
 				:searchKeyWord="searchKeyWord" />
+
+			<fileGrid v-else />
 		</div>
 		<div class="pages-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
@@ -18,15 +26,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { theme } from "ant-design-vue";
-import { chatRoom } from "../../chatroom";
 import HeaderVue from "./components/Header.vue";
 import fileList from "./components/FileList.vue";
+import fileGrid from "./components/FileGrid.vue";
 import { disableContextMenu } from "../../utils";
 import ButtonList from "./components/ButtonList.vue";
 
 const { token } = theme.useToken();
 
+// 搜索关键词
 const searchKeyWord = ref("");
+
+// 数据展示模式 - 为true时，展示网格模式 也就是文件夹模式
+const isGrid = ref(true);
 
 // 当前有几个文件被选中
 const checkedNumber = ref(0);
@@ -63,6 +75,7 @@ onMounted(() => {
 .pages-sheets-container {
 	height: calc(100% - 64px - 52px);
 	padding: 20px;
+	overflow: hidden;
 }
 
 .pages-footer {

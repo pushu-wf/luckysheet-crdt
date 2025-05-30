@@ -88,7 +88,7 @@ import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
-import { BranchesOutlined, DeleteOutlined, CloudDownloadOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import { BranchesOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import router from "../../../router";
 
 const { userInfo } = useUserStore();

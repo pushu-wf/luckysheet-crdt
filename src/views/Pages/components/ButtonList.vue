@@ -4,6 +4,19 @@
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
 		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
+		<a-button type="default" v-show="isGrid" @click="openCreateFileModal" style="margin-left: 20px" :icon="h(FolderAddOutlined)">
+			新建文件夹
+		</a-button>
+
+		<a-tooltip placement="left">
+			<template #title>切换至{{ isGrid ? "列表" : "网格" }}模式</template>
+			<a-button
+				@click="emit('update:isGrid')"
+				type="text"
+				style="margin-left: 20px"
+				:icon="h(isGrid ? UnorderedListOutlined : AppstoreOutlined)" />
+		</a-tooltip>
+
 		<!-- 导入暂未实现 -->
 		<!-- <a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button> -->
 	</div>
@@ -52,15 +65,17 @@
 import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
 import { API_createWorkerBook } from "../../../axios";
-import { PlusOutlined, StarOutlined } from "@ant-design/icons-vue";
+import { PlusOutlined, StarOutlined, UnorderedListOutlined, AppstoreOutlined, FolderAddOutlined } from "@ant-design/icons-vue";
 
 // 选中几个文件
-const { checkedNumber } = defineProps({ checkedNumber: { type: Number, default: 0 } });
+const { checkedNumber, isGrid } = defineProps({ checkedNumber: { type: Number, default: 0 }, isGrid: { type: Boolean, default: false } });
 
 // 定义 emit
-const emit = defineEmits(["updateFileList", "handleOuterFileOperate"]);
+const emit = defineEmits(["updateFileList", "handleOuterFileOperate", "update:isGrid"]);
 
 const { token } = theme.useToken();
+
+// 定义当前列表的展示模式 - 列表展示 网格展示
 
 // 定义按钮组列表
 const filterTypes = [
