@@ -17,6 +17,7 @@ import { WorkerBookModel } from "./Models/WorkerBook";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
 import { CalcChainModel } from "./Models/CalcChain";
+import { FolderModel } from "./Models/Folder";
 
 class DataBase {
 	private _connected: boolean = false; // 连接状态
@@ -89,9 +90,13 @@ class DataBase {
 	 */
 	private registerModule() {
 		if (!this._sequelize || !this._connected) return;
-		// 初始化数据库表
+		/**
+		 * 初始化数据库表
+		 *  注意初始化的顺序，依赖的外键需要先初始化，不然报错
+		 */
 		UserModel.registerModule(this._sequelize);
 		WorkerBookModel.registerModule(this._sequelize);
+		FolderModel.registerModule(this._sequelize);
 		FileMapModel.registerModule(this._sequelize);
 		WorkerSheetModel.registerModule(this._sequelize);
 		CalcChainModel.registerModule(this._sequelize);

@@ -16,6 +16,7 @@ import { BorderInfoModel } from "./Models/BorderInfo";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
 import { CalcChainModel } from "./Models/CalcChain";
+import { FolderModel } from "./Models/Folder";
 
 (async () => {
 	const { port, host, database, user, password } = SQL_CONFIG;
@@ -29,9 +30,13 @@ import { CalcChainModel } from "./Models/CalcChain";
 		await sequelize.authenticate();
 		logger.success("Connection has been established successfully.");
 
-		// 初始化数据库表
+		/**
+		 * 初始化数据库表
+		 *  注意初始化的顺序，依赖的外键需要先初始化，不然报错
+		 */
 		UserModel.registerModule(sequelize);
 		WorkerBookModel.registerModule(sequelize);
+		FolderModel.registerModule(sequelize);
 		FileMapModel.registerModule(sequelize);
 		WorkerSheetModel.registerModule(sequelize);
 		CalcChainModel.registerModule(sequelize);
