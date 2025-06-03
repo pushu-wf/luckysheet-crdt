@@ -78,6 +78,7 @@
 </template>
 
 <script setup lang="ts">
+import router from "../../../router";
 import ShareFile from "./ShareFile.vue";
 import { MenuProps } from "ant-design-vue/es/menu";
 import { useUserStore } from "../../../store/User";
@@ -89,7 +90,6 @@ import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
 import { StarFilled, EllipsisOutlined, StarOutlined, FormOutlined } from "@ant-design/icons-vue";
 import { BranchesOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import router from "../../../router";
 
 const { userInfo } = useUserStore();
 

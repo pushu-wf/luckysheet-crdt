@@ -37,11 +37,11 @@ export const API_register = (data: { userid: string; password: string }) => {
 };
 
 // 创建工作簿
-export const API_createWorkerBook = (bookname: string) => {
+export const API_createWorkerBook = (bookname: string, folderid?: string) => {
 	return fetch({
 		url: "/luckysheet/createWorkerBook",
 		method: "POST",
-		data: { bookname },
+		data: { bookname, folderid },
 	});
 };
 
@@ -141,5 +141,23 @@ export const API_checkSheetEditPermission = (data: { filemapid: string }) => {
 		url: "/filemap/checkSheetEditPermission",
 		method: "POST",
 		data,
+	});
+};
+
+// 创建文件夹
+export const API_createFolder = (data: { foldername: string; parentid?: string }) => {
+	return fetch({
+		url: "/folder/createFolder",
+		method: "POST",
+		data,
+	});
+};
+
+// 获取文件夹列表
+export const API_getFolderList = (folderid?: string) => {
+	return fetch({
+		url: "/folder/getFolderList",
+		method: "POST",
+		data: { folderid },
 	});
 };

@@ -23,10 +23,15 @@ async function deleteFolder() {}
 // 查询当前文件夹ID 下的所有文件夹
 async function findAllFolderByParentId(parentid: string | null, user_uuid: string) {
 	try {
-		return FolderModel.findAll({
+		const data = await FolderModel.findAll({
 			where: { parentid: parentid, owner: user_uuid },
 			attributes: ["folderid", "foldername", "updatedAt"],
 		});
+		return data.map((i) => ({
+			label: i.foldername,
+			updatedAt: dayjs(i.updatedAt).format("YYYY-MM-DD") || "",
+			folderid: i.folderid,
+		}));
 	} catch (error) {
 		logger.error(error);
 	}
@@ -50,14 +55,10 @@ async function findAllFileByFolderId(folderid: string | null, user_uuid: string)
 			const item = i.toJSON() as FileListResult;
 			return {
 				favor: item.favor,
+				label: item.WorkerBook!.title || "",
+				gridKey: item.WorkerBook!.gridKey,
+				updatedAt: dayjs(item.WorkerBook!.updatedAt).format("YYYY-MM-DD"),
 				file_map_id: item.file_map_id,
-				workerbook: {
-					gridKey: item.WorkerBook!.gridKey,
-					lang: item.WorkerBook!.lang,
-					title: item.WorkerBook!.title,
-					updatedAt: dayjs(item.WorkerBook!.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
-					createAt: dayjs(item.WorkerBook!.createdAt).format("YYYY-MM-DD HH:mm:ss"),
-				},
 			};
 		});
 	} catch (error) {

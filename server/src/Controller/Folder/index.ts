@@ -3,9 +3,7 @@ import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { getUseridFromToken } from "../../Utils";
 import { FolderService } from "../../Service/Folder";
-import { FileListResult, FolderListResult } from "../../Interface/FIleResult";
-
-// 定义
+import { FolderListResult } from "../../Interface/FIleResult";
 
 // 创建文件夹
 async function createFolder(req: Request, res: Response) {
@@ -74,23 +72,12 @@ async function getFolderList(req: Request, res: Response) {
 	const fileList = await FolderService.findAllFileByFolderId(folderid || null, user_uuid);
 
 	const data: FolderListResult[] = [];
-	folderList?.forEach((item) => {
-		data.push({
-			item,
-			type: "folder",
-		});
-	});
-	fileList?.forEach((item) => {
-		data.push({
-			item: <FileListResult>item,
-			type: "file",
-		});
-	});
+	// 处理文件夹 - service 中已经解析过对象，此处直接 push 即可
+	folderList?.forEach((item) => data.push({ ...item, type: "folder" }));
+	// 处理文件 - 同上
+	fileList?.forEach((item) => data.push({ ...item, type: "file" }));
 
-	res.json({
-		code: 200,
-		data,
-	});
+	res.json({ code: 200, data });
 }
 
 export { deleteFolder, createFolder, updateFolder, getFolderList };

@@ -4,7 +4,7 @@ import { defineStore, StateTree } from "pinia";
 import { imageUrlHandle } from "../utils/LuckysheetImage";
 
 // 定义用户信息完整类型
-export type UserInfo = {
+type UserInfo = {
 	userid: string;
 	username: string;
 	email: string;

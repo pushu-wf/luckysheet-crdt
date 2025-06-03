@@ -1,4 +1,3 @@
-import { FolderModelType } from "../Sequelize/Models/Folder";
 import { UserModelType } from "../Sequelize/Models/User";
 import { WorkerBookModel } from "../Sequelize/Models/WorkerBook";
 
@@ -14,5 +13,9 @@ export type FileListResult = {
 
 export type FolderListResult = {
 	type: "folder" | "file";
-	item: FolderModelType | FileListResult;
+	updatedAt: string; // 更新时间
+	label: string; // foldername filename（title 属性）
+	gridKey?: string;
+	folderid?: string;
+	file_map_id?: string;
 };

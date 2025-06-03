@@ -21,4 +21,15 @@ interface SheetListItem {
 	};
 }
 
-export { type SheetListItem };
+// 定义文件夹页面数据返回格式
+interface FolderItem {
+	type: "folder" | "file";
+	updatedAt: string; // 更新时间
+	label: string; // foldername filename（title 属性）
+	gridKey?: string;
+	folderid?: string;
+	file_map_id?: string;
+	owner: UserInfo;
+}
+
+export { type SheetListItem, type FolderItem };

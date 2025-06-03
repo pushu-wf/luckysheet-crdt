@@ -9,6 +9,7 @@ export class FolderModel extends Model {
 	declare foldername: string; // 文件夹名称
 	declare parentid?: string; // 父级文件夹 ID, 如果为空，则表示根文件夹
 	declare owner: string; // 文件夹用户 UUID
+	declare updatedAt?: Date;
 
 	static registerModule(sequelize: Sequelize) {
 		FolderModel.init(

@@ -4,7 +4,7 @@
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
 		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
-		<a-button type="default" v-show="isGrid" @click="openCreateFileModal" style="margin-left: 20px" :icon="h(FolderAddOutlined)">
+		<a-button type="default" v-show="isGrid" @click="openCreateFolderModal" style="margin-left: 20px" :icon="h(FolderAddOutlined)">
 			新建文件夹
 		</a-button>
 
@@ -54,28 +54,45 @@
 		@cancel="createFileName = ''">
 		<a-input
 			placeholder="请输入工作簿名称"
-			ref="createFileNameRef"
+			ref="createFileInputRef"
 			allowClear
 			v-model:value="createFileName"
 			@pressEnter="createFileConfirm" />
+	</a-modal>
+
+	<!-- 新建文件夹弹窗 -->
+	<a-modal
+		v-model:open="createFolderVisible"
+		title="创建文件夹"
+		okText="创建"
+		cancelText="取消"
+		@ok="createFolderConfirm"
+		@cancel="createFolderName = ''">
+		<a-input
+			placeholder="请输入工作簿名称"
+			ref="createFolderInputRef"
+			allowClear
+			v-model:value="createFolderName"
+			@pressEnter="createFolderConfirm" />
 	</a-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, h, watch, nextTick } from "vue";
 import { message, theme } from "ant-design-vue";
-import { API_createWorkerBook } from "../../../axios";
+import { API_createFolder, API_createWorkerBook } from "../../../axios";
+import { useFolderBreadCrumbStore } from "../../../store/FolderBreadCrumb";
 import { PlusOutlined, StarOutlined, UnorderedListOutlined, AppstoreOutlined, FolderAddOutlined } from "@ant-design/icons-vue";
 
-// 选中几个文件
+const { getLastItem } = useFolderBreadCrumbStore();
+
+// 选中几个文件 当前数据展示模式
 const { checkedNumber, isGrid } = defineProps({ checkedNumber: { type: Number, default: 0 }, isGrid: { type: Boolean, default: false } });
 
 // 定义 emit
-const emit = defineEmits(["updateFileList", "handleOuterFileOperate", "update:isGrid"]);
+const emit = defineEmits(["updateFileList", "handleOuterFileOperate", "update:isGrid", "updateFolderList"]);
 
 const { token } = theme.useToken();
-
-// 定义当前列表的展示模式 - 列表展示 网格展示
 
 // 定义按钮组列表
 const filterTypes = [
@@ -94,23 +111,40 @@ watch(
 const createFileVisible = ref(false);
 // 新建工作簿名称
 const createFileName = ref("");
-
 // 创建文件输入框
-const createFileNameRef = ref();
+const createFileInputRef = ref();
 
-// 打卡创建文件模态框
+// 新建文件夹弹窗
+const createFolderVisible = ref(false);
+// 创建文件夹名称
+const createFolderName = ref("");
+// 创建文件夹输入框
+const createFolderInputRef = ref();
+
+// 打开创建文件模态框
 function openCreateFileModal() {
 	createFileVisible.value = true;
 	nextTick(() => {
-		createFileNameRef.value.focus();
+		createFileInputRef.value.focus();
 	});
 }
+
+// 打开创建文件夹模态框
+function openCreateFolderModal() {
+	createFolderVisible.value = true;
+	nextTick(() => {
+		createFolderInputRef.value.focus();
+	});
+}
+
 // 新建文件确认回调
 async function createFileConfirm() {
 	if (!createFileName.value) return message.warn("请输入工作簿名称");
 
 	// 调用 createWorkerBooks API
-	await API_createWorkerBook(createFileName.value);
+	// 判断最后一个节点是否存在
+	const lastItem = getLastItem();
+	await API_createWorkerBook(createFileName.value, lastItem.folderid);
 
 	message.success("创建成功");
 	createFileVisible.value = false;
@@ -118,6 +152,23 @@ async function createFileConfirm() {
 
 	// 更新文件列表
 	emit("updateFileList");
+}
+
+// 创建文件夹确认回调
+async function createFolderConfirm() {
+	if (!createFolderName.value) return message.warn("请输入文件夹名称");
+
+	// 调用 createFolder API 父级ID 通过 store 获取
+	// 判断最后一个节点是否存在
+	const lastItem = getLastItem();
+	await API_createFolder({ foldername: createFolderName.value, parentid: lastItem.folderid });
+
+	message.success("创建成功");
+	createFolderVisible.value = false;
+	createFolderName.value = "";
+
+	// 刷新文件列表
+	emit("updateFolderList");
 }
 </script>
 

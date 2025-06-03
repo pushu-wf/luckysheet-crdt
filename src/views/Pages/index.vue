@@ -5,17 +5,18 @@
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
 			<ButtonList
 				:isGrid="isGrid"
-				@update:isGrid="() => (isGrid = !isGrid)"
 				:checkedNumber="checkedNumber"
+				@update:isGrid="() => (isGrid = !isGrid)"
 				@updateFileList="updateFileList"
-				@handleOuterFileOperate="handleOuterFileOperate" />
+				@handleOuterFileOperate="handleOuterFileOperate"
+				@updateFolderList="updateFolderList" />
 			<fileList
 				v-if="!isGrid"
 				ref="fileListRef"
 				@updateCheckedNumber="(number: number) => (checkedNumber = number)"
 				:searchKeyWord="searchKeyWord" />
 
-			<fileGrid v-else />
+			<folderList ref="folderListRef" :searchKeyWord="searchKeyWord" v-else />
 		</div>
 		<div class="pages-footer">
 			<span>© 2025 Luckysheet-CRDT 在线协同编辑系统</span>
@@ -28,8 +29,8 @@ import { onMounted, ref } from "vue";
 import { theme } from "ant-design-vue";
 import HeaderVue from "./components/Header.vue";
 import fileList from "./components/FileList.vue";
-import fileGrid from "./components/FileGrid.vue";
 import { disableContextMenu } from "../../utils";
+import folderList from "./components/FolderList.vue";
 import ButtonList from "./components/ButtonList.vue";
 
 const { token } = theme.useToken();
@@ -44,6 +45,7 @@ const isGrid = ref(true);
 const checkedNumber = ref(0);
 
 const fileListRef = ref<typeof fileList>();
+const folderListRef = ref<typeof folderList>();
 
 // 外层按钮对多选文件的操作
 function handleOuterFileOperate(operation: string) {
@@ -53,16 +55,21 @@ function handleOuterFileOperate(operation: string) {
 
 // 更新数据列表
 function updateFileList(filterType: string) {
+	// 如果当前模式是文件夹列表，则同步请求文件夹数据
+	updateFolderList();
+
 	if (!fileListRef.value) return;
 	fileListRef.value.queryFileList(filterType);
 }
 
-onMounted(() => {
-	// 连接聊天室 - 暂未实现
-	// chatRoom.connect();
-	// 此页面禁止右键菜单
-	disableContextMenu(".pages-box");
-});
+// 更新folder list
+function updateFolderList() {
+	if (!folderListRef.value) return;
+	folderListRef.value.queryFolderList();
+}
+
+// 此页面禁止右键菜单
+onMounted(() => disableContextMenu(".pages-box"));
 </script>
 
 <style lang="less" scoped>
