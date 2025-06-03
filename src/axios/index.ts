@@ -170,3 +170,12 @@ export const API_deleteFolder = (data: { folderid: string }) => {
 		data,
 	});
 };
+
+// 重命名文件夹
+export const API_renameFolder = (data: { folderid: string; foldername: string }) => {
+	return fetch({
+		url: "/folder/updateFolder",
+		method: "POST",
+		data,
+	});
+};

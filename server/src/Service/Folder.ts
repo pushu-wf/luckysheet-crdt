@@ -15,7 +15,18 @@ async function createFolder(folderinfo: FolderModelType) {
 }
 
 // 更新文件夹
-async function updateFolder() {}
+async function updateFolder(payload: FolderModelType) {
+	try {
+		return FolderModel.update(payload, {
+			where: {
+				folderid: payload.folderid,
+				owner: payload.owner,
+			},
+		});
+	} catch (error) {
+		logger.error(error);
+	}
+}
 
 // 删除文件夹
 async function deleteFolder(folderid: string, owner: string) {

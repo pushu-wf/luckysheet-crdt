@@ -31,32 +31,48 @@
 					</a-card>
 					<template #overlay>
 						<a-menu @click="(e:MenuProps['onClick']) => handleSheetOperate(e, item)">
-							<a-menu-item key="rename"> <FormOutlined /> 重命名 </a-menu-item>
-							<a-divider />
-							<a-menu-item key="delete-file" v-if="item.type === 'file'" :style="{ color: token.colorError }">
-								<DeleteOutlined />
-								删除记录
-							</a-menu-item>
-							<a-menu-item key="delete-folder" v-if="item.type === 'folder'" :style="{ color: token.colorError }">
-								<DeleteOutlined />
-								删除文件夹
-							</a-menu-item>
+							<template v-if="item.type === 'file'">
+								<a-menu-item key="rename-file"> <FormOutlined /> 重命名 </a-menu-item>
+								<a-divider />
+								<a-menu-item key="delete-file" :style="{ color: token.colorError }">
+									<DeleteOutlined />
+									删除记录
+								</a-menu-item>
+							</template>
+							<template v-else>
+								<a-menu-item key="rename-folder"> <FormOutlined /> 重命名 </a-menu-item>
+								<a-divider />
+								<a-menu-item key="delete-folder" :style="{ color: token.colorError }">
+									<DeleteOutlined />
+									删除文件夹
+								</a-menu-item>
+							</template>
 						</a-menu>
 					</template>
 				</a-dropdown>
 			</a-space>
 		</div>
 	</div>
+
+	<!-- 文件重命名弹窗 -->
+	<InputModal
+		title="重命名文件"
+		placeholder="请输入工作簿名称"
+		:value="renamePlaceholder"
+		v-bind:visible="renameVisible"
+		@confirm="renameConfirm"
+		@cancel="renameVisible = false" />
 </template>
 
 <script setup lang="ts">
 import router from "../../../router";
 import { FolderItem } from "../../../interface";
 import { encode, getHighlightHtml } from "../../../utils";
+import InputModal from "../../../components/InputModal.vue";
 import { MenuProps, message, Modal, theme } from "ant-design-vue";
-import { API_deleteFile, API_deleteFolder, API_getFolderList } from "../../../axios";
-import { createVNode, h, onMounted, reactive, toRaw, watch } from "vue";
 import { useFolderBreadCrumbStore } from "../../../store/FolderBreadCrumb";
+import { createVNode, h, onMounted, reactive, ref, toRaw, watch } from "vue";
+import { API_deleteFile, API_deleteFolder, API_getFolderList, API_renameFile, API_renameFolder } from "../../../axios";
 import { HomeOutlined, FormOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
 // 解析面包屑相关方法
@@ -72,6 +88,12 @@ const { searchKeyWord } = defineProps({ searchKeyWord: { type: String, default: 
 
 // 定义数据列表
 const dataList: FolderItem[] = reactive([]);
+
+// 文件重命名相关参数
+const renameType = ref("");
+const renameKey = ref("");
+const renamePlaceholder = ref("");
+const renameVisible = ref(false);
 
 // 双击数据项
 function handleDoubleClick(item: FolderItem) {
@@ -127,12 +149,57 @@ async function handleDeleteFolder(folderid: string) {
 	});
 }
 
+// 文件重命名
+async function renameConfirm(value: string) {
+	const isFile = renameType.value === "file";
+
+	if (!value) return message.warn(`请输入${isFile ? "文件" : "文件夹"}名称`);
+
+	// 确定请求的方法
+	const request = isFile ? API_renameFile : API_renameFolder;
+
+	// 确定请求的参数
+	const params = isFile ? { gridKey: renameKey.value, newName: value } : { folderid: renameKey.value, foldername: value };
+
+	try {
+		// @ts-ignore
+		const { data } = await request(params);
+
+		if (data.code === 200) {
+			message.success("重命名成功");
+			// 使用 void 0 定义 undefined
+			let current: FolderItem | undefined = void 0;
+
+			if (isFile) current = dataList.find((i) => i.gridKey === renameKey.value);
+			else current = dataList.find((i) => i.folderid === renameKey.value);
+
+			if (current) current.label = value;
+
+			renameVisible.value = false;
+			renameKey.value = "";
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // 右键菜单操作
 async function handleSheetOperate(e: MenuProps["onClick"], item: FolderItem) {
 	// @ts-ignore
 	const { key } = e!;
 	if (key === "delete-file") handleDeleteFile(item.label, item.file_map_id!, item.gridKey!);
 	else if (key === "delete-folder") handleDeleteFolder(item.folderid!);
+	else if (key === "rename-file") {
+		renameType.value = "file";
+		renameVisible.value = true;
+		renamePlaceholder.value = item.label;
+		renameKey.value = item.gridKey!;
+	} else if (key === "rename-folder") {
+		renameType.value = "folder";
+		renameVisible.value = true;
+		renamePlaceholder.value = item.label;
+		renameKey.value = item.folderid!;
+	}
 }
 
 // 获取数据

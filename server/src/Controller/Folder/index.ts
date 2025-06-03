@@ -39,7 +39,31 @@ async function createFolder(req: Request, res: Response) {
 	}
 }
 async function updateFolder(req: Request, res: Response) {
-	console.log(" ==> updateFolder", req, res);
+	const { folderid, foldername } = req.body;
+
+	if (!folderid) {
+		res.status(400).json({ code: 400, message: "folderid 缺失" });
+		return;
+	}
+
+	const userid = getUseridFromToken(req);
+	if (!userid) {
+		res.status(400).json({ code: 400, message: "userid 缺失" });
+		return;
+	}
+
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户查询失败" });
+		return;
+	}
+
+	// 不然更新文件名称
+	if (foldername) {
+		await FolderService.updateFolder({ folderid, owner: user_uuid, foldername });
+	}
+
+	res.status(200).json({ code: 200, message: "更新成功" });
 }
 
 // 删除文件夹
