@@ -147,7 +147,7 @@ async function createFileConfirm() {
 	// 调用 createWorkerBooks API
 	// 判断最后一个节点是否存在
 	const lastItem = getLastItem();
-	await API_createWorkerBook(createFileName.value, lastItem.folderid);
+	await API_createWorkerBook(createFileName.value, lastItem?.folderid);
 
 	message.success("创建成功");
 	createFileVisible.value = false;
@@ -164,7 +164,7 @@ async function createFolderConfirm() {
 	// 调用 createFolder API 父级ID 通过 store 获取
 	// 判断最后一个节点是否存在
 	const lastItem = getLastItem();
-	await API_createFolder({ foldername: createFolderName.value, parentid: lastItem.folderid });
+	await API_createFolder({ foldername: createFolderName.value, parentid: lastItem?.folderid });
 
 	message.success("创建成功");
 	createFolderVisible.value = false;

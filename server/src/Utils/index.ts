@@ -64,7 +64,7 @@ function md5(password: string): string {
 
 // 生成 token
 function createToken(userid: string, password: string): string {
-	return jwt.sign({ userid, password }, JWT_SECRET, { expiresIn: "1h" });
+	return jwt.sign({ userid, password }, JWT_SECRET, { expiresIn: "24h" });
 }
 
 // 从 token 中获取 userid

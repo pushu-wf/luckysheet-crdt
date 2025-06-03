@@ -38,8 +38,8 @@ const { token } = theme.useToken();
 // 搜索关键词
 const searchKeyWord = ref("");
 
-// 数据展示模式 - 为true时，展示网格模式 也就是文件夹模式
-const isFolder = ref(true);
+// 数据展示模式 - 为true时，展示文件夹模式
+const isFolder = ref(false);
 
 // 当前有几个文件被选中
 const checkedNumber = ref(0);
