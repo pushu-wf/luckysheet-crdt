@@ -1,6 +1,6 @@
 <template>
-	<div class="file-grid">
-		<div class="file-grid-breadcrumb">
+	<div class="folder-box">
+		<div class="folder-box-breadcrumb">
 			<a-breadcrumb>
 				<a-breadcrumb-item>
 					<a-button type="link" @click="clearBreadCrumbList" :icon="h(HomeOutlined)">根路径</a-button>
@@ -12,7 +12,7 @@
 		</div>
 
 		<!-- 循环列表 -->
-		<div class="file-grid-list">
+		<div class="folder-box-list">
 			<a-empty v-if="!dataList || !dataList.length" style="margin: auto">
 				<template #description>
 					<span style="user-select: none"> 暂无文件 </span>
@@ -106,18 +106,18 @@ defineExpose({ queryFolderList });
 </script>
 
 <style lang="less" scoped>
-.file-grid {
-	height: calc(100% - 32px - 82px);
+.folder-box {
+	height: calc(100% - 42px);
 	width: 100%;
 	overflow: hidden;
 }
-.file-grid-breadcrumb {
+.folder-box-breadcrumb {
 	.ant-btn-link {
 		padding: 4px;
 	}
 }
 
-.file-grid-list {
+.folder-box-list {
 	height: calc(100% - 20px);
 	margin-top: 20px;
 	display: flex;

@@ -4,14 +4,14 @@
 		<div class="pages-sheets-container">
 			<!-- 拆分功能页面，将按钮与列表独立出来 -->
 			<ButtonList
-				:isGrid="isGrid"
+				:isFolder="isFolder"
 				:checkedNumber="checkedNumber"
-				@update:isGrid="() => (isGrid = !isGrid)"
+				@update:isFolder="() => (isFolder = !isFolder)"
 				@updateFileList="updateFileList"
 				@handleOuterFileOperate="handleOuterFileOperate"
 				@updateFolderList="updateFolderList" />
 			<fileList
-				v-if="!isGrid"
+				v-if="!isFolder"
 				ref="fileListRef"
 				@updateCheckedNumber="(number: number) => (checkedNumber = number)"
 				:searchKeyWord="searchKeyWord" />
@@ -39,7 +39,7 @@ const { token } = theme.useToken();
 const searchKeyWord = ref("");
 
 // 数据展示模式 - 为true时，展示网格模式 也就是文件夹模式
-const isGrid = ref(true);
+const isFolder = ref(true);
 
 // 当前有几个文件被选中
 const checkedNumber = ref(0);

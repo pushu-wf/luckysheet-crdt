@@ -1,26 +1,26 @@
 <template>
 	<div class="sheets-container-btns">
-		<a-radio-group v-model:value="filterType" button-style="solid">
+		<a-radio-group v-model:value="filterType" button-style="solid" v-show="!isFolder">
 			<a-radio-button v-for="item in filterTypes" :value="item.value" :key="item.value">{{ item.name }}</a-radio-button>
 		</a-radio-group>
 		<a-button type="primary" @click="openCreateFileModal" style="margin-left: auto" :icon="h(PlusOutlined)">新建</a-button>
-		<a-button type="default" v-show="isGrid" @click="openCreateFolderModal" style="margin-left: 20px" :icon="h(FolderAddOutlined)">
+		<a-button type="default" v-show="isFolder" @click="openCreateFolderModal" style="margin-left: 20px" :icon="h(FolderAddOutlined)">
 			新建文件夹
 		</a-button>
 
 		<a-tooltip placement="left">
-			<template #title>切换至{{ isGrid ? "列表" : "网格" }}模式</template>
+			<template #title>切换至{{ isFolder ? "列表" : "网格" }}模式</template>
 			<a-button
-				@click="emit('update:isGrid')"
+				@click="emit('update:isFolder')"
 				type="text"
 				style="margin-left: 20px"
-				:icon="h(isGrid ? UnorderedListOutlined : AppstoreOutlined)" />
+				:icon="h(isFolder ? UnorderedListOutlined : AppstoreOutlined)" />
 		</a-tooltip>
 
 		<!-- 导入暂未实现 -->
 		<!-- <a-button type="default" @click="ImportFile" style="margin-left: 20px" :icon="h(CloudUploadOutlined)">导入</a-button> -->
 	</div>
-	<div class="choose-files">
+	<div class="choose-files" v-show="!isFolder">
 		<span v-show="checkedNumber">
 			已选择 <code>{{ checkedNumber }}</code> 个文件
 		</span>
@@ -87,10 +87,13 @@ import { PlusOutlined, StarOutlined, UnorderedListOutlined, AppstoreOutlined, Fo
 const { getLastItem } = useFolderBreadCrumbStore();
 
 // 选中几个文件 当前数据展示模式
-const { checkedNumber, isGrid } = defineProps({ checkedNumber: { type: Number, default: 0 }, isGrid: { type: Boolean, default: false } });
+const { checkedNumber, isFolder } = defineProps({
+	checkedNumber: { type: Number, default: 0 },
+	isFolder: { type: Boolean, default: false },
+});
 
 // 定义 emit
-const emit = defineEmits(["updateFileList", "handleOuterFileOperate", "update:isGrid", "updateFolderList"]);
+const emit = defineEmits(["updateFileList", "handleOuterFileOperate", "update:isFolder", "updateFolderList"]);
 
 const { token } = theme.useToken();
 
