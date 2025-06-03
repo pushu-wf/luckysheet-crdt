@@ -30,14 +30,14 @@
 						<div class="description">{{ item.updatedAt }}</div>
 					</a-card>
 					<template #overlay>
-						<a-menu>
+						<a-menu @click="(e:MenuProps['onClick']) => handleSheetOperate(e, item)">
 							<a-menu-item key="rename"> <FormOutlined /> 重命名 </a-menu-item>
 							<a-divider />
-							<a-menu-item key="delete" v-if="item.type === 'file'" :style="{ color: token.colorError }">
+							<a-menu-item key="delete-file" v-if="item.type === 'file'" :style="{ color: token.colorError }">
 								<DeleteOutlined />
 								删除记录
 							</a-menu-item>
-							<a-menu-item key="delete" v-if="item.type === 'folder'" :style="{ color: token.colorError }">
+							<a-menu-item key="delete-folder" v-if="item.type === 'folder'" :style="{ color: token.colorError }">
 								<DeleteOutlined />
 								删除文件夹
 							</a-menu-item>
@@ -50,14 +50,14 @@
 </template>
 
 <script setup lang="ts">
-import { theme } from "ant-design-vue";
 import router from "../../../router";
 import { FolderItem } from "../../../interface";
-import { API_getFolderList } from "../../../axios";
 import { encode, getHighlightHtml } from "../../../utils";
-import { h, onMounted, reactive, toRaw, watch } from "vue";
+import { MenuProps, message, Modal, theme } from "ant-design-vue";
+import { API_deleteFile, API_deleteFolder, API_getFolderList } from "../../../axios";
+import { createVNode, h, onMounted, reactive, toRaw, watch } from "vue";
 import { useFolderBreadCrumbStore } from "../../../store/FolderBreadCrumb";
-import { HomeOutlined, FormOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+import { HomeOutlined, FormOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 
 // 解析面包屑相关方法
 const { breadCrumbList, handleClickBreadCrumb, clearBreadCrumbList, pushItem, getLastItem } = useFolderBreadCrumbStore();
@@ -83,6 +83,56 @@ function handleDoubleClick(item: FolderItem) {
 
 	// 不然直接打开文件即可
 	router.push(`/excel/${encode(encode(file_map_id!))}`);
+}
+
+// 删除文件
+async function handleDeleteFile(bookname: string, filemapid: string, gridKey: string) {
+	Modal.confirm({
+		title: "温馨提示",
+		icon: createVNode(ExclamationCircleOutlined),
+		content: `确认删除文件：${bookname}.xlsx ?`,
+		okText: "删除",
+		okType: "danger",
+		cancelText: "取消",
+		async onOk() {
+			try {
+				const { data } = await API_deleteFile({ filemapid, gridKey });
+				if (data.code === 200) message.success(data.message || "删除成功");
+				queryFolderList();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	});
+}
+
+// 删除文件夹
+async function handleDeleteFolder(folderid: string) {
+	Modal.confirm({
+		title: "敏感操作！",
+		icon: createVNode(ExclamationCircleOutlined),
+		content: `确认删除该文件夹？（内部文件或将一并删除且不可恢复！）`,
+		okText: "删除",
+		okType: "danger",
+		cancelText: "取消",
+		async onOk() {
+			try {
+				const { data } = await API_deleteFolder({ folderid });
+				if (data.code === 200) message.success(data.message || "删除成功");
+				queryFolderList();
+			} catch (error) {
+				console.error(error);
+			}
+		},
+	});
+}
+
+// 右键菜单操作
+async function handleSheetOperate(e: MenuProps["onClick"], item: FolderItem) {
+	// @ts-ignore
+	const { key } = e!;
+	if (key === "delete-file") handleDeleteFile(item.label, item.file_map_id!, item.gridKey!);
+	else if (key === "delete-folder") handleDeleteFolder(item.folderid!);
 }
 
 // 获取数据

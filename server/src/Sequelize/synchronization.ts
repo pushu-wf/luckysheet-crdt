@@ -9,14 +9,14 @@ import { UserModel } from "./Models/User";
 import { MergeModel } from "./Models/Merge";
 import { ImageModel } from "./Models/Image";
 import { ChartModel } from "./Models/Chart";
+import { FolderModel } from "./Models/Folder";
 import { FileMapModel } from "./Models/FileMap";
 import { CellDataModel } from "./Models/CellData";
+import { CalcChainModel } from "./Models/CalcChain";
 import { WorkerBookModel } from "./Models/WorkerBook";
 import { BorderInfoModel } from "./Models/BorderInfo";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
-import { CalcChainModel } from "./Models/CalcChain";
-import { FolderModel } from "./Models/Folder";
 
 (async () => {
 	const { port, host, database, user, password } = SQL_CONFIG;

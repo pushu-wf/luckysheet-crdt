@@ -10,14 +10,14 @@ import { ImageModel } from "./Models/Image";
 import { MergeModel } from "./Models/Merge";
 import { ChartModel } from "./Models/Chart";
 import { SQL_CONFIG } from "../Config/index";
+import { FolderModel } from "./Models/Folder";
 import { FileMapModel } from "./Models/FileMap";
 import { CellDataModel } from "./Models/CellData";
+import { CalcChainModel } from "./Models/CalcChain";
 import { BorderInfoModel } from "./Models/BorderInfo";
 import { WorkerBookModel } from "./Models/WorkerBook";
 import { WorkerSheetModel } from "./Models/WorkerSheet";
 import { HiddenAndLenModel } from "./Models/HiddenAndLen";
-import { CalcChainModel } from "./Models/CalcChain";
-import { FolderModel } from "./Models/Folder";
 
 class DataBase {
 	private _connected: boolean = false; // 连接状态

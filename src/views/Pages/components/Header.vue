@@ -89,15 +89,6 @@ function handleOperate(payload: { key: string }) {
 	color: v-bind("token.colorTextQuaternary");
 }
 
-// 未读
-:deep .ant-badge-count {
-	min-width: 16px;
-	height: 16px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .pages-header {
 	padding: 0 20px;
 	height: 64px;

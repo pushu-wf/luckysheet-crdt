@@ -3,7 +3,10 @@ import { Request, Response } from "express";
 import { UserService } from "../../Service/User";
 import { getUseridFromToken } from "../../Utils";
 import { FolderService } from "../../Service/Folder";
+import { FileMapService } from "../../Service/FileMap";
+import { WorkerBookService } from "../../Service/WorkerBook";
 import { FolderListResult } from "../../Interface/FIleResult";
+import { WorkerSheetService } from "../../Service/WorkerSheet";
 
 // 创建文件夹
 async function createFolder(req: Request, res: Response) {
@@ -41,7 +44,74 @@ async function updateFolder(req: Request, res: Response) {
 
 // 删除文件夹
 async function deleteFolder(req: Request, res: Response) {
-	console.log(" ==> deleteFolder", req, res);
+	const { folderid } = req.body;
+	if (!folderid) {
+		res.status(400).json({ code: 400, message: "folderid 缺失" });
+		return;
+	}
+
+	const userid = getUseridFromToken(req);
+	if (!userid) {
+		res.status(400).json({ code: 400, message: "userid 缺失" });
+		return;
+	}
+
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户查询失败" });
+		return;
+	}
+
+	// 递归实现删除
+	await getFolderListByFolderId(folderid!, user_uuid);
+
+	res.json({ code: 200, message: "删除成功" });
+}
+
+// 工具函数 - 通过传入的 folderid 查询出当前文件夹下的所有文件夹
+async function getFolderListByFolderId(folderid: string | undefined, user_uuid: string) {
+	if (!folderid) return;
+
+	// 查找该文件夹是否有子文件夹
+	const subFolderList = await FolderService.findAllFolderByParentId(folderid, user_uuid);
+
+	// 递归查询子文件夹(不能将删除放在前面，后续有依赖的子文件夹，会报错)
+	if (subFolderList && subFolderList.length) {
+		for (let i = 0; i < subFolderList.length; i++) {
+			await getFolderListByFolderId(subFolderList[i].folderid, user_uuid);
+		}
+	} else {
+		// 获取当前需要删除的文件映射记录 ，当前文件夹下可能有多个文件
+		const filemapList = await FileMapService.getFileMapByFolderId(folderid, user_uuid);
+
+		if (filemapList && filemapList.length) {
+			for (let i = 0; i < filemapList.length; i++) {
+				const item = filemapList[i];
+				// 删除文件映射记录
+				await FileMapService.deleteFileMap(item.file_map_id!);
+
+				// 判断该文件所有者是否当前操作人，如果不是，是不能删除文件实际内容的，只能删除映射表记录
+				if (item.owner !== user_uuid) continue;
+
+				// 删除 worker book 之前，需要查询关联的 worker sheet，
+				const workerSheet = await WorkerSheetService.findWorkerSheetByGridKey(item.gridKey);
+				const worker_sheet_id = workerSheet?.worker_sheet_id;
+				if (worker_sheet_id) {
+					// 查到 worker sheet 后，要先删除关联的所有数据
+					await WorkerSheetService.deleteAllDataByWorkerSheetId(worker_sheet_id);
+
+					// 然后删除 worker Sheet 记录
+					await WorkerSheetService.deleteSheet(item.gridKey);
+
+					// 最后删除 workerBooks
+					await WorkerBookService.deleteWorkerBook(item.gridKey);
+				}
+			}
+		}
+
+		// 删除该文件夹
+		await FolderService.deleteFolder(folderid, user_uuid);
+	}
 }
 
 // 获取文件夹列表

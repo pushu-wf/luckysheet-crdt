@@ -3,7 +3,7 @@ import { decode, encode } from "../utils";
 import { defineStore, StateTree } from "pinia";
 import { imageUrlHandle } from "../utils/LuckysheetImage";
 
-// 定义用户信息完整类型
+// 定义用户信息完整类型 - 内部使用
 type UserInfo = {
 	userid: string;
 	username: string;

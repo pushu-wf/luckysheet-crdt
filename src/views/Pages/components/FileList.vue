@@ -64,14 +64,13 @@
 	</a-list>
 
 	<!-- 重命名弹窗 -->
-	<a-modal v-model:open="renameModalVisible" title="重命名文件" okText="确认" cancelText="取消" @ok="renameConfirm">
-		<a-input
-			placeholder="请输入工作簿名称"
-			ref="renameInputRef"
-			allowClear
-			v-model:value="renameInputValue"
-			@pressEnter="renameConfirm" />
-	</a-modal>
+	<InputModal
+		title="重命名文件"
+		placeholder="请输入工作簿名称"
+		:value="renameInputValue"
+		v-bind:visible="renameModalVisible"
+		@confirm="renameConfirm"
+		@cancel="renameModalVisible = false" />
 
 	<!-- 分享文件弹窗 -->
 	<ShareFile :item="ShareFileItem" v-if="ShareFileItem" ref="ShareFileRef" @close="ShareFileItem = null" />
@@ -85,6 +84,7 @@ import { useUserStore } from "../../../store/User";
 import { SheetListItem } from "../../../interface";
 import { message, Modal, theme } from "ant-design-vue";
 import { encode, getHighlightHtml } from "../../../utils";
+import InputModal from "../../../components/InputModal.vue";
 import { API_queryFileList, API_renameFile } from "../../../axios";
 import { API_toggleFavor, API_deleteFile } from "../../../axios/index";
 import { ref, h, onMounted, reactive, toRaw, watch, createVNode, nextTick } from "vue";
@@ -95,9 +95,7 @@ const { userInfo } = useUserStore();
 
 const emit = defineEmits(["updateCheckedNumber"]);
 
-const { searchKeyWord } = defineProps({
-	searchKeyWord: { type: String, default: "" },
-});
+const { searchKeyWord } = defineProps<{ searchKeyWord: string }>();
 
 const { token } = theme.useToken();
 
@@ -109,10 +107,6 @@ const checkedAll = ref(false);
 
 // 重命名模态框
 const renameModalVisible = ref(false);
-
-// 重命名输入框
-const renameInputRef = ref();
-
 // 重命名输入框绑定值
 const renameInputValue = ref("");
 // 当前重命名的 gridKey
@@ -217,19 +211,17 @@ async function handleShareFile(item: SheetListItem) {
 /**
  * @description 重命名文件 - modal 确认事件回调
  */
-async function renameConfirm() {
-	if (!renameInputValue.value) return message.warn("请输入文件名称");
+async function renameConfirm(value: string) {
+	if (!value) return message.warn("请输入文件名称");
 
 	try {
-		const { data } = await API_renameFile({ gridKey: renameGridKey.value, newName: renameInputValue.value });
+		const { data } = await API_renameFile({ gridKey: renameGridKey.value, newName: value });
 		if (data.code === 200) {
 			message.success("重命名成功");
 			const current = fileList.find((i) => i.workerbook.gridKey === renameGridKey.value);
 			if (!current) return;
-			current.workerbook.title = renameInputValue.value;
-
+			current.workerbook.title = value;
 			renameModalVisible.value = false;
-			renameInputValue.value = "";
 			renameGridKey.value = "";
 		}
 	} catch (error) {
@@ -308,9 +300,6 @@ async function handleSheetOperate(e: MenuProps["onClick"], item: SheetListItem) 
 		renameModalVisible.value = true;
 		renameInputValue.value = item.workerbook.title;
 		renameGridKey.value = item.workerbook.gridKey;
-		nextTick(() => {
-			renameInputRef.value.focus();
-		});
 	}
 }
 

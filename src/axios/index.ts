@@ -161,3 +161,12 @@ export const API_getFolderList = (folderid?: string) => {
 		data: { folderid },
 	});
 };
+
+// 删除文件夹
+export const API_deleteFolder = (data: { folderid: string }) => {
+	return fetch({
+		url: "/folder/deleteFolder",
+		method: "POST",
+		data,
+	});
+};

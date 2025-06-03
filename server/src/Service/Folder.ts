@@ -18,7 +18,13 @@ async function createFolder(folderinfo: FolderModelType) {
 async function updateFolder() {}
 
 // 删除文件夹
-async function deleteFolder() {}
+async function deleteFolder(folderid: string, owner: string) {
+	try {
+		return FolderModel.destroy({ where: { folderid, owner } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
 
 // 查询当前文件夹ID 下的所有文件夹
 async function findAllFolderByParentId(parentid: string | null, user_uuid: string) {

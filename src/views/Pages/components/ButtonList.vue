@@ -50,10 +50,20 @@
 	</div>
 
 	<!-- 新建文件弹窗 -->
-	<InputModal :visible="createFileVisible" title="新建文件" @confirm="createFileConfirm" @cancel="createFileVisible = false" />
+	<InputModal
+		:visible="createFileVisible"
+		title="新建文件"
+		placeholder="请输入文件名"
+		@confirm="createFileConfirm"
+		@cancel="createFileVisible = false" />
 
 	<!-- 新建文件夹弹窗 -->
-	<InputModal :visible="createFolderVisible" title="新建文件夹" @confirm="createFolderConfirm" @cancel="createFolderVisible = false" />
+	<InputModal
+		:visible="createFolderVisible"
+		title="新建文件夹"
+		placeholder="请输入文件夹名称"
+		@confirm="createFolderConfirm"
+		@cancel="createFolderVisible = false" />
 </template>
 
 <script setup lang="ts">

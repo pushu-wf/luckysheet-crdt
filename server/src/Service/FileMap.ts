@@ -134,6 +134,15 @@ async function hasFileMap(gridKey: string, operator: string) {
 	}
 }
 
+// 通过 folderid 获取文件映射
+async function getFileMapByFolderId(folderid: string, operator: string) {
+	try {
+		return await FileMapModel.findAll({ where: { folderid, operator } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 // 通过 FileMapID 获取记录
 async function getFileMapByID(file_map_id: string) {
 	try {
@@ -152,6 +161,15 @@ async function checkFileEditPermission(user_uuid: string, gridKey: string) {
 	}
 }
 
+// 删除关联文件夹下的文件
+async function deleteFileMapByFolderId(file_map_id: string, folderid: string) {
+	try {
+		return await FileMapModel.destroy({ where: { file_map_id, folderid } });
+	} catch (error) {
+		logger.error(error);
+	}
+}
+
 export const FileMapService = {
 	hasFileMap,
 	getFileList,
@@ -161,4 +179,6 @@ export const FileMapService = {
 	getInviteInfo,
 	getFileMapByID,
 	checkFileEditPermission,
+	deleteFileMapByFolderId,
+	getFileMapByFolderId,
 };

@@ -2,14 +2,18 @@
 
 <template>
 	<a-modal :open="visible" :title="title" :okText="okText || '创建'" :cancelText="cancelText || '取消'" @ok="confirm" @cancel="cancel">
-		<a-input :placeholder="placeholder || 'Input value...'" ref="inputRef" allowClear v-model:value="inputValue" @pressEnter="cancel" />
+		<a-input
+			:placeholder="placeholder || 'Input value...'"
+			ref="inputRef"
+			allowClear
+			v-model:value="inputValue"
+			@pressEnter="confirm" />
 		<!-- 其他插槽 -->
 		<slot></slot>
 	</a-modal>
 </template>
 
 <script setup lang="ts">
-import message from "ant-design-vue/es/message";
 import { nextTick, ref, watch } from "vue";
 
 // 定义模态框状态
