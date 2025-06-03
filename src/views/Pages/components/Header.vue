@@ -11,11 +11,6 @@
 			</template>
 		</a-input>
 
-		<!-- 消息中心 - 暂未实现 -->
-		<!-- <a-badge count="5">
-			<a-button type="text" :icon="h(BellOutlined)" />
-		</a-badge> -->
-
 		<a-dropdown arrow trigger="click" placement="bottomRight">
 			<div class="user-avatar">
 				<span class="username">{{ getUserName() }}</span>

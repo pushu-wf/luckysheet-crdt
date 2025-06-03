@@ -204,3 +204,19 @@ export const useAvatarHook = () => {
 
 	return { beforeUpload, handleUpload, avatarModalVisible, avatarPreview, uploadList };
 };
+
+/**
+ * @description 导出简单 全部|我的|共享|收藏 按钮组 hooks
+ */
+export const useBtnGroupHook = () => {
+	// 定义按钮组列表
+	const filterTypes = [
+		{ name: "全部", value: "all" },
+		{ name: "我的", value: "mine" },
+		{ name: "共享", value: "share" },
+		{ name: "收藏", value: "favor" },
+	];
+	const filterType = ref("all");
+
+	return { filterTypes, filterType };
+};
