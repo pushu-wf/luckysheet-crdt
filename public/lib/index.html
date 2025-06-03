@@ -25,21 +25,37 @@
 
 		<script>
 			$(function () {
-				const id = Math.random().toString(16).slice(2, 8);
+				// 从 sessionstorage 中获取数据
+				const userid = window.sessionStorage.getItem("userid");
+				console.log(" ==> userid", userid);
+				const id = userid || Math.random().toString(16).slice(2, 8);
 				const username = `user_${id}`;
+				const gridkey = "29c0098f1e754e06f4cac2fbfd2b662a";
 
 				const options = {
 					container: "luckysheet",
 					lang: "zh",
 					// showinfobar: false,
 					plugins: ["fileImport", "vchart", "chart"],
-					data: [sheetChart],
-					requestHeaders: {
-						"Custom-userid": "123",
+					data: [sheetCell],
+					// 自定义请求头
+					// requestHeaders: {
+					// 	"Custom-userid": "123",
+					// },
+					cellRightClickConfig: {
+						customs: [
+							{
+								title: "test",
+								onClick: function (clickEvent, event, params) {
+									console.log("function test click", clickEvent, event, params);
+								},
+							},
+						],
 					},
-					// allowUpdate: true, // 配置协同功能
-					// loadUrl: "http://localhost:9000/luckysheet/loadSheetData?gridkey=deeccd89d8aa2bf8ca7655bd1b1b222b",
-					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=deeccd89d8aa2bf8ca7655bd1b1b222b`, // 协同服务转发服务
+
+					allowUpdate: true, // 配置协同功能
+					loadUrl: `http://localhost:9000/loadSheetData?gridkey=${gridkey}`,
+					updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=${gridkey}`, // 协同服务转发服务
 
 					menuHandler: {
 						// 隐藏内置菜单
