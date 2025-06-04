@@ -14,7 +14,7 @@ export function createWebSocketServer(server: Server) {
 	const wss = new WebSocketServer({ server }).on("connection", connection);
 
 	/**
-	 * 监听 websocket 连接事件 - 这里需要判断是否 luckysheet 协同服务 / 聊天服务，通过 namespace 参数判断
+	 * 监听 websocket 连接事件 - 这里需要判断是否 luckysheet 协同服务 | 聊天服务，通过 namespace 参数判断
 	 * @param client WebSocket 实例
 	 * @param req 请求对象
 	 */

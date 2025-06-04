@@ -1,5 +1,5 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 
 /**
  * 处理跨域

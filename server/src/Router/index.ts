@@ -1,8 +1,8 @@
 import express from "express";
 import { UserRouter } from "./User";
 import { FolderRouter } from "./Folder";
+import { initPages } from "../Controller";
 import { FileMapRouter } from "./FileMap";
-import { Controller } from "../Controller";
 import { LuckySheetRouter } from "./LuckySheet";
 
 const routes = express.Router();
@@ -17,6 +17,6 @@ routes.use("/filemap", FileMapRouter);
 
 routes.use("/folder", FolderRouter);
 
-routes.get("*", Controller.initPages);
+routes.get("*", initPages);
 
 export default routes;

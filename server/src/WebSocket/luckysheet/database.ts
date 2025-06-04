@@ -32,6 +32,7 @@ import { ChartService } from "../../Service/Chart";
 import { MergeService } from "../../Service/Merge";
 import { BorderInfoService } from "../../Service/Border";
 import { CellDataService } from "../../Service/CellData";
+import { CalcChainService } from "../../Service/CalcChain";
 import { WorkerBookService } from "../../Service/WorkerBook";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
 import { HiddenAndLenService } from "../../Service/HiddenAndLen";
@@ -40,7 +41,6 @@ import { BorderInfoModelType } from "../../Sequelize/Models/BorderInfo";
 import { WorkerSheetModelType } from "../../Sequelize/Models/WorkerSheet";
 import { HiddenAndLenModelType } from "../../Sequelize/Models/HiddenAndLen";
 import { V, CG, RV, DRC, ARC, SHA, CHART, MERGE, CRDTDataType } from "../../Interface/WebSocket";
-import { CalcChainService } from "../../Service/CalcChain";
 
 /**
  * 协同消息映射的操作

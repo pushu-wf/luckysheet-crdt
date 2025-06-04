@@ -1,33 +1,10 @@
+import { UserController } from "./User";
 import { initPages } from "./Page/index";
+import { FolderController } from "./Folder";
+import { FileMapController } from "./FileMap";
+import { WorkerBookController } from "./WorkerBooks";
 import { uploadImage } from "./Luckysheet/uploadImage";
 import { loadSheetData } from "./Luckysheet/LoadSheetData";
-import { createFolder, updateFolder, deleteFolder, getFolderList } from "./Folder";
-import { login, register, updateUser, verifyPassword, uploadAvatar } from "./User";
-import { getInviteInfo, setFavor, acceptInvite, checkSheetEditPermission } from "./FileMap";
-import { createWorkerBook, getFileList, getWorkerBook, deleteFile, renameFile, importFile } from "./WorkerBooks";
 
 // 统一导出控制层对象
-export const Controller = {
-	login,
-	setFavor,
-	register,
-	initPages,
-	updateUser,
-	deleteFile,
-	importFile,
-	renameFile,
-	getFileList,
-	uploadImage,
-	uploadAvatar,
-	acceptInvite,
-	createFolder,
-	updateFolder,
-	deleteFolder,
-	getFolderList,
-	loadSheetData,
-	getInviteInfo,
-	getWorkerBook,
-	verifyPassword,
-	createWorkerBook,
-	checkSheetEditPermission,
-};
+export { initPages, uploadImage, loadSheetData, UserController, FolderController, FileMapController, WorkerBookController };

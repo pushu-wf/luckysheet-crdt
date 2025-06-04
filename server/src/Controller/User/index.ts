@@ -7,7 +7,7 @@ import { createToken, getUseridFromToken, md5 } from "../../Utils";
 /**
  * @description 注册用户
  */
-export async function register(req: Request, res: Response) {
+async function register(req: Request, res: Response) {
 	// 用户需要传递的参数为 userid password
 	const { userid, password } = req.body;
 
@@ -30,9 +30,9 @@ export async function register(req: Request, res: Response) {
 }
 
 /**
- * 登录系统
+ * @description 登录系统
  */
-export async function login(req: Request, res: Response) {
+async function login(req: Request, res: Response) {
 	// 用户需要传递的参数为 userid password
 	const { userid, password } = req.body;
 
@@ -53,9 +53,11 @@ export async function login(req: Request, res: Response) {
 	res.json({ code: 200, message: "登录成功", token, user });
 }
 
-// 更新用户信息
-export async function updateUser(req: Request, res: Response) {
-	const { password, username, email, avatar } = req.body;
+/**
+ * @description 更新用户信息 password, username, email
+ */
+async function updateUser(req: Request, res: Response) {
+	const { password, username, email } = req.body;
 
 	// 通过 token 获取 userid
 	const userid = getUseridFromToken(req);
@@ -72,11 +74,10 @@ export async function updateUser(req: Request, res: Response) {
 	}
 
 	// 特别注意密码的处理方式，如果为空的话 会直接 md5('')导致密码变更
-	const updateData: { password?: string; username?: string; email?: string; avatar?: string } = {};
+	const updateData: { password?: string; username?: string; email?: string } = {};
 	if (password) updateData.password = md5(password);
 	if (username) updateData.username = username;
 	if (email) updateData.email = email;
-	if (avatar) updateData.avatar = avatar;
 
 	// 执行更新操作
 	const data = await UserService.update({ user_uuid, ...updateData });
@@ -87,8 +88,10 @@ export async function updateUser(req: Request, res: Response) {
 	}
 }
 
-// 验证密码是否正确
-export async function verifyPassword(req: Request, res: Response) {
+/**
+ * @description 校验密码
+ */
+async function verifyPassword(req: Request, res: Response) {
 	const { password } = req.body;
 	if (!password) {
 		res.status(400).json({ code: 400, message: "密码不能为空" });
@@ -111,8 +114,10 @@ export async function verifyPassword(req: Request, res: Response) {
 	}
 }
 
-// 用户上传头像
-export async function uploadAvatar(req: Request, res: Response) {
+/**
+ * @description 用户上传头像
+ */
+async function uploadAvatar(req: Request, res: Response) {
 	UserAvatarMulter(req, res, async () => {
 		const { file } = req;
 
@@ -161,3 +166,5 @@ export async function uploadAvatar(req: Request, res: Response) {
 		res.json({ code: 200, message: "Success to upload.", avatar });
 	});
 }
+
+export const UserController = { register, login, updateUser, verifyPassword, uploadAvatar };

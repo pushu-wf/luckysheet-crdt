@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { LuckySheetMuter, UploadDest } from "../../Config";
 
 /**
- * Luckysheet 自定义图片上传方法
+ * @description Luckysheet 自定义图片上传方法
  */
 export async function uploadImage(req: Request, res: Response) {
 	LuckySheetMuter(req, res, async () => {

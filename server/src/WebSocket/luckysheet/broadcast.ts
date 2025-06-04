@@ -45,10 +45,7 @@ export function broadcastOtherClients(wss: WebSocket.Server, currentClient: Cust
 
 function getCallbackData(currentClient: CustomWebSocket, data: string): string {
 	const { userid, username } = currentClient.clientInfo;
-	if (data === "exit") {
-		console.log(" ==> 用户退出");
-		return JSON.stringify({ message: "用户退出", id: userid });
-	}
+	if (data === "exit") return JSON.stringify({ message: "用户退出", id: userid });
 
 	// 不然就正常封装，根据data的t识别不同的 type
 	const { t } = JSON.parse(data);

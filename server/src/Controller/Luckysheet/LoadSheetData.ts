@@ -2,10 +2,10 @@ import {
 	type ChartType,
 	type MergeType,
 	type ImagesType,
+	type CalcChainType,
 	type BorderInfoType,
 	type CellDataItemType,
 	type WorkerSheetItemType,
-	CalcChainType,
 } from "../../Interface/luckysheet";
 import { DB } from "../../Sequelize";
 import { logger } from "../../Utils/Logger";
@@ -23,8 +23,7 @@ import { CellDataModelType } from "../../Sequelize/Models/CellData";
 import { WorkerSheetModelType } from "../../Sequelize/Models/WorkerSheet";
 
 /**
- * loadSheetData loadUrl 加载数据
- * 协同第一步 ： 解析数据库数据，生成 workerbook data 数据
+ * @description loadSheetData loadUrl 加载数据 协同第一步 ： 解析数据库数据，生成 workerbook data 数据
  * @returns string
  */
 export async function loadSheetData(req: Request, res: Response) {
@@ -93,7 +92,7 @@ export async function loadSheetData(req: Request, res: Response) {
 }
 
 /**
- * 基础数据模板
+ * @description 基础数据模板
  */
 function getSheetDataTemp(item: WorkerSheetModelType) {
 	const currentSheetData: WorkerSheetItemType = {
@@ -120,7 +119,7 @@ function getSheetDataTemp(item: WorkerSheetModelType) {
 }
 
 /**
- * parseCellData 解析 cellData 数据
+ * @description parseCellData 解析 cellData 数据
  */
 async function parseCellData(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
@@ -173,7 +172,7 @@ async function parseCellData(worker_sheet_id: string, currentSheetData: WorkerSh
 }
 
 /**
- * parseMerge 解析合并单元格
+ * @description parseMerge 解析合并单元格
  */
 async function parseMerge(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
@@ -201,7 +200,7 @@ async function parseMerge(worker_sheet_id: string, currentSheetData: WorkerSheet
 }
 
 /**
- * parseConfigBorder 解析边框
+ * @description parseConfigBorder 解析边框
  */
 async function parseConfigBorder(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
@@ -245,7 +244,7 @@ async function parseConfigBorder(worker_sheet_id: string, currentSheetData: Work
 }
 
 /**
- * 解析隐藏行列和行高列宽
+ * @description 解析隐藏行列和行高列宽
  */
 async function parseHiddenAndLen(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
@@ -272,7 +271,7 @@ async function parseHiddenAndLen(worker_sheet_id: string, currentSheetData: Work
 }
 
 /**
- * parseImages 解析图片
+ * @description parseImages 解析图片
  */
 async function parseImages(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
@@ -319,9 +318,8 @@ async function parseImages(worker_sheet_id: string, currentSheetData: WorkerShee
 }
 
 /**
- * parseCharts 解析图表数据
+ * @description parseCharts 解析图表数据
  */
-
 async function parseCharts(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {
 		const result: ChartType[] = [];
@@ -349,7 +347,7 @@ async function parseCharts(worker_sheet_id: string, currentSheetData: WorkerShee
 }
 
 /**
- * parseCalcChain 解析公式连
+ * @description parseCalcChain 解析公式连
  */
 async function parseCalcChain(worker_sheet_id: string, currentSheetData: WorkerSheetItemType) {
 	try {

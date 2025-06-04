@@ -8,7 +8,9 @@ import { WorkerBookService } from "../../Service/WorkerBook";
 import { FolderListResult } from "../../Interface/FIleResult";
 import { WorkerSheetService } from "../../Service/WorkerSheet";
 
-// 创建文件夹
+/**
+ * @description 创建文件夹
+ */
 async function createFolder(req: Request, res: Response) {
 	const { foldername, parentid } = req.body;
 	if (!foldername) {
@@ -38,6 +40,10 @@ async function createFolder(req: Request, res: Response) {
 		res.status(500).json({ code: 500, message: "创建失败" });
 	}
 }
+
+/**
+ * @description 更新文件夹 - 更新文件夹名称、位置
+ */
 async function updateFolder(req: Request, res: Response) {
 	const { folderid, foldername } = req.body;
 
@@ -66,7 +72,9 @@ async function updateFolder(req: Request, res: Response) {
 	res.status(200).json({ code: 200, message: "更新成功" });
 }
 
-// 删除文件夹
+/**
+ * @description 删除文件夹
+ */
 async function deleteFolder(req: Request, res: Response) {
 	const { folderid } = req.body;
 	if (!folderid) {
@@ -92,7 +100,45 @@ async function deleteFolder(req: Request, res: Response) {
 	res.json({ code: 200, message: "删除成功" });
 }
 
-// 工具函数 - 通过传入的 folderid 查询出当前文件夹下的所有文件夹
+/**
+ * @description 获取文件夹列表
+ */
+async function getFolderList(req: Request, res: Response) {
+	const { folderid } = req.body;
+
+	const userid = getUseridFromToken(req);
+	if (!userid) {
+		res.status(400).json({ code: 400, message: "userid 缺失" });
+		return;
+	}
+
+	const user_uuid = await UserService.getUserUUID(userid);
+	if (!user_uuid) {
+		res.status(400).json({ code: 400, message: "用户查询失败" });
+		return;
+	}
+
+	/**
+	 * 1. 如果用户没有传递 folderid 则认为处于根目录下查询，那么需要返回 folderModel parentid = null 并且 filemapModel folderid = null 的数据
+	 * 2. 如果用户传递了 folderid 则认为用户进入子目录，那么需要返回 folderModel parentid = folderid 、filemapModel folderid = folderid 的数据
+	 *  这里返回的数据，应该始终包含着 folder 及 file 两个数据
+	 */
+
+	const folderList = await FolderService.findAllFolderByParentId(folderid || null, user_uuid);
+
+	// 获取当前文件夹下的所有文件
+	const fileList = await FolderService.findAllFileByFolderId(folderid || null, user_uuid);
+
+	const data: FolderListResult[] = [];
+	// 处理文件夹 - service 中已经解析过对象，此处直接 push 即可
+	folderList?.forEach((item) => data.push({ ...item, type: "folder" }));
+	// 处理文件 - 同上
+	fileList?.forEach((item) => data.push({ ...item, type: "file" }));
+
+	res.json({ code: 200, data });
+}
+
+// 工具函数 - 递归实现删除文件夹及内部文件
 async function getFolderListByFolderId(folderid: string | undefined, user_uuid: string) {
 	if (!folderid) return;
 
@@ -138,40 +184,7 @@ async function getFolderListByFolderId(folderid: string | undefined, user_uuid: 
 	}
 }
 
-// 获取文件夹列表
-async function getFolderList(req: Request, res: Response) {
-	const { folderid } = req.body;
-
-	const userid = getUseridFromToken(req);
-	if (!userid) {
-		res.status(400).json({ code: 400, message: "userid 缺失" });
-		return;
-	}
-
-	const user_uuid = await UserService.getUserUUID(userid);
-	if (!user_uuid) {
-		res.status(400).json({ code: 400, message: "用户查询失败" });
-		return;
-	}
-
-	/**
-	 * 1. 如果用户没有传递 folderid 则认为处于根目录下查询，那么需要返回 folderModel parentid = null 并且 filemapModel folderid = null 的数据
-	 * 2. 如果用户传递了 folderid 则认为用户进入子目录，那么需要返回 folderModel parentid = folderid 、filemapModel folderid = folderid 的数据
-	 *  这里返回的数据，应该始终包含着 folder 及 file 两个数据
-	 */
-
-	const folderList = await FolderService.findAllFolderByParentId(folderid || null, user_uuid);
-
-	// 获取当前文件夹下的所有文件
-	const fileList = await FolderService.findAllFileByFolderId(folderid || null, user_uuid);
-
-	const data: FolderListResult[] = [];
-	// 处理文件夹 - service 中已经解析过对象，此处直接 push 即可
-	folderList?.forEach((item) => data.push({ ...item, type: "folder" }));
-	// 处理文件 - 同上
-	fileList?.forEach((item) => data.push({ ...item, type: "file" }));
-
-	res.json({ code: 200, data });
-}
-
-export { deleteFolder, createFolder, updateFolder, getFolderList };
+/**
+ * @description 文件夹控制器
+ */
+export const FolderController = { deleteFolder, createFolder, updateFolder, getFolderList };

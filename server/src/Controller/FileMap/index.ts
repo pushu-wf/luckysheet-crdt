@@ -3,8 +3,10 @@ import { UserService } from "../../Service/User";
 import { FileMapService } from "../../Service/FileMap";
 import { getUseridFromToken, isEmpty } from "../../Utils";
 
-// 设置收藏状态
-export async function setFavor(req: Request, res: Response) {
+/**
+ * @description 设置收藏状态
+ */
+async function setFavor(req: Request, res: Response) {
 	// 需要获取 filemapid favor
 	const { filemapid, favor } = req.body;
 	if (!filemapid || isEmpty(favor)) {
@@ -21,8 +23,10 @@ export async function setFavor(req: Request, res: Response) {
 	}
 }
 
-// 受邀获取信息
-export async function getInviteInfo(req: Request, res: Response) {
+/**
+ * @description 受邀获取信息 - 指的是通过 filemapid 获取文件名称、文件拥有者
+ */
+async function getInviteInfo(req: Request, res: Response) {
 	const { filemapid } = req.body;
 	if (!filemapid) {
 		res.status(400).json({ code: 400, message: "filemapid 参数缺失" });
@@ -38,8 +42,10 @@ export async function getInviteInfo(req: Request, res: Response) {
 	}
 }
 
-// 同意邀请
-export async function acceptInvite(req: Request, res: Response) {
+/**
+ * @description 同意邀请 - 加入某个文件
+ */
+async function acceptInvite(req: Request, res: Response) {
 	const { gridKey, owner, editable } = req.body;
 	if (!gridKey || !owner) {
 		res.status(400).json({ code: 400, message: "gridKey | owner 缺失" });
@@ -86,7 +92,7 @@ export async function acceptInvite(req: Request, res: Response) {
 /**
  * @description 判断用户是否有文件编辑权限
  */
-export async function checkSheetEditPermission(req: Request, res: Response) {
+async function checkSheetEditPermission(req: Request, res: Response) {
 	const { filemapid } = req.body;
 	if (!filemapid) {
 		res.status(400).json({ code: 400, message: "filemapid 缺失" });
@@ -121,3 +127,8 @@ export async function checkSheetEditPermission(req: Request, res: Response) {
 		res.json({ code: 200, gridKey: filemap.gridKey, editable: filemap.editable });
 	}
 }
+
+/**
+ * @description 文件映射控制器
+ */
+export const FileMapController = { setFavor, getInviteInfo, acceptInvite, checkSheetEditPermission };
