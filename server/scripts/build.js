@@ -13,6 +13,7 @@ const packageJson = require("../package.json");
 const rootPath = path.resolve(__dirname, "../");
 
 (async () => {
+	console.log("1️⃣ Starting build wwwroot directory...");
 	// 判断当前目录下是否存在 wwwroot 目录
 	if (fs.existsSync(`${rootPath}/wwwroot`)) {
 		// 如果存在的话，删除，再创建，确保文件夹内容是最新的
@@ -20,6 +21,7 @@ const rootPath = path.resolve(__dirname, "../");
 	}
 	fs.mkdirSync(`${rootPath}/wwwroot`);
 
+	console.log("2️⃣ Starting build package.json...");
 	// 进行后续操作
 	// 1. 复制 package.json 文件到 wwwroot 目录下(不需要 xxx-lock 文件，服务器上都重新拉依赖)
 	// 重修修订 scripts 命令
@@ -31,21 +33,20 @@ const rootPath = path.resolve(__dirname, "../");
 	packageJson.scripts.db = "node build/Sequelize/synchronization.js";
 	packageJson.scripts.start = "node build/main.js";
 
-	fs.writeFileSync(
-		`${rootPath}/wwwroot/package.json`,
-		JSON.stringify(JSON.parse(JSON.stringify(packageJson)))
-	);
+	fs.writeFileSync(`${rootPath}/wwwroot/package.json`, JSON.stringify(JSON.parse(JSON.stringify(packageJson))));
 
 	// 2. 复制 build 文件夹到 wwwroot 目录下
 	fs.cpSync(`${rootPath}/build`, `${rootPath}/wwwroot/build`, {
 		recursive: true,
 	});
 
+	console.log("3️⃣ Starting build public directory...");
 	// 3. 复制 public/dist 文件夹到 wwwroot 目录下
 	fs.cpSync(`${rootPath}/public/dist`, `${rootPath}/wwwroot/public/dist`, {
 		recursive: true,
 	});
 
+	console.log("4️⃣ Starting build license...");
 	// 4. 创建打包版本信息文件
 	const license = `
 /**
@@ -259,4 +260,5 @@ const rootPath = path.resolve(__dirname, "../");
 
 	// 创建 LICENSE 文件
 	fs.writeFileSync(`${rootPath}/wwwroot/LICENSE`, license.toString());
+	console.log("✅️ Successully builded.");
 })();
