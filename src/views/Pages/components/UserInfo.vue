@@ -16,7 +16,7 @@
 			<!-- 左右布局 -->
 			<div class="user-info-left">
 				<div class="user-info-avatar">
-					<a-avatar :size="80" @click="avatarModalVisible = true" :src="parseAvatar()" />
+					<a-avatar :size="80" @click="openUserAvatarModal" :src="parseAvatar()" />
 					<h2>{{ USERNAME }}</h2>
 				</div>
 				<div class="user-info-form">
@@ -74,44 +74,23 @@
 	</a-modal>
 
 	<!-- 上传图片模态框 -->
-	<a-modal v-model:open="avatarModalVisible" title="上传头像" cancelText="取消" okText="上传" @ok="handleUpload">
+	<a-modal v-model:open="avatarModalVisible" title="上传头像" cancelText="取消" okText="上传" @ok="confirmUpload">
+		<a-button type="primary" @click="uploadImage">上传图片</a-button>
+		<a-divider style="margin: 10px 0"></a-divider>
 		<div class="user-avatar-upload">
-			<a-upload
-				v-model:file-list="uploadList"
-				name="avatar"
-				list-type="picture-card"
-				class="avatar-uploader"
-				:show-upload-list="false"
-				:before-upload="beforeUpload">
-				<img v-if="avatarPreview" :src="avatarPreview" alt="avatar" style="width: 100%; height: fit-content" />
-				<div v-else>
-					<plus-outlined></plus-outlined>
-					<div class="ant-upload-text">Upload</div>
-				</div>
-			</a-upload>
-			<a-divider type="vertical" style="height: 90px" />
-
-			<!-- 头像预览 -->
-			<div class="avatar-preview">
-				<div class="circle">
-					<a-avatar :size="48" :src="avatarPreview" />
-					<a-avatar :size="32" :src="avatarPreview" />
-					<a-avatar :size="28" :src="avatarPreview" />
-				</div>
-				<div class="square">
-					<a-avatar shape="square" :size="48" :src="avatarPreview" />
-					<a-avatar shape="square" :size="32" :src="avatarPreview" />
-					<a-avatar shape="square" :size="28" :src="avatarPreview" />
-				</div>
+			<div id="clipper-container"></div>
+			<div class="preview">
+				<img :src="avatarPreview" style="border-radius: 50%" alt="" />
+				<img :src="avatarPreview" alt="" />
 			</div>
 		</div>
 	</a-modal>
 </template>
 
 <script setup lang="ts">
-import { h } from "vue";
+import { h, nextTick } from "vue";
 import { useUserStore } from "../../../store/User";
-import { FormOutlined, PlusOutlined } from "@ant-design/icons-vue";
+import { FormOutlined } from "@ant-design/icons-vue";
 import { usePasswordHook, useAvatarHook, useUserInfoHook } from "../config";
 
 const emit = defineEmits(["close"]);
@@ -119,11 +98,17 @@ const emit = defineEmits(["close"]);
 // 解析 user store
 const { parseAvatar } = useUserStore();
 
+function openUserAvatarModal() {
+	avatarModalVisible.value = true;
+	// 创建 clipper 实例
+	nextTick(initAvatarClipper);
+}
+
 // 解析用户信息相关 hook 参数
 const { userInfoModalVisible, userInfoForm, resetUserInfoForm, updateUserInfo, USERNAME } = useUserInfoHook();
 
 // 解析头像上传相关 hook 参数
-const { beforeUpload, avatarModalVisible, uploadList, avatarPreview, handleUpload } = useAvatarHook();
+const { avatarModalVisible, avatarPreview, initAvatarClipper, confirmUpload, uploadImage } = useAvatarHook();
 
 // 解析修改密码相关 hook 参数
 const { passwordForm, passwordRules, resetForm, updatePassword, passwordModalVisible, passwordFormRef } = usePasswordHook();
@@ -192,22 +177,19 @@ defineExpose({ open: () => (userInfoModalVisible.value = true) });
 .user-avatar-upload {
 	display: flex;
 	align-items: center;
-	.ant-upload-wrapper {
-		width: auto;
+	height: 200px;
+	& > div {
+		width: 50%;
+		height: 100%;
 	}
-	.avatar-preview {
+	img {
+		width: 80px;
+		height: 80px;
+	}
+	.preview {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
-		justify-content: center;
-		& > * {
-			& > * {
-				margin-right: 10px;
-			}
-			display: flex;
-			align-items: flex-end;
-			justify-content: space-between;
-		}
+		justify-content: space-evenly;
 	}
 }
 </style>

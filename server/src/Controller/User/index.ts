@@ -127,7 +127,7 @@ async function uploadAvatar(req: Request, res: Response) {
 			return;
 		}
 
-		const { filename, originalname } = <Express.Multer.File>file;
+		const { filename, mimetype } = <Express.Multer.File>file;
 
 		/**
 		 * 处理文件路径：
@@ -135,7 +135,7 @@ async function uploadAvatar(req: Request, res: Response) {
 		 *  转换成 85d6d8c593b7239406ce2c13099c6110.png
 		 *  保留后缀，方便用户以静态资源访问
 		 */
-		const suffix = originalname.split(".").pop();
+		const suffix = mimetype.split("/").pop();
 		const oldpath = `${UploadDest}/${filename}`;
 		const newpath = `${UploadDest}/${filename}.${suffix}`;
 

@@ -8,6 +8,7 @@ import { FormInstance, message } from "ant-design-vue";
 import { Rule } from "ant-design-vue/es/form/interface";
 import { checkPasswordStrength, md5 } from "../../../utils";
 import { API_updateUser, API_uploadAvatar, API_verifyPassword } from "../../../axios";
+import AvatarClipper from "avatar-clipper";
 
 /**
  * @description 导出用户信息 modal 相关 hooks
@@ -145,20 +146,41 @@ export const usePasswordHook = () => {
 export const useAvatarHook = () => {
 	const userStore = useUserStore();
 
+	// 定义图片上传相关参数
+	const clipper = ref<AvatarClipper>();
+
 	// 模态框状态
 	const avatarModalVisible = ref(false);
 
 	// 上传的图片 这个用于预览的
 	const avatarPreview = ref("");
 
-	// 图片列表
-	const uploadList = reactive<File[]>([]);
+	/**
+	 * @description 初始化 AvatarClipper
+	 */
+	function initAvatarClipper() {
+		clipper.value = new AvatarClipper({ container: "#clipper-container" });
+		clipper.value.event.on("preview", (result) => (avatarPreview.value = result));
+	}
+
+	/**
+	 * @description 上传图片
+	 */
+	function uploadImage() {
+		const input = document.createElement("input");
+		input.type = "file";
+		input.accept = "image/*";
+		input.onchange = () => {
+			const file = input.files?.[0];
+			if (file) clipper.value?.command.setImage(file);
+		};
+		input.click();
+	}
 
 	/**
 	 * @description 文件上传前 类型及大小校验
 	 */
 	function beforeUpload(file: File) {
-		uploadList.length = 0; // 清空上传列表
 		avatarPreview.value = "";
 
 		const checkImageType = file.type === "image/jpeg" || file.type === "image/png";
@@ -169,24 +191,16 @@ export const useAvatarHook = () => {
 		if (!isLt2M) {
 			message.error("Image must smaller than 2MB!");
 		}
-
-		if (checkImageType && isLt2M) {
-			// 将图片资源添加到 uploadList 中
-			uploadList.push(file);
-
-			// 处理 avatarPreview
-			avatarPreview.value = URL.createObjectURL(file);
-		}
-
-		return false; // beforeUpload 返回 false 后，手动上传文件。
 	}
 
-	/** 手动上传头像 */
-	async function handleUpload() {
-		if (!uploadList.length) return;
+	/**
+	 * @description 确认上传文件
+	 */
+	async function confirmUpload() {
+		const imageBlob = <Blob>clipper.value?.command.getResult("blob");
 		// 将头像上传到服务器
 		const formData = new FormData();
-		formData.append("userAvatar", uploadList[0]);
+		formData.append("userAvatar", imageBlob);
 
 		try {
 			const { data } = await API_uploadAvatar(formData);
@@ -202,7 +216,7 @@ export const useAvatarHook = () => {
 		}
 	}
 
-	return { beforeUpload, handleUpload, avatarModalVisible, avatarPreview, uploadList };
+	return { beforeUpload, avatarModalVisible, avatarPreview, clipper, initAvatarClipper, confirmUpload, uploadImage };
 };
 
 /**

@@ -14,6 +14,9 @@ importers:
       ant-design-vue:
         specifier: ^4.2.6
         version: 4.2.6(vue@3.5.14(typescript@5.8.3))
+      avatar-clipper:
+        specifier: ^0.0.6
+        version: 0.0.6
       axios:
         specifier: ^1.7.9
         version: 1.8.4
@@ -569,6 +572,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  avatar-clipper@0.0.6:
+    resolution: {integrity: sha512-DF5sevndgg5T2cmWnhvDMyxiZHxFU5cZEsTtGJazZnr4PXPSL6KDJGpE4QNoIj7zpZaGgZPb1PhihqUoKtUdww==}
+
   axios@1.8.4:
     resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
@@ -999,6 +1005,9 @@ packages:
 
   knitwork@1.2.0:
     resolution: {integrity: sha512-xYSH7AvuQ6nXkq42x0v5S8/Iry+cfulBz/DJQzhIyESdLD7425jXsPy4vn5cCXU+HhRN2kVw51Vd1K6/By4BQg==}
+
+  konva@9.3.20:
+    resolution: {integrity: sha512-7XPD/YtgfzC8b1c7z0hhY5TF1IO/pBYNa29zMTA2PeBaqI0n5YplUeo4JRuRcljeAF8lWtW65jePZZF7064c8w==}
 
   less@4.3.0:
     resolution: {integrity: sha512-X9RyH9fvemArzfdP8Pi3irr7lor2Ok4rOttDXBhlwDg+wKQsXOXgHWduAJE1EsF7JJx0w0bcO6BC6tCKKYnXKA==}
@@ -1929,6 +1938,10 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  avatar-clipper@0.0.6:
+    dependencies:
+      konva: 9.3.20
+
   axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9
@@ -2362,6 +2375,8 @@ snapshots:
   klona@2.0.6: {}
 
   knitwork@1.2.0: {}
+
+  konva@9.3.20: {}
 
   less@4.3.0:
     dependencies:
