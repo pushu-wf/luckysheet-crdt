@@ -23,7 +23,7 @@
 1. 本项目基于 [Luckysheet](https://github.com/mengshukeji/Luckysheet) 源码修改，**请遵循原作者开源协议**，同时，**请不要删除或修改源码头部版权声明**。
 2. 本项目以 **Apache2.0 协议开源**，请放心使用，同时，本项目也将回馈于 Luksysheet 社区，丰富社区生态，再次感谢 @[Luckysheet](https://github.com/mengshukeji/Luckysheet) 团队 ❤️
 3. 项目为 **Luckysheet 协同增强版（全功能实现）**，意在**提供协同实现思路、数据存储服务、协同演示**等，项目基于 [Luckysheet](https://github.com/mengshukeji/Luckysheet) 实现，感谢原作者开源。
-4. 本项目主要**实现协同功能**模块，对其他内容不做修改，功能使用上并无影响；
+4. 本项目主要**实现协同功能**模块，对源码修改部分均体现在 `luckysheet-source-private` 目录下；
 5. 项目支持 **可选数据库服务**，没有数据库的用户数据无法持久化存储，协同功能并不受影响，**⚠️`仅对 master、master-alpha` 分支有效，master-vue 依赖数据库功能实现用户系统**。
 6. 项目使用 **[Sequelize](https://www.sequelize.cn/)** 作为 ORM 数据服务技术，支持 mysql、sqlite、postgres、mssql 等数据库，方便用户快速迁移。
 7. 项目使用 **Typescript** 作为主要开发语言，提供完整的类型提示，规范代码，提高开发效率。
@@ -111,29 +111,41 @@ npm run db
 
 **温馨提示：下列所有命令均在项目根目录下执行 /LUCKYSHEET-CRDT/**
 
-1.  先打包前台项目: `npm run build`
+1. 注意！
 
-    -   请注意，打包文件文件，默认输出到 `server/public/dist`
+    - 请修改部署的配置文件：`src/config/index.ts`:
 
-2.  打包服务端代码: `npm run build:server`
+```ts
+// 修改后台地址为 服务器IP地址
+export const SERVER_URL = "http://localhost:9000";
 
-    -   此时，整个项目的打包结果，会直接输出到 `server/wwwroot` 目录下，即可直接部署到服务器上。
+// 修改协同地址为 服务器IP地址
+export const WS_SERVER_URL = "ws://127.0.0.1:9000";
+```
 
-3.  请将 `server/wwwroot` 目录下的文件，上传到服务器上
-<p align="center">
-  <img src='/public/result/build.png' />
-</p>
+2. 先打包前台项目: `npm run build`
 
-4.  在服务器上安装 `node` 环境，相关教程可自行上网查询
+    - 请注意，打包文件文件，默认输出到 `server/public/dist`
 
-    -   本例提供：[centos 参考此链接](https://blog.csdn.net/weixin_61367575/article/details/138012405)
+3. 打包服务端代码: `npm run build:server`
 
-5.  同步数据库表：`npm run db`
+    - 此时，整个项目的打包结果，会直接输出到 `server/wwwroot` 目录下，即可直接部署到服务器上。
 
-    -   请确保数据库配置正确可用(~~如果无数据库服务，请跳过此步骤~~)
+4. 请将 `server/wwwroot` 目录下的文件，上传到服务器上
+ <p align="center">
+   <img src='/public/result/build.png' />
+ </p>
 
-6.  启动服务：`npm run start`: **此命令仅打包后 wwwroot 文件夹下有效**
-    -   等待依赖下载完成，启动服务`npm run start`，部署完成后访问 `http://${ip}:9000` 即可访问
+5. 在服务器上安装 `node` 环境，相关教程可自行上网查询
+
+    - 本例提供：[centos 参考此链接](https://blog.csdn.net/weixin_61367575/article/details/138012405)
+
+6. 同步数据库表：`npm run db`
+
+    - 请确保数据库配置正确可用(~~如果无数据库服务，请跳过此步骤~~)
+
+7. 启动服务：`npm run start`: **此命令仅打包后 wwwroot 文件夹下有效**
+    - 等待依赖下载完成，启动服务`npm run start`，部署完成后访问 `http://${ip}:9000` 即可访问
 
 ## 协同功能计划表
 

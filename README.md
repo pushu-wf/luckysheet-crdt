@@ -111,28 +111,39 @@ npm run db
 
 **Kind reminder: All the following commands are executed in the project root directory/LUCKYSHEET-CRDT/**
 
-1.  Pack the front-end project first: `npm run build`
+1. Notice!:
+    - Please modify the deployed configuration file: ` src/config/index. ts'`:
+
+```ts
+// Change the backend address to the server IP address
+export const SERVER_URL = "http://localhost:9000";
+
+// Change the collaborative address to the server IP address
+export const WS_SERVER_URL = "ws://127.0.0.1:9000";
+```
+
+2.  Pack the front-end project first: `npm run build`
 
     -   Please note that when packaging file files, the default output is to `server/public/dist`
 
-2.  Package server code: `npm run build:server`
+3.  Package server code: `npm run build:server`
 
     -   At this point, the packaging result of the entire project will be directly output to the `server/wwwroot` directory, which can be deployed directly to the server。
 
-3.  Please upload the files from the 'server/wwwroot' directory to the server
+4.  Please upload the files from the 'server/wwwroot' directory to the server
 <p align="center">
   <img src='/public/result/build.png' />
 </p>
 
-4.  Install the 'node' environment on the server. You can search for related tutorials online by yourself
+5.  Install the 'node' environment on the server. You can search for related tutorials online by yourself
 
     -   This example provides:[centos 参考此链接](https://blog.csdn.net/weixin_61367575/article/details/138012405)
 
-5.  Synchronize database tables:`npm run db`
+6.  Synchronize database tables:`npm run db`
 
     -   Please ensure that the database configuration is correct and available(~~If there is no database service, please skip this step~~)
 
-6.  Start service:`npm run start`: **This command is only valid in the wwwroot folder after packaging**
+7.  Start service:`npm run start`: **This command is only valid in the wwwroot folder after packaging**
     -   Wait for dependency download to complete, start service `npm run start`, Access after deployment completion to just access `http://${ip}:9000`
 
 ## Collaborative Function Plan Table
@@ -192,23 +203,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-      <p align="center">
-      <img src='/public/result/chartmix-vchart.png' />
-      </p>
-      <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-      <p align="center">
-      <img src='/public/result/vchart.gif' />
-      </p>
-      <span style="font-weight:900">vchart setting</span>
-      <p align="center">
-      <img src='/public/result/vchart-setting.gif' />
-      </p>
+    <p align="center">
+    <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+    <p align="center">
+    <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart setting</span>
+    <p align="center">
+    <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-      <p align="center">
-      <img src='/public/result/chartmix-update-data-crdt.gif' />
-      </p>
+    <p align="center">
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart </span>
 
