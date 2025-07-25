@@ -28,6 +28,13 @@ export function initToken(app: express.Application) {
 			return;
 		}
 
+		// 是否跳过 token 校验
+		const enablePassToken = req.headers["enable-pass-token"];
+		if (enablePassToken) {
+			next();
+			return;
+		}
+
 		// 不然校验token
 		const token = req.headers.authorization;
 
