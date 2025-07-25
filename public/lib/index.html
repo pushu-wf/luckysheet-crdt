@@ -27,9 +27,11 @@
 			$(function () {
 				// 从 sessionstorage 中获取数据
 				const userid = window.sessionStorage.getItem("userid");
-				console.log(" ==> userid", userid);
 				const id = userid || Math.random().toString(16).slice(2, 8);
 				const username = `user_${id}`;
+
+				// ### 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常
+				// ### 是真实数据库表的 workerbooks gridKey 字段
 				const gridkey = "29c0098f1e754e06f4cac2fbfd2b662a";
 
 				const options = {
@@ -53,9 +55,10 @@
 						],
 					},
 
-					allowUpdate: true, // 配置协同功能
-					loadUrl: `http://localhost:9000/loadSheetData?gridkey=${gridkey}`,
-					updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=${gridkey}`, // 协同服务转发服务
+					// ### 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
+					// allowUpdate: true, // 配置协同功能
+					// loadUrl: `http://localhost:9000/loadSheetData?gridkey=${gridkey}`,
+					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=${gridkey}`, // 协同服务转发服务
 
 					menuHandler: {
 						// 隐藏内置菜单
