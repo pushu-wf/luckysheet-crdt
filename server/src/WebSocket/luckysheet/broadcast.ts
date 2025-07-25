@@ -23,37 +23,32 @@ import { CustomWebSocket } from "../../Interface/WebSocket";
  * @param currentClient
  * @param data
  */
-export function broadcastOtherClients(
-  wss: WebSocket.Server,
-  currentClient: CustomWebSocket,
-  data: string
-) {
-  /** 根据传入的 data 进行协同回传消息类型处理 */
-  const callback = getCallbackData(currentClient, data);
+export function broadcastOtherClients(wss: WebSocket.Server, currentClient: CustomWebSocket, data: string) {
+	/** 根据传入的 data 进行协同回传消息类型处理 */
+	const callback = getCallbackData(currentClient, data);
 
-  /**
-   * 请注意，此处应该做校验：
-   *  1. 协同类型是否为 luckysheet（同一个协同服务类型才协同）
-   *  2. 当前用户的文件ID(使用 gridkey 替代 fileid) 是否一致（同一篇文档的用户才协同）
-   *  3. 当前用户的 userid 是否一致（同一用户不发送消息）
-   */
-  wss.clients.forEach((conn) => {
-    const { type, gridkey, userid } = (<CustomWebSocket>conn).clientInfo;
-    if (type !== "luckysheet") return;
-    if (gridkey !== currentClient.clientInfo.gridkey) return;
-    if (userid === currentClient.clientInfo.userid) return;
-    // 校验通过，发送消息给客户端
-    if (conn.readyState === WebSocket.OPEN) conn.send(callback);
-  });
+	/**
+	 * 请注意，此处应该做校验：
+	 *  1. 协同类型是否为 luckysheet（同一个协同服务类型才协同）
+	 *  2. 当前用户的文件ID(使用 gridkey 替代 fileid) 是否一致（同一篇文档的用户才协同）
+	 *  3. 当前用户的 userid 是否一致（同一用户不发送消息）
+	 */
+	wss.clients.forEach((conn) => {
+		const { type, gridkey, userid } = (<CustomWebSocket>conn).clientInfo;
+		if (type !== "luckysheet") return;
+		if (gridkey !== currentClient.clientInfo.gridkey) return;
+		if (userid === currentClient.clientInfo.userid) return;
+		// 校验通过，发送消息给客户端
+		if (conn.readyState === WebSocket.OPEN) conn.send(callback);
+	});
 }
 
 function getCallbackData(currentClient: CustomWebSocket, data: string): string {
-  const { userid, username } = currentClient.clientInfo;
-  if (data === "exit")
-    return JSON.stringify({ message: "用户退出", id: userid });
+	const { userid, username } = currentClient.clientInfo;
+	if (data === "exit") return JSON.stringify({ message: "用户退出", id: userid });
 
-  // 不然就正常封装，根据data的t识别不同的 type
-  const { t } = JSON.parse(data);
-  const info = { data, id: userid, username, type: t === "mv" ? 3 : 2 };
-  return JSON.stringify(info);
+	// 不然就正常封装，根据data的t识别不同的 type
+	const { t } = JSON.parse(data);
+	const info = { data, id: userid, username, type: t === "mv" ? 3 : 2 };
+	return JSON.stringify(info);
 }
