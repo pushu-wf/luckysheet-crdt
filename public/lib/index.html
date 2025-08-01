@@ -24,73 +24,113 @@
 		<div id="luckysheet" style="margin: 0px; padding: 0px; position: absolute; width: 100%; height: 100%; left: 0px; top: 0px"></div>
 
 		<script>
-			$(function () {
-				// 从 sessionstorage 中获取数据
-				const userid = window.sessionStorage.getItem("userid");
-				const id = userid || Math.random().toString(16).slice(2, 8);
-				const username = `user_${id}`;
+			// 公共配置项
+			const commonOptions = {
+				container: "luckysheet",
+				lang: "zh",
+				// showinfobar: false, // 隐藏信息栏
+				// plugins: ["fileImport", "vchart", "chart"],
+				data: [sheetCell],
 
-				// ### 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常
-				// ### 是真实数据库表的 workerbooks gridKey 字段
-				const gridkey = "29c0098f1e754e06f4cac2fbfd2b662a";
+				// 自定义请求头
+				// requestHeaders: {
+				// 	"Custom-userid": "123",
+				// },
 
-				const options = {
-					container: "luckysheet",
-					lang: "zh",
-					// showinfobar: false,
-					plugins: ["fileImport", "vchart", "chart"],
-					data: [sheetCell],
-					// 自定义请求头
-					// requestHeaders: {
-					// 	"Custom-userid": "123",
-					// },
-					cellRightClickConfig: {
-						customs: [
-							{
-								title: "test",
-								onClick: function (clickEvent, event, params) {
-									console.log("function test click", clickEvent, event, params);
-								},
+				// 自定义右键菜单
+				cellRightClickConfig: {
+					customs: [
+						{
+							title: "test",
+							onClick: function (clickEvent, event, params) {
+								console.log("function test click", clickEvent, event, params);
 							},
-						],
-					},
+						},
+					],
+				},
 
-					// ### 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
-					// allowUpdate: true, // 配置协同功能
-					// loadUrl: `http://localhost:9000/loadSheetData?gridkey=${gridkey}`,
-					// updateUrl: `http://localhost:9000?type=luckysheet&userid=${id}&username=${username}&gridkey=${gridkey}`, // 协同服务转发服务
-
-					menuHandler: {
-						// 隐藏内置菜单
-						// hideDefaultMenu: ['exportFile', 'importFile'],
-
-						// 自定义
-						customs: [
-							// 分割线
-
-							{
-								order: 0,
-								label: "自定义菜单",
-								value: "newFile",
-								callback: () => {
-									console.log("==> 自定义菜单");
-								},
+				// 项目菜单
+				menuHandler: {
+					// 隐藏内置菜单
+					// hideDefaultMenu: ['exportFile', 'importFile'],
+					// 自定义
+					customs: [
+						// 分割线
+						{
+							order: 0,
+							label: "自定义菜单",
+							value: "newFile",
+							callback: () => {
+								console.log("==> 自定义菜单");
 							},
-							{
-								order: 0,
-								value: "divider",
-							},
-						],
-					},
-				};
-				options.loading = {
+						},
+						{
+							order: 0,
+							value: "divider",
+						},
+					],
+				},
+
+				// loading 样式
+				loading: {
 					image: () => {
 						return `<svg viewBox="25 25 50 50" class="circular">
-					<circle cx="50" cy="50" r="20" fill="none"></circle>
-					</svg>`;
+						<circle cx="50" cy="50" r="20" fill="none"></circle>
+						</svg>`;
 					},
 					imageClass: "loadingAnimation",
-				};
+				},
+			};
+
+			// 动态获取 luadUrl
+			function getLoadUrl(serviceServer, currentBranch, gridkey) {
+				return `${serviceServer}${currentBranch === "master-alpha" ? "/" : "/luckysheet/"}loadSheetData?gridkey=${gridkey}`;
+			}
+
+			// 动态获取 updateUrl
+			function getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey) {
+				return `${collabrationServer}
+				${currentBranch === "master-alpha" ? "?" : "/luckysheet?"}
+				type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
+			}
+
+			$(function () {
+				/**
+				 * -------------------------------------------------------
+				 * ⚠️ 注意：请严格按照下列步骤进行配置，否则会导致无法协同 ⚠️
+				 * -------------------------------------------------------
+				 */
+
+				// 1. 请明确协同服务地址
+				const collabrationServer = "ws://localhost:9000";
+
+				// 2. 请明确业务服务地址
+				const serviceServer = "http://localhost:9000";
+
+				// 3. 请明确 `luckysheet-crdt` 项目目前所在的分支，因为 master-alpha 与 master-vue 分支所在的服务端不尽相同，`master-vue` 分支需要校验 token
+				const currentBranch = "master-vue"; // "master-vue" | "master-alpha"
+
+				// 4. 定义 userid 内部 userid 可随机生成
+				const userid = Math.random().toString(16).slice(2, 8);
+
+				// 5. username 字段 仅用于显示 xxx正在编辑
+				const username = `user_${userid}`;
+
+				// 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
+				const gridkey = "705abf334c946bf5545ce04f586eb42e";
+
+				// 7. 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
+				const options = Object.assign({}, commonOptions, {
+					// 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
+					requestHeaders: {
+						"enable-pass-token": currentBranch === "master-vue" ? true : false, // 是否允许跳过 token 验证
+					},
+					// allowUpdate: true, // 配置协同功能
+					// loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					// updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+				});
+
+				// 6. 创建表格
 				luckysheet.create(options);
 			});
 		</script>
