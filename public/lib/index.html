@@ -29,7 +29,7 @@
 				container: "luckysheet",
 				lang: "zh",
 				// showinfobar: false, // 隐藏信息栏
-				plugins: ["fileImport", "vchart", "chart"],
+				// plugins: ["fileImport", "vchart", "chart"],
 				data: [sheetCell],
 
 				// 自定义请求头
@@ -83,13 +83,13 @@
 			};
 
 			// 动态获取 luadUrl
-			function getLoadUrl(currentBranch, gridkey) {
-				return `http://localhost:9000${currentBranch === "master-alpha" ? "/" : "/luckysheet/"}loadSheetData?gridkey=${gridkey}`;
+			function getLoadUrl(serviceServer, currentBranch, gridkey) {
+				return `${serviceServer}${currentBranch === "master-alpha" ? "/" : "/luckysheet/"}loadSheetData?gridkey=${gridkey}`;
 			}
 
 			// 动态获取 updateUrl
-			function getUpdateUrl(currentBranch, userid, username, gridkey) {
-				return `ws://localhost:9000
+			function getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey) {
+				return `${collabrationServer}
 				${currentBranch === "master-alpha" ? "?" : "/luckysheet?"}
 				type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
 			}
@@ -101,27 +101,36 @@
 				 * -------------------------------------------------------
 				 */
 
-				// 1. 请明确 `luckysheet-crdt` 项目目前所在的分支，因为 master-alpha 与 master-vue 分支所在的服务端不尽相同，`master-vue` 分支需要校验 token
-				const currentBranch = "master-vue"; // "master-vue" | "master-alpha"
+				// 1. 请明确协同服务地址
+				const collabrationServer = "ws://localhost:9000";
 
-				// 2. 定义 userid 内部 userid 可随机生成
+				// 2. 请明确业务服务地址
+				const serviceServer = "http://localhost:9000";
+
+				// 3. 请明确 `luckysheet-crdt` 项目目前所在的分支，因为 master-alpha 与 master-vue 分支所在的服务端不尽相同，`master-vue` 分支需要校验 token
+				const currentBranch = "master-alpha"; // "master-vue" | "master-alpha"
+
+				// 4. 定义 userid 内部 userid 可随机生成
 				const userid = Math.random().toString(16).slice(2, 8);
 
-				// 3. username 字段 仅用于显示 xxx正在编辑
+				// 5. username 字段 仅用于显示 xxx正在编辑
 				const username = `user_${userid}`;
 
-				// 4. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
+				// 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
 				const gridkey = "705abf334c946bf5545ce04f586eb42e";
 
-				// 5. 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
+				// 7. 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
 				const options = Object.assign({}, commonOptions, {
 					// 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
-					requestHeaders: {
-						"enable-pass-token": currentBranch === "master-vue" ? true : false, // 是否允许跳过 token 验证
-					},
+					requestHeaders:
+						currentBranch === "master-vue"
+							? {
+									"enable-pass-token": true, // 是否允许跳过 token 验证
+							  }
+							: {},
 					allowUpdate: true, // 配置协同功能
-					loadUrl: getLoadUrl(currentBranch, gridkey),
-					updateUrl: getUpdateUrl(currentBranch, userid, username, gridkey), // 协同服务转发服务
+					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
 				});
 
 				// 6. 创建表格
