@@ -108,7 +108,7 @@
 				const serviceServer = "http://localhost:9000";
 
 				// 3. 请明确 `luckysheet-crdt` 项目目前所在的分支，因为 master-alpha 与 master-vue 分支所在的服务端不尽相同，`master-vue` 分支需要校验 token
-				const currentBranch = "master-vue"; // "master-vue" | "master-alpha"
+				const currentBranch = "master-alpha"; // "master-vue" | "master-alpha"
 
 				// 4. 定义 userid 内部 userid 可随机生成
 				const userid = Math.random().toString(16).slice(2, 8);
@@ -122,12 +122,15 @@
 				// 7. 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
 				const options = Object.assign({}, commonOptions, {
 					// 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
-					requestHeaders: {
-						"enable-pass-token": currentBranch === "master-vue" ? true : false, // 是否允许跳过 token 验证
-					},
-					// allowUpdate: true, // 配置协同功能
-					// loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
-					// updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+					requestHeaders:
+						currentBranch === "master-vue"
+							? {
+									"enable-pass-token": true, // 是否允许跳过 token 验证
+							  }
+							: {},
+					allowUpdate: true, // 配置协同功能
+					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
 				});
 
 				// 6. 创建表格
