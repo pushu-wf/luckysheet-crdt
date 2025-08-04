@@ -18,6 +18,11 @@
 -   `Master alpha`: Development version, providing optional database services and complete functionality implementation;
 -   `Master Vue`: Stable version, providing user system, file system, complete functional implementation, relying on database services;
 
+**Warehouse address:**
+
+-   `Gitee`: [https://gitee.com/wfeng0/luckysheet-crdt](https://gitee.com/wfeng0/luckysheet-crdt)
+-   `GitHub`: [https://github.com/pushu-wf/luckysheet-crdt](https://github.com/pushu-wf/luckysheet-crdt)
+
 ## Master-Vue Ready to use version out of the box
 
 This project, as a branch of 'luckysheet crdt', is attached to 'luckysheet crdt' and serves only as an example for the Vue version. It provides a complete user system (login, registration, information modification) and file system (create, modify, delete, collaborate, share...). The project screenshot is as follows:
@@ -204,23 +209,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart setting</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-vchart.png' />
+      </p>
+      <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+      <p align="center">
+      <img src='/public/result/vchart.gif' />
+      </p>
+      <span style="font-weight:900">vchart setting</span>
+      <p align="center">
+      <img src='/public/result/vchart-setting.gif' />
+      </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-update-data-crdt.gif' />
+      </p>
 
 <span style="font-weight:900">vchart </span>
 
