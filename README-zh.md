@@ -18,6 +18,11 @@
 -   `master-alpha`: 开发版，提供可选数据库服务，提供完整功能实现；
 -   `master-vue`: 稳定版，提供用户系统、文件系统，提供完整功能实现，依赖数据库服务；
 
+**仓库地址：**
+
+-   `Gitee`: [https://gitee.com/wfeng0/luckysheet-crdt](https://gitee.com/wfeng0/luckysheet-crdt)
+-   `GitHub`: [https://github.com/pushu-wf/luckysheet-crdt](https://github.com/pushu-wf/luckysheet-crdt)
+
 ## 项目说明
 
 1. 本项目基于 [Luckysheet](https://github.com/mengshukeji/Luckysheet) 源码修改，**请遵循原作者开源协议**，同时，**请不要删除或修改源码头部版权声明**。
@@ -206,23 +211,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-    <p align="center">
-    <img src='/public/result/chartmix-vchart.png' />
-    </p>
-    <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-    <p align="center">
-    <img src='/public/result/vchart.gif' />
-    </p>
-    <span style="font-weight:900">vchart 图表设置</span>
-    <p align="center">
-    <img src='/public/result/vchart-setting.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-vchart.png' />
+   </p>
+   <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+   <p align="center">
+   <img src='/public/result/vchart.gif' />
+   </p>
+   <span style="font-weight:900">vchart 图表设置</span>
+   <p align="center">
+   <img src='/public/result/vchart-setting.gif' />
+   </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-    <p align="center">
-    <img src='/public/result/chartmix-update-data-crdt.gif' />
-    </p>
+   <p align="center">
+   <img src='/public/result/chartmix-update-data-crdt.gif' />
+   </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
