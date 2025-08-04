@@ -203,23 +203,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart setting</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-vchart.png' />
+      </p>
+      <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+      <p align="center">
+      <img src='/public/result/vchart.gif' />
+      </p>
+      <span style="font-weight:900">vchart setting</span>
+      <p align="center">
+      <img src='/public/result/vchart-setting.gif' />
+      </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-update-data-crdt.gif' />
+      </p>
 
 <span style="font-weight:900">vchart </span>
 
@@ -393,6 +393,15 @@ $.ajax({
 <p align="center">
   <img src='/public/result/print-preview.gif' />
 </p>
+
+### 9️⃣ Other source code optimizations
+
+1. [#Fix Fixed abnormal display of multi person collaboration prompt box](https://gitee.com/wfeng0/luckysheet-crdt/commit/af3c5837f8bec8a8cf4d261cbc8c9416d19902e1)
+2. [#Fix Fixed the issue where the cursor cannot collaborate after refreshing with the same user ID](https://gitee.com/wfeng0/luckysheet-crdt/commit/5212b82c90595ff324c86db56e5ec25b88912d38)
+3. [#Fix Fix collaborative message transmission related to formula chain](https://gitee.com/wfeng0/luckysheet-crdt/commit/c121bcd389b4f8ecef00e3570cda9aea27e7333d)
+4. [#Feat Implementing annotation import and improving source code recognition of annotations](https://gitee.com/wfeng0/luckysheet-crdt/commit/72e52419ce0168c352b0ed78e182832426b7bdda)
+5. [#Feat Optimize the data linkage between chartmix/vchart and implement server data update and storage records](https://gitee.com/wfeng0/luckysheet-crdt/commit/3f89fff92722ab1631c6c5976b307eb37f83f1d1)
+6. [#Fix Emergency repair: When initializing the sheet and returning data celldata f='', the formula judgment is abnormal, causing double clicking to clear the data](https://gitee.com/wfeng0/luckysheet-crdt/commit/09147f0c76cbd0c94b2e358d8045282f7dba165d)
 
 ## Master-Vue Ready to use version out of the box
 

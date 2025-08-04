@@ -206,23 +206,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-      <p align="center">
-      <img src='/public/result/chartmix-vchart.png' />
-      </p>
-      <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-      <p align="center">
-      <img src='/public/result/vchart.gif' />
-      </p>
-      <span style="font-weight:900">vchart 图表设置</span>
-      <p align="center">
-      <img src='/public/result/vchart-setting.gif' />
-      </p>
+    <p align="center">
+    <img src='/public/result/chartmix-vchart.png' />
+    </p>
+    <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+    <p align="center">
+    <img src='/public/result/vchart.gif' />
+    </p>
+    <span style="font-weight:900">vchart 图表设置</span>
+    <p align="center">
+    <img src='/public/result/vchart-setting.gif' />
+    </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-      <p align="center">
-      <img src='/public/result/chartmix-update-data-crdt.gif' />
-      </p>
+    <p align="center">
+    <img src='/public/result/chartmix-update-data-crdt.gif' />
+    </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
@@ -396,6 +396,15 @@ $.ajax({
 <p align="center">
   <img src='/public/result/print-preview.gif' />
 </p>
+
+### 9️⃣ 其他源码优化
+
+1. [#Fix 修复多人协同提示框显示异常](https://gitee.com/wfeng0/luckysheet-crdt/commit/af3c5837f8bec8a8cf4d261cbc8c9416d19902e1)
+2. [#Fix 修复同用户 ID 刷新后光标无法实现协同](https://gitee.com/wfeng0/luckysheet-crdt/commit/5212b82c90595ff324c86db56e5ec25b88912d38)
+3. [#Fix 修复公式链相关协同消息传递](https://gitee.com/wfeng0/luckysheet-crdt/commit/c121bcd389b4f8ecef00e3570cda9aea27e7333d)
+4. [#Feat 批注导入实现、完善源码对批注的识别](https://gitee.com/wfeng0/luckysheet-crdt/commit/72e52419ce0168c352b0ed78e182832426b7bdda)
+5. [#Feat 优化 chartmix/vchart 数据联动及实现 server 数据更新存储记录](https://gitee.com/wfeng0/luckysheet-crdt/commit/3f89fff92722ab1631c6c5976b307eb37f83f1d1)
+6. [#Fix 紧急修复初始化 sheet 时，返回数据 celldata f ='' 时， formula 判断异常，导致双击清空数据](https://gitee.com/wfeng0/luckysheet-crdt/commit/09147f0c76cbd0c94b2e358d8045282f7dba165d)
 
 ## Master-Vue 开箱即用版
 
