@@ -28,7 +28,7 @@ export function createWebSocketServer(server: Server) {
 		const gridkey = getURLQuery(req.url, "gridkey");
 		const username = getURLQuery(req.url, "username");
 
-		logger.info(`luckysheet 协同用户连接成功 [ID: ${userid}].`);
+		logger.info(`luckysheet 协同用户连接成功 [ID: ${userid} | NAME: ${username}].`);
 
 		/** 将 url 参数添加到 client 上，方便后续使用 */
 		client.clientInfo = { userid, username, type, gridkey };

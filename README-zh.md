@@ -211,23 +211,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart 图表设置</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+     <p align="center">
+     <img src='/public/result/chartmix-vchart.png' />
+     </p>
+     <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+     <p align="center">
+     <img src='/public/result/vchart.gif' />
+     </p>
+     <span style="font-weight:900">vchart 图表设置</span>
+     <p align="center">
+     <img src='/public/result/vchart-setting.gif' />
+     </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+     <p align="center">
+     <img src='/public/result/chartmix-update-data-crdt.gif' />
+     </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
@@ -400,6 +400,36 @@ $.ajax({
 
 <p align="center">
   <img src='/public/result/print-preview.gif' />
+</p>
+
+**打印当前页**
+
+<p align="center">
+  <img src='/public/result/printCurrentSheet.gif' />
+</p>
+
+**打印单元格**
+
+<p align="center">
+  <img src='/public/result/printCurrentRange.gif' />
+</p>
+
+**打印指定页码**
+
+<p align="center">
+  <img src='/public/result/printPage.gif' />
+</p>
+
+**打印图片**
+
+<p align="center">
+  <img src='/public/result/printImage.gif' />
+</p>
+
+**打印图表**
+
+<p align="center">
+  <img src='/public/result/printChart.gif' />
 </p>
 
 ### 9️⃣ 其他源码优化

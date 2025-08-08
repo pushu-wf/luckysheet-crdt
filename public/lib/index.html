@@ -29,7 +29,7 @@
 				container: "luckysheet",
 				lang: "zh",
 				// showinfobar: false, // 隐藏信息栏
-				// plugins: ["fileImport", "vchart", "chart"],
+				plugins: ["chart", "vchart", "fileImport"],
 				data: [sheetCell],
 
 				// 自定义请求头
@@ -114,7 +114,7 @@
 				const userid = Math.random().toString(16).slice(2, 8);
 
 				// 5. username 字段 仅用于显示 xxx正在编辑
-				const username = `user_${userid}`;
+				const username = `用户_${userid}`;
 
 				// 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
 				const gridkey = "705abf334c946bf5545ce04f586eb42e";
@@ -128,9 +128,9 @@
 									"enable-pass-token": true, // 是否允许跳过 token 验证
 							  }
 							: {},
-					allowUpdate: true, // 配置协同功能
-					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
-					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+					// allowUpdate: true, // 配置协同功能
+					// loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					// updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
 				});
 
 				// 6. 创建表格
