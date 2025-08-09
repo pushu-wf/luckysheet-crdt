@@ -27,7 +27,7 @@ window.onbeforeunload = () => luckysheet && luckysheet.closeWebSocket();
  */
 async function initLuckysheet() {
 	const id = getRandom();
-	const username = `user_${id}`;
+	const username = encodeURIComponent(`用户_${id}`);
 	const gridKey = "gridkey_demo"; // 请注意大小写哈~
 
 	const options = {
