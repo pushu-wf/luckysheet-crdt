@@ -8,5 +8,6 @@ window.sheetCell = {
 		{ r: 0, c: 1, v: { v: "1", ct: { fa: "General", t: "n" }, m: "1" } },
 		{ r: 1, c: 0, v: { v: "B", ct: { fa: "General", t: "n" }, m: "1" } },
 		{ r: 1, c: 1, v: { v: "2", ct: { fa: "General", t: "n" }, m: "1" } },
+		{ r: 4, c: 6, v: { v: "4-6", ct: { fa: "General", t: "n" }, m: "1" } },
 	],
 };
