@@ -49,6 +49,6 @@ function getCallbackData(currentClient: CustomWebSocket, data: string): string {
 
 	// 不然就正常封装，根据data的t识别不同的 type
 	const { t } = JSON.parse(data);
-	const info = { data, id: userid, username, type: t === "mv" ? 3 : 2 };
+	const info = { data, id: userid, username: decodeURIComponent(username), type: t === "mv" ? 3 : 2 };
 	return JSON.stringify(info);
 }

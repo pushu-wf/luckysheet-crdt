@@ -193,7 +193,9 @@ async function initLuckysheet(gridKey: string, editable: boolean = true) {
 
 		options.allowUpdate = true;
 		options.loadUrl = getLoadUrl(gridKey);
-		options.updateUrl = `${WS_SERVER_URL}/luckysheet?type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridKey}`;
+		options.updateUrl = `${WS_SERVER_URL}/luckysheet?type=luckysheet&userid=${userid}&username=${encodeURIComponent(
+			username
+		)}&gridkey=${gridKey}`;
 		luckysheet.create(options);
 	} catch (error) {
 		console.error("==> 协同服务异常", error);
