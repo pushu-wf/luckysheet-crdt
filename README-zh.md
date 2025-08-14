@@ -71,9 +71,9 @@ npm run dep-npm | npm run dep-pnpm
 
 ```js
 1. 项目依赖分为前台依赖、后台依赖（独立的项目哈）；
-2. 推荐大家使用 `npm install` 安装依赖，避免出现版本冲突问题；
+2. 推荐大家使用 `pnpm install` 安装依赖，避免出现版本冲突问题；
 3. 如果依赖下载报错，可以尝试删除 `package-lock.json` 文件，重新执行依赖安装；
-4. 如果封装命令 `npm run dep` 报错，请尝试执行 `npm install --s` 命令进行前台依赖安装，执行 `cd server && npm install --s` 命令进行后台依赖安装。
+4. 如果封装命令 `npm run dep-npm` 报错，请尝试执行 `npm install --s` 命令进行前台依赖安装，执行 `cd server && npm install --s` 命令进行后台依赖安装。
 
 **如果还报错，请确认环境是否满足运行条件：**
 `node -v ==> v20.x.x` // 请确保 node 版本大于 18
@@ -116,9 +116,7 @@ npm run db
 
 **温馨提示：下列所有命令均在项目根目录下执行 /LUCKYSHEET-CRDT/**
 
-1. 注意！
-
-    - 请修改部署的配置文件：`src/config/index.ts`:
+1. **注意！** 请修改部署的配置文件：`src/config/index.ts`:
 
 ```ts
 // 修改后台地址为 服务器IP地址
