@@ -132,8 +132,10 @@ async function v(data: string) {
 		// 取 v m
 		const value = <string>v.v;
 		const monitor = <string>v.m;
-		const ctfa = v.ct.fa;
-		const ctt = v.ct.t;
+
+		// 处理 ct 字段可能缺失的情况（格式刷时常见）
+		const ctfa = v.ct?.fa || "General";
+		const ctt = v.ct?.t || "n";
 
 		// 判断表内是否存在当前记录
 		const exist = await CellDataService.hasCellData(i, r, c);
