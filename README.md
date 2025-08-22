@@ -150,22 +150,6 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 7.  Start service:`npm run start`: **This command is only valid in the wwwroot folder after packaging**
     -   Wait for dependency download to complete, start service `npm run start`, Access after deployment completion to just access `http://${ip}:9000`
 
-## Collaborative Function Plan Table
-
-| functional module        | Implemented                                                                                                                        | Unrealized                                                                                                                                                          |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| File operation           | ✅️ import file ✅️ export file(Not implemented)                                                                                   |                                                                                                                                                                     |
-| Cell operation           | ✅️ Single cell operation ✅️ Range cell operation                                                                                 |                                                                                                                                                                     |
-| Config operation         | ✅️ Line hidden ✅️ Column hidden ✅️ Modify row height ✅️ Modify column width                                                    |                                                                                                                                                                     |
-| Universal save           | ✅️ Change worksheet name ✅️ Change worksheet color ✅️ Merge cell                                                                | ❌️ Freeze rows and columns ❌️ Filter scope ❌️ Specific settings for filtering ❌️ Alternating colors ❌️ Conditional formatting ❌️ PivotTable ❌️ Dynamic array |
-| Function chain operation | ✅️ Function chain operation                                                                                                       |                                                                                                                                                                     |
-| Row and column operation | ✅️ Delete rows or columns ✅️ Add rows or columns                                                                                 |                                                                                                                                                                     |
-| Filter operations        |                                                                                                                                    | ❌️ Clear filter ❌️ Restore filter                                                                                                                                 |
-| Sheet operations         | ✅️ Add sheet ✅️ Copy sheet ✅️ Delete sheet ✅️ Restore sheet ✅️ Adjust the position of the sheet Switch to the specified sheet |                                                                                                                                                                     |
-| Sheet attribute          | ✅️ Hidden or displayed                                                                                                            |                                                                                                                                                                     |
-| Table information change | ✅️ Change workbook name                                                                                                           |                                                                                                                                                                     |
-| Chart operation          | ✅️ Add chart ✅️ Move chart ✅️ Zoom chart ✅️ Update chart options                                                               |                                                                                                                                                                     |
-
 ## Service Port Description
 
 1. Front desk service port：`5000`
@@ -207,23 +191,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-   <p align="center">
-   <img src='/public/result/chartmix-vchart.png' />
-   </p>
-   <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-   <p align="center">
-   <img src='/public/result/vchart.gif' />
-   </p>
-   <span style="font-weight:900">vchart setting</span>
-   <p align="center">
-   <img src='/public/result/vchart-setting.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-vchart.png' />
+      </p>
+      <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+      <p align="center">
+      <img src='/public/result/vchart.gif' />
+      </p>
+      <span style="font-weight:900">vchart setting</span>
+      <p align="center">
+      <img src='/public/result/vchart-setting.gif' />
+      </p>
 
 2. Expand the implementation of chart data update linkage:
    <span style="font-weight:900">chartmix </span>
-   <p align="center">
-   <img src='/public/result/chartmix-update-data-crdt.gif' />
-   </p>
+      <p align="center">
+      <img src='/public/result/chartmix-update-data-crdt.gif' />
+      </p>
 
 <span style="font-weight:900">vchart </span>
 
@@ -245,7 +229,83 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
   <img src='/public/result/picture-new.gif' />
 </p>
 
-### 4️⃣ File Import
+### 4️⃣ Plugin dependency optimization
+
+1. **Plugin registration scheme in source code**:
+
+```js
+plugins: [{ name: "chart" }, { name: "print" }];
+```
+
+<p align="center">
+  <img src='/public/result/expendPlugins-source.png' />
+</p>
+
+**This can lead to a problem where online links cannot be downloaded properly due to network issues, internal network restrictions, and other factors.**
+
+2. **optimization plan**:
+
+```js
+plugins: [
+  {
+    name: "chart",
+    dependScripts: [
+      "/lib/expendPlugins/libs/vue@2.6.11.min.js",
+      "/lib/expendPlugins/libs/vuex.min.js",
+      "/lib/expendPlugins/libs/elementui.min.js",
+      "/lib/expendPlugins/libs/echarts.min.js",
+      "/lib/expendPlugins/libs/chartmix.umd.min.js",
+    ],
+    dependLinks: ["/lib/expendPlugins/libs/element-ui.css", "/lib/expendPlugins/libs/chartmix.css"],
+  },
+  {
+    name: "vchart",
+    dependScripts: ["/lib/expendPlugins/libs/vchart.min.js"],
+    dependLinks: ["/lib/expendPlugins/libs/vchart.css"],
+  },
+  {
+    name: "fileImport",
+    dependScripts: ["/lib/expendPlugins/libs/luckyexcel.umd.js"],
+  },
+  {
+    name: "fileExport",
+    dependScripts: ["/lib/expendPlugins/libs/exceljs.min.js", "/lib/expendPlugins/libs/fileSaver.min.js"],
+  },
+],
+```
+
+<p align="center">
+  <img src='/public/result/expendPlugins-new.png' />
+</p>
+
+**The related plugin dependencies and loading schemes have been encapsulated, and are also compatible with online schemes:**
+
+```ts
+// Online solution
+plugins: [
+  {
+    name: "chart",
+    dependScripts: [
+      "https://unpkg.com/vue@2.6.11/dist/vue.min.js",
+      // ...
+    ],
+  },
+```
+
+```ts
+// The request principle in the source code is as follows:
+// If it is an HTTP online address, request directly
+if (url.indexOf("http") == 0) {
+	link.setAttribute("href", url);
+} else link.setAttribute("href", window.location.origin + "/" + url);
+
+// If it is an HTTP online address, request directly
+if (scripts[i].indexOf("http") === 0) {
+	s[i].setAttribute("src", scripts[i]);
+} else s[i].setAttribute("src", window.location.origin + "/" + scripts[i]);
+```
+
+### 5️⃣ File Import
 
 <span style="font-weight:900">Support collaboration~</span>
 
@@ -270,7 +330,7 @@ luckysheet.create(options);
 2. Therefore, some functions are limited by plugins. If you need to expand them, please implement them yourself!
 3. Please configure plugins correctly Use the import function after `fileImport`.
 
-### 5️⃣ File Export
+### 6️⃣ File Export
 
 <p align="center">
   <img src='/public/result/file-export.gif' />
@@ -293,7 +353,7 @@ luckysheet.create(options);
 2. Therefore, some functions are limited by plugins. If you need to expand them, please implement them yourself!
 3. Please configure plugins correctly Use the import function after `fileExport`.
 
-### 6️⃣ Customize Menu
+### 7️⃣ Customize Menu
 
 <span style="font-weight:900">Configuration:</span>
 
@@ -353,7 +413,7 @@ menuHandler: {
 
 3. Package and output to use iconfont icon normally
 
-### 7️⃣ Custom request header
+### 8️⃣ Custom request header
 
 Many people have reported that cookies, tokens, and other information should be added when requesting table data interfaces to verify user identity and permissions. This has been implemented and the specific configuration is as follows：
 
@@ -390,7 +450,7 @@ $.ajax({
 });
 ```
 
-### 8️⃣ Print
+### 9️⃣ Print
 
 **print perview**
 
@@ -428,7 +488,7 @@ $.ajax({
   <img src='/public/result/printChart.gif' />
 </p>
 
-### 9️⃣ Other source code optimizations
+### 🔟 Other source code optimizations
 
 1. [#Fix Fixed abnormal display of multi person collaboration prompt box](https://gitee.com/wfeng0/luckysheet-crdt/commit/af3c5837f8bec8a8cf4d261cbc8c9416d19902e1)
 2. [#Fix Fixed the issue where the cursor cannot collaborate after refreshing with the same user ID](https://gitee.com/wfeng0/luckysheet-crdt/commit/5212b82c90595ff324c86db56e5ec25b88912d38)
@@ -495,38 +555,7 @@ be careful! If there is no record in two tables, it may also cause the inability
 be careful! If there are records in the workersheets table, but deleteFlag is true, it will also result in the inability to render luckysheets;
 ```
 
-4. **Forefront resource reference exception**
-
-```ts
-Note: Currently, all plugin dependencies in the source code are derived from absolute paths
-// Dynamically load dependent scripts and styles
-const dependScripts = [
-	"expendPlugins/libs/vue@2.6.11.min.js",
-	"expendPlugins/libs/vuex.min.js",
-	"expendPlugins/libs/elementui.min.js",
-	"expendPlugins/libs/echarts.min.js",
-	"expendPlugins/chart/chartmix.umd.min.js",
-];
-
-So, it will cause a problem that the actual project in the front-end is probably not the path of public/appendplugins/ * *. Please ensure that the expenndplugins directory is correctly placed and recognized.
-```
-
-**Handling method:**
-
-```ts
-1. Source code packaging: `npm run build` ==> `dist` Place the directory into the `Accessing static resources`（`public`|`static`|`...`）；
-2. Register plugin： `plugins:['chart']`
-3. Analyze resource path:
-   1. If there are no other paths after the port, it should be placed in the public directory;
-   2. If there are other paths after the port, it should be placed in another directory, such as: static。
-4. The file is backed up in the `dist` directory and can be copied directly。
-```
-
-<p align="center">
-  <img src='/public/result/extendplugins.png' />
-</p>
-
-5. **Customize the creation of chart types**
+4. **Customize the creation of chart types**
    At present, creating charts in vchart is a random 'pie chart' | 'line chart'. If you want to implement custom chart type transfer, you need to modify the chartmix related source code. The specific steps can be referred to as follows：
 
 <p align="center">
@@ -537,15 +566,6 @@ So, it will cause a problem that the actual project in the front-end is probably
 1. Download Source：https://gitee.com/mengshukeji/chartMix
 2. Modify the src/tiles/exportUtil.js create Chart method and add a chart type parameter;
 3. Repackage and place the file into the project
-```
-
-6. **Registration plugin error**
- <p align="center">
-   <img src='/public/result/register-plugin-error.png' />
- </p>
-
-```ts
-Solution Review: Abnormal Reference to Front end Resources`
 ```
 
 ## Open source contribution

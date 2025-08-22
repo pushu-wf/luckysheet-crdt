@@ -147,26 +147,7 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
     - 请确保数据库配置正确可用(~~如果无数据库服务，请跳过此步骤~~)
 
-7. 启动服务：`npm run start`: **此命令仅打包后 wwwroot 文件夹下有效**
-    - 等待依赖下载完成，启动服务`npm run start`，部署完成后访问 `http://${ip}:9000` 即可访问
-
-## 协同功能计划表
-
-<!-- **已实现功能 ✅️，未实现功能 ❌️** -->
-
-| 功能模块               | 已完成                                                                                     | 未完成                                                                                             |
-| ---------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| 文件导入、导出         | ✅️ 导入文件 ✅️ 导出文件(导出不需要协同)                                                  |                                                                                                    |
-| 单元格操作             | ✅️ 单个单元格操作 ✅️ 范围单元格操作                                                      |                                                                                                    |
-| config 操作            | ✅️ 行隐藏 ✅️ 列隐藏 ✅️ 修改行高 ✅️ 修改列宽                                            |                                                                                                    |
-| 通用保存               | ✅️ 修改工作表名称 ✅️ 修改工作表颜色 ✅️ 合并单元格                                       | ❌️ 冻结行列 ❌️ 筛选范围 ❌️ 筛选的具体设置 ❌️ 交替颜色 ❌️ 条件格式 ❌️ 数据透视表 ❌️ 动态数组 |
-| 函数链操作             | ✅️ 函数链操作                                                                             |                                                                                                    |
-| 行列操作               | ✅️ 删除行或列 ✅️ 增加行或列                                                              |                                                                                                    |
-| 筛选操作               |                                                                                            | ❌️ 清除筛选 ❌️ 恢复筛选                                                                          |
-| sheet 操作             | ✅️ 新建 sheet ✅️ 复制 sheet ✅️ 删除 sheet ✅️ 删除 sheet 后恢复操作 ✅️ 调整 sheet 位置 |                                                                                                    |
-| sheet 属性(隐藏或显示) | ✅️ 隐藏或显示                                                                             |                                                                                                    |
-| 表格信息更改           | ✅️ 修改工作簿名称                                                                         |                                                                                                    |
-| 图表                   | ✅️ 新增图表 ✅️ 移动图表位置 ✅️ 缩放图表 ✅️ 修改图表配置                                |                                                                                                    |
+7. 启动服务：`npm run start`: **此命令仅打包后 wwwroot 文件夹下有效** - 等待依赖下载完成，启动服务`npm run start`，部署完成后访问 `http://${ip}:9000` 即可访问
 
 ## 服务端口说明
 
@@ -209,23 +190,23 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 1. 已实现 vchart 图表，请查阅 [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
    <span style="font-weight:900">左侧为 `vchart` 渲染，右侧为 `chartmix` 渲染</span>
-      <p align="center">
-      <img src='/public/result/chartmix-vchart.png' />
-      </p>
-      <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
-      <p align="center">
-      <img src='/public/result/vchart.gif' />
-      </p>
-      <span style="font-weight:900">vchart 图表设置</span>
-      <p align="center">
-      <img src='/public/result/vchart-setting.gif' />
-      </p>
+     <p align="center">
+     <img src='/public/result/chartmix-vchart.png' />
+     </p>
+     <span style="font-weight:900">vchart 图表动画更加流畅，页面简洁美观</span>
+     <p align="center">
+     <img src='/public/result/vchart.gif' />
+     </p>
+     <span style="font-weight:900">vchart 图表设置</span>
+     <p align="center">
+     <img src='/public/result/vchart-setting.gif' />
+     </p>
 
 2. 拓展实现图表数据更新联动：
    <span style="font-weight:900">chartmix 图表数据联动</span>
-      <p align="center">
-      <img src='/public/result/chartmix-update-data-crdt.gif' />
-      </p>
+     <p align="center">
+     <img src='/public/result/chartmix-update-data-crdt.gif' />
+     </p>
 
 <span style="font-weight:900">vchart 图表数据联动</span>
 
@@ -247,7 +228,83 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
   <img src='/public/result/picture-new.gif' />
 </p>
 
-### 4️⃣ 文件导入
+### 4️⃣ 插件依赖优化
+
+1. **源码中的插件注册方案**:
+
+```js
+plugins: [{ name: "chart" }, { name: "print" }];
+```
+
+<p align="center">
+  <img src='/public/result/expendPlugins-source.png' />
+</p>
+
+**这会导致一个问题，在线链接在网络问题、内网限制等其他因素下，导致插件依赖无法正常下载。**
+
+2. **优化方案**:
+
+```js
+plugins: [
+  {
+    name: "chart",
+    dependScripts: [
+      "/lib/expendPlugins/libs/vue@2.6.11.min.js",
+      "/lib/expendPlugins/libs/vuex.min.js",
+      "/lib/expendPlugins/libs/elementui.min.js",
+      "/lib/expendPlugins/libs/echarts.min.js",
+      "/lib/expendPlugins/libs/chartmix.umd.min.js",
+    ],
+    dependLinks: ["/lib/expendPlugins/libs/element-ui.css", "/lib/expendPlugins/libs/chartmix.css"],
+  },
+  {
+    name: "vchart",
+    dependScripts: ["/lib/expendPlugins/libs/vchart.min.js"],
+    dependLinks: ["/lib/expendPlugins/libs/vchart.css"],
+  },
+  {
+    name: "fileImport",
+    dependScripts: ["/lib/expendPlugins/libs/luckyexcel.umd.js"],
+  },
+  {
+    name: "fileExport",
+    dependScripts: ["/lib/expendPlugins/libs/exceljs.min.js", "/lib/expendPlugins/libs/fileSaver.min.js"],
+  },
+],
+```
+
+<p align="center">
+  <img src='/public/result/expendPlugins-new.png' />
+</p>
+
+**相关的插件依赖，相关的加载方案均封装好了，同时，还兼容在线方案：**
+
+```ts
+// 在线方案
+plugins: [
+  {
+    name: "chart",
+    dependScripts: [
+      "https://unpkg.com/vue@2.6.11/dist/vue.min.js",
+      // ...
+    ],
+  },
+```
+
+```ts
+// 源码中的请求原理如下：
+// 如果是 http 在线地址，直接请求
+if (url.indexOf("http") == 0) {
+	link.setAttribute("href", url);
+} else link.setAttribute("href", window.location.origin + "/" + url);
+
+// 如果是 http 在线地址 则直接请求
+if (scripts[i].indexOf("http") === 0) {
+	s[i].setAttribute("src", scripts[i]);
+} else s[i].setAttribute("src", window.location.origin + "/" + scripts[i]);
+```
+
+### 5️⃣ 文件导入
 
 <span style="font-weight:900">支持协同~</span>
 
@@ -260,7 +317,7 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 // 1. 配置导入插件
 const options = {
 	// ...other config
-	plugins: ["fileImport"],
+	plugins: [{ name: "fileImport" }],
 };
 
 luckysheet.create(options);
@@ -270,9 +327,9 @@ luckysheet.create(options);
 
 1. 文件导入依赖于 `luckyexcel` 插件；
 2. 故而有些功能受限于插件，如需拓展，请自行实现哈！
-3. 请正确配置 `plugins: [ 'fileImport' ]` 后使用导入功能。
+3. 请正确配置 `plugins: [{ name: "fileImport" }]` 后使用导入功能。
 
-### 5️⃣ 文件导出
+### 6️⃣ 文件导出
 
 <p align="center">
   <img src='/public/result/file-export.gif' />
@@ -283,7 +340,7 @@ luckysheet.create(options);
 // 1. 配置导出插件
 const options = {
 	// ...other config
-	plugins: ["fileExport"],
+	plugins: [{ name: "fileExport" }],
 };
 
 luckysheet.create(options);
@@ -293,9 +350,9 @@ luckysheet.create(options);
 
 1. 文件导入依赖于 `exceljs | file-saver` 插件；
 2. 故而有些功能受限于插件，如需拓展，请自行实现哈！
-3. 请正确配置 `plugins: [ 'fileExport' ]` 后使用导入功能。
+3. 请正确配置 `plugins: [ { name: "fileExport" } ]` 后使用导入功能。
 
-### 6️⃣ 自定义菜单
+### 7️⃣ 自定义菜单
 
 <span style="font-weight:900">配置方法：</span>
 
@@ -355,7 +412,7 @@ menuHandler: {
 
 3. 打包输出即可正常使用 iconfont 图标
 
-### 7️⃣ 自定义请求头
+### 8️⃣ 自定义请求头
 
 很多人反映，应该在请求表格数据接口时，添加 cookies、token 等信息，以实现用户身份权限校验，目前已实现，具体配置如下：
 
@@ -392,7 +449,7 @@ $.ajax({
 });
 ```
 
-### 8️⃣ 打印相关
+### 9️⃣ 打印相关
 
 **打印预览视图**
 
@@ -430,7 +487,7 @@ $.ajax({
   <img src='/public/result/printChart.gif' />
 </p>
 
-### 9️⃣ 其他源码优化
+### 🔟 其他源码优化
 
 1. [#Fix 修复多人协同提示框显示异常](https://gitee.com/wfeng0/luckysheet-crdt/commit/af3c5837f8bec8a8cf4d261cbc8c9416d19902e1)
 2. [#Fix 修复同用户 ID 刷新后光标无法实现协同](https://gitee.com/wfeng0/luckysheet-crdt/commit/5212b82c90595ff324c86db56e5ec25b88912d38)
@@ -499,38 +556,6 @@ catch (error) {}
 注意！如果 workersheets 表有记录，但是 deleteFlag 为 true 的情况下，也会导致无法渲染 luckysheet；
 ```
 
-4. **前台资源引用异常**
-
-```ts
-注意： 目前源码中的所有插件依赖，均源自绝对路径哈：
-// Dynamically load dependent scripts and styles
-const dependScripts = [
-	"expendPlugins/libs/vue@2.6.11.min.js",
-	"expendPlugins/libs/vuex.min.js",
-	"expendPlugins/libs/elementui.min.js",
-	"expendPlugins/libs/echarts.min.js",
-	"expendPlugins/chart/chartmix.umd.min.js",
-];
-
-那么，就会引发一个问题，前台实际的项目，估计不是 public/expendPlugins/ ** 的路径,请确保 expendPlugins 目录被正确放置并识别。
-```
-
-**处理方式：**
-
-```ts
-
-1. 源码打包： `npm run build` ==> `dist` 目录放置到项目`可访问静态资源`（`public`|`static`|`...`）目录下；
-2. 注册插件： `plugins:['chart']`
-3. 分析资源路径：
-   1. 如果端口后没有其他路径，则应该放到 public 目录下；
-   2. 如果端口后有其他路径，则应该放到其他目录下，如：static。
-4. 文件在 `dist` 目录下有备份，直接复制出来即可。
-```
-
-<p align="center">
-  <img src='/public/result/extendplugins.png' />
-</p>
-
 5. **自定义创建图表类型**
    目前 vchart 创建图表是随机的`饼图`|`折线图`，如果想实现自定义的图表类型传递，需要修改 chartmix 相关源码，具体步骤可参考如下：
 
@@ -542,15 +567,6 @@ const dependScripts = [
 1. 下载源码：https://gitee.com/mengshukeji/chartMix
 2. 修改 src/utils/exportUtil.js createChart 方法，添加图表类型参数
 3. 重新打包，将文件放置到项目中
-```
-
-6. **注册插件报错**
- <p align="center">
-   <img src='/public/result/register-plugin-error.png' />
- </p>
-
-```ts
-解决办法回看`前台资源引用异常`;
 ```
 
 ## 开源贡献

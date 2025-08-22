@@ -43,7 +43,6 @@ async function initLuckysheet() {
 				name: "chart",
 				dependScripts: [
 					"/lib/expendPlugins/libs/vue@2.6.11.min.js",
-					"/lib/expendPlugins/libs/vue@2.6.11.min.js",
 					"/lib/expendPlugins/libs/vuex.min.js",
 					"/lib/expendPlugins/libs/elementui.min.js",
 					"/lib/expendPlugins/libs/echarts.min.js",
