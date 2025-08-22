@@ -64,7 +64,7 @@ import { localForage } from "../../localforage";
 import { decode, getLoadUrl } from "../../utils";
 import { h, onBeforeUnmount, onMounted, ref } from "vue";
 import { defaultSheetData, WS_SERVER_URL } from "../../config";
-import { uploadImage, imageUrlHandle } from "../../utils/LuckysheetImage";
+import { uploadImage, imageUrlHandle, registerPlugins } from "../../utils/Luckysheet";
 import { API_checkSheetEditPermission, API_getWorkerBook, API_renameFile } from "../../axios";
 import { UsergroupAddOutlined, ShareAltOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons-vue";
 import { MenuOutlined, FileExcelOutlined, CommentOutlined, CloudUploadOutlined, CloudDownloadOutlined } from "@ant-design/icons-vue";
@@ -148,7 +148,7 @@ async function initLuckysheet(gridKey: string, editable: boolean = true) {
 		allowUpdate: false, // 配置协同功能
 		loadUrl: "",
 		updateUrl: "", // 协同服务转发服务
-		plugins: ["chart", "vchart", "fileImport", "fileExport"],
+		plugins: registerPlugins(),
 
 		// 添加请求头
 		requestHeaders: { authorization: localForage.getItem("token") },

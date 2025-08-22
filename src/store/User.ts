@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { decode, encode } from "../utils";
 import { defineStore, StateTree } from "pinia";
-import { imageUrlHandle } from "../utils/LuckysheetImage";
+import { imageUrlHandle } from "../utils/Luckysheet";
 
 // 定义用户信息完整类型 - 内部使用
 type UserInfo = {
