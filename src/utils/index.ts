@@ -38,3 +38,33 @@ export const isDev = () => {
 export const getLoadUrl = (gridKey: string) => {
 	return `${isDev() ? "/api/" : "/"}loadSheetData?gridkey=${gridKey}`;
 };
+
+// 注册插件
+export const registerPlugins = () => {
+	return [
+		{
+			name: "chart",
+			dependScripts: [
+				"/lib/expendPlugins/libs/vue@2.6.11.min.js",
+				"/lib/expendPlugins/libs/vuex.min.js",
+				"/lib/expendPlugins/libs/elementui.min.js",
+				"/lib/expendPlugins/libs/echarts.min.js",
+				"/lib/expendPlugins/libs/chartmix.umd.min.js",
+			],
+			dependLinks: ["/lib/expendPlugins/libs/element-ui.css", "/lib/expendPlugins/libs/chartmix.css"],
+		},
+		{
+			name: "vchart",
+			dependScripts: ["/lib/expendPlugins/libs/vchart.min.js"],
+			dependLinks: ["/lib/expendPlugins/libs/vchart.css"],
+		},
+		{
+			name: "fileImport",
+			dependScripts: ["/lib/expendPlugins/libs/luckyexcel.umd.js"],
+		},
+		{
+			name: "fileExport",
+			dependScripts: ["/lib/expendPlugins/libs/exceljs.min.js", "/lib/expendPlugins/libs/fileSaver.min.js"],
+		},
+	];
+};

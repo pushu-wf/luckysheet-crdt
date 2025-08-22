@@ -9,7 +9,7 @@
 import "./style/index.css";
 import { API_getWorkerBook } from "./axios";
 import { defaultSheetData, WS_SERVER_URL } from "./config";
-import { uploadImage, imageUrlHandle, getRandom, getLoadUrl } from "./utils";
+import { uploadImage, imageUrlHandle, getRandom, getLoadUrl, registerPlugins } from "./utils";
 
 window.onload = initLuckysheet;
 
@@ -38,32 +38,7 @@ async function initLuckysheet() {
 		allowUpdate: false, // 配置协同功能
 		loadUrl: "",
 		updateUrl: "", // 协同服务转发服务
-		plugins: [
-			{
-				name: "chart",
-				dependScripts: [
-					"/lib/expendPlugins/libs/vue@2.6.11.min.js",
-					"/lib/expendPlugins/libs/vuex.min.js",
-					"/lib/expendPlugins/libs/elementui.min.js",
-					"/lib/expendPlugins/libs/echarts.min.js",
-					"/lib/expendPlugins/libs/chartmix.umd.min.js",
-				],
-				dependLinks: ["/lib/expendPlugins/libs/element-ui.css", "/lib/expendPlugins/libs/chartmix.css"],
-			},
-			{
-				name: "vchart",
-				dependScripts: ["/lib/expendPlugins/libs/vchart.min.js"],
-				dependLinks: ["/lib/expendPlugins/libs/vchart.css"],
-			},
-			{
-				name: "fileImport",
-				dependScripts: ["/lib/expendPlugins/libs/luckyexcel.umd.js"],
-			},
-			{
-				name: "fileExport",
-				dependScripts: ["/lib/expendPlugins/libs/exceljs.min.js", "/lib/expendPlugins/libs/fileSaver.min.js"],
-			},
-		],
+		plugins: registerPlugins(),
 		menuHandler: {
 			customs: [
 				{
