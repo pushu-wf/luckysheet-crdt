@@ -182,34 +182,43 @@ export const WS_SERVER_URL = "ws://127.0.0.1:9000";
 
 ## Source project optimization
 
-#### 1️⃣ Page UI Refactoring
+### 1️⃣ Page UI Refactoring
 
 1. Source code UI refactoring, please refer to [Luckysheet-source-recover-style](/Luckysheet-source/src/css/recover.css)
- <p align="center">
-   <img src='/public/result/ui.gif' />
- </p>
 
-#### 2️⃣ Chart Collaboration
+<p align="center">
+  <img src='/public/result/ui.gif' />
+</p>
+
+### 2️⃣ Chart Collaboration
 
 1. Implemented vchart, please refer to [Luckysheet-source-vchart](/Luckysheet-source/src/expendPlugins/vchart/plugin.js)
-   <span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
-      <p align="center">
-      <img src='/public/result/chartmix-vchart.png' />
-      </p>
-      <span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
-      <p align="center">
-      <img src='/public/result/vchart.gif' />
-      </p>
-      <span style="font-weight:900">vchart setting</span>
-      <p align="center">
-      <img src='/public/result/vchart-setting.gif' />
-      </p>
+
+<span style="font-weight:900">On the left is' vchart 'rendering, and on the right is' chartmix' rendering</span>
+
+<p align="center">
+  <img src='/public/result/chartmix-vchart.png' />
+</p>
+
+<span style="font-weight:900">The vchart chart animation is smoother, and the page is concise and beautiful</span>
+
+<p align="center">
+  <img src='/public/result/vchart.gif' />
+</p>
+
+<span style="font-weight:900">vchart setting</span>
+
+<p align="center">
+  <img src='/public/result/vchart-setting.gif' />
+</p>
 
 2. Expand the implementation of chart data update linkage:
-   <span style="font-weight:900">chartmix </span>
-      <p align="center">
-      <img src='/public/result/chartmix-update-data-crdt.gif' />
-      </p>
+
+<span style="font-weight:900">chartmix </span>
+
+<p align="center">
+  <img src='/public/result/chartmix-update-data-crdt.gif' />
+</p>
 
 <span style="font-weight:900">vchart </span>
 
