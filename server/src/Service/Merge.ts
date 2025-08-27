@@ -35,7 +35,7 @@ async function createMerge(info: MergeModelType) {
 // 查询全部
 async function findAllMerge(worker_sheet_id: string) {
 	try {
-		return await MergeModel.findAll({ where: { worker_sheet_id } });
+		return await MergeModel.findAll({ where: { worker_sheet_id }, order: [["createdAt", "ASC"]] });
 	} catch (error) {
 		logger.error(error);
 	}

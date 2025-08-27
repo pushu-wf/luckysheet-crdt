@@ -51,7 +51,7 @@ async function update(info: BorderInfoModelType) {
  */
 async function findAll(worker_sheet_id: string) {
 	try {
-		return await BorderInfoModel.findAll({ where: { worker_sheet_id } });
+		return await BorderInfoModel.findAll({ where: { worker_sheet_id }, order: [["createdAt", "ASC"]] });
 	} catch (error) {
 		logger.error(error);
 	}

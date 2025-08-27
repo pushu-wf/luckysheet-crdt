@@ -133,9 +133,9 @@
 									"enable-pass-token": true, // 是否允许跳过 token 验证
 							  }
 							: {},
-					// allowUpdate: true, // 配置协同功能
-					// loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
-					// updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+					allowUpdate: true, // 配置协同功能
+					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
 				});
 
 				// 6. 创建表格

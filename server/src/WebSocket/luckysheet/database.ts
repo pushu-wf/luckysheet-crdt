@@ -467,9 +467,11 @@ async function all(data: string) {
 		// {"t":"all","i":"e73f971....","v":{"merge":{"1_0":{"r":1,"c":0,"rs":3,"cs":3},"9_1":{"r":9,"c":1,"rs":5,"cs":3}},},"k":"config"}
 		// {"t":"all","i":"e73f971....","v":{"merge":{"9_1":{"r":9,"c":1,"rs":5,"cs":3}},},"k":"config"}
 
+		// 如果当前 sheet 没有 merge 属性，则表示最后一个合并单元格被取消，则删除当前 sheetindex 下的所有 merge 记录
+		// 删除当前 sheet Index 下的所有merge 记录
+		await MergeService.deleteMerge(i);
+		// 如果有记录 再新增
 		if (Object.keys(v.merge).length) {
-			// 先删除
-			await MergeService.deleteMerge(i);
 			// 再新增
 			for (const key in v.merge) {
 				if (Object.prototype.hasOwnProperty.call(v.merge, key)) {
