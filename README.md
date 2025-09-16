@@ -40,27 +40,28 @@ This project, as a branch of 'luckysheet crdt', is attached to 'luckysheet crdt'
 1. This project is based on the [Luckysheet source code](https://github.com/mengshukeji/Luckysheet) modification. Please follow the original author's open source agreement, and do not delete or modify the source code header copyright statement。
 2. This project is open sourced under the **Apache 2.0 protocol**, so please feel free to use it. At the same time, this project will also contribute to the Luksysheet community, enriching the community ecosystem. Thank you again to the @[Luckysheet](https://github.com/mengshukeji/Luckysheet) team ❤️
 3. The project is **Luckysheet Collaborative Enhanced Edition (fully functional implementation)**, aiming to provide collaborative implementation ideas, data storage services, collaborative demonstrations, etc. The project is based on [Luckysheet](https://github.com/mengshukeji/Luckysheet) Implemented, thank you to the original author for open-source.
-4. This project mainly implements the collaborative function module, which has no impact on other content. The parts modified based on the source code are all reflected in the `Luckysheet source` folder.
-5. The project supports **optional database services**. User data without a database cannot be persistently stored, and collaborative functionality is not affected，**⚠️Only valid for `master and master-alpha` branches, `master-vue` relies on database functionality to implement user systems**.
-6. Project Use **[Sequelize](https://www.sequelize.cn/)** As an ORM data service technology, it supports databases such as MySQL, SQLite, PostgreSQL, and MSSQL, making it easy for users to quickly migrate.
-7. The project uses **Typescript** as the main development language, providing complete type prompts, standardizing code, and improving development efficiency.
-8. My personal energy is limited, and there are bugs and incomplete functions. Please submit an [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) and I will handle it promptly;
-9. Welcome everyone to fork the project, submit PR, and work together to improve the project.
+4. The project supports **optional database services**. User data without a database cannot be persistently stored, and collaborative functionality is not affected，**⚠️Only valid for `master and master-alpha` branches, `master-vue` relies on database functionality to implement user systems**.
+5. Project Use **[Sequelize](https://www.sequelize.cn/)** As an ORM data service technology, it supports databases such as MySQL, SQLite, PostgreSQL, and MSSQL, making it easy for users to quickly migrate.
+6. The project uses **Typescript** as the main development language, providing complete type prompts, standardizing code, and improving development efficiency.
+7. My personal energy is limited, and there are bugs and incomplete functions. Please submit an [issue](https://gitee.com/wfeng0/luckysheet-crdt/issues/new) and I will handle it promptly;
+8. Welcome everyone to fork the project, submit PR, and work together to improve the project.
 
-## Fee Statement
+## Pricing Statement
 
-1. Please note that there is no Luckymeet source code available for the startup, operation, deployment, and other stages of this project, which does not affect the actual collaborative functionality。
-2. In order to better drive open source, starting from `2025-04-15` the git head of `e12d2f4850127f53292a5161445fc500593176b9`, the source code modification part will no longer be provided. If necessary, please contact the author for a fee to obtain it。
-3. **The lack of Luckysheet source code does not affect the actual functionality, and all collaborative features are open source**。
-4. **The impact of no source code:**
-    1. The source code is only used for functional expansion in binary scenarios;
-    2. If there is no requirement for secondary opening, you do not need to use the source code. If there is a requirement for secondary opening, please contact the author for payment first；
-5. **Please note that:**
-    1. The enhanced front-end code and server-side code are both open source, and the lack of source code does not affect the functionality and usage；
-    2. Fee standard:**`￥ 99`**
-    3. Provide services: Only provide source code packages (do not provide continuous feature upgrades, bug fixes, and not purchase products!)
-6. **Contact Author**：
-    1. qq 群: 522121825 (recommend)
+In order to better drive the development of open source, starting from version `E12d2f4850127f53292a5161445fc500593176b9` on `April 15, 2025`, the project will no longer provide the Luckysheet source code modification section. If you need the source code for secondary development, please contact the author to pay for it.
+
+Please note that the front-end and back-end functions of Luckysheet CRDT are completely open source and can be used normally without relying on source code. Source code is not required for project startup, operation, deployment, and other stages.
+
+The source code is mainly used for functional expansion in secondary development scenarios:
+
+-   If you only use existing collaborative editing features, **no need to obtain source code**
+-   If you need secondary development to meet specific requirements, **please contact the author to pay for the source code**
+
+**Service Details**
+
+-   **Pricing**：**`199 yuan`**
+-   **Service Content**：Only provide source code package (does not include continuous feature upgrades, bug fixes, and does not equate to product purchase)
+-   **Contact Information**：QQ Group: `522121825`(Recommended)| Email: `<1982392655@qq.com>`(Recommended)
 
 ## START
 
