@@ -29,21 +29,32 @@
 				container: "luckysheet",
 				lang: "zh",
 				// showinfobar: false, // 隐藏信息栏
-				// plugins: ["chart", "vchart", "fileImport"],
-				plugins: [
-					{
-						name: "vchart",
-					},
-				],
+				// showlogo: false, // 隐藏logo
+				plugins: [{ name: "vchart" }, { name: "chart" }],
 				data: [sheetCell],
 
-				// 自定义请求头
-				// requestHeaders: {
-				// 	"Custom-userid": "123",
-				// },
+				// 打印像素比，设置越高，越清晰
+				printDevicePixelRatio: 4,
+
+				// 图片显示方式
+				imageMode: "cell", // 'cell' | 'float'
 
 				// 自定义右键菜单
 				cellRightClickConfig: {
+					// copy: false,
+					copyAs: false,
+					// paste: false,
+					hideColumn: false,
+					columnWidth: false,
+					clear: false,
+					matrix: false,
+					sort: false,
+					filter: false,
+					chart: false,
+					image: false,
+					link: false,
+					data: false,
+					cellFormat: false,
 					customs: [
 						{
 							title: "test",
@@ -80,12 +91,45 @@
 				loading: {
 					image: () => {
 						return `<svg viewBox="25 25 50 50" class="circular">
-						<circle cx="50" cy="50" r="20" fill="none"></circle>
-						</svg>`;
+									<circle cx="50" cy="50" r="20" fill="none"></circle>
+									</svg>`;
 					},
 					imageClass: "loadingAnimation",
 				},
 			};
+
+			// 处理协同图片上传
+			async function uploadImage(file, serviceServer) {
+				// 此处拿到的是上传的 file 对象，进行文件上传 ，配合 node 接口实现
+				const formData = new FormData();
+				formData.append("image", file);
+
+				// 结合 Ajax 实现图片上传
+				return new Promise((resolve, reject) => {
+					$.ajax({
+						url: `${serviceServer}/uploadImage`,
+						type: "POST",
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (res) {
+							if (res.code === 200) resolve(res.url);
+							else reject("image upload error");
+						},
+						error: function (err) {
+							reject("image upload error");
+						},
+					});
+				});
+			}
+
+			// 处理上传图片的地址
+			function imageUrlHandle(url, serviceServer) {
+				// 已经是 // http data 开头则不处理
+				if (/^(?:\/\/|(?:http|https|data):)/i.test(url)) return url;
+				// 不然拼接服务器路径
+				return serviceServer + url;
+			}
 
 			// 动态获取 luadUrl
 			function getLoadUrl(serviceServer, currentBranch, gridkey) {
@@ -95,9 +139,72 @@
 			// 动态获取 updateUrl
 			function getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey) {
 				return `${collabrationServer}
-				${currentBranch === "master-alpha" ? "?" : "/luckysheet?"}
-				type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
+							${currentBranch === "master-alpha" ? "?" : "/luckysheet?"}
+							type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
 			}
+
+			// 根据协同与否，动态获取配置
+			function getOptions(
+				isCollabration,
+				requestHeaders = {},
+				serviceServer,
+				collabrationServer,
+				currentBranch,
+				userid,
+				username,
+				gridkey
+			) {
+				// 如果没有开启协同，则直接返回基础配置
+				if (!isCollabration) return Object.assign({}, commonOptions, { requestHeaders });
+
+				return Object.assign({}, commonOptions, {
+					// 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
+					requestHeaders:
+						currentBranch === "master-vue"
+							? {
+									"enable-pass-token": true, // 是否允许跳过 token 验证
+									...requestHeaders,
+							  }
+							: requestHeaders,
+					allowUpdate: true, // 配置协同功能
+					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
+					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+
+					// 如果配置了协同，请配置图片处理函数，避免base64图片过大导致图片无法显示
+					uploadImage: (file) => uploadImage(file, serviceServer),
+					imageUrlHandle: (url) => imageUrlHandle(url, serviceServer),
+				});
+			}
+
+			/**
+			 * performanceTest 测试性能
+			 */
+			function performanceTest(options) {
+				// 获取当前的行列配置
+				const row = 10000;
+				const column = 60;
+				options.row = row;
+				options.column = column;
+				// { r: 0, c: 0, v: { v: "A", ct: { fa: "General", t: "n" }, m: "1" } },
+				for (let r = 0; r < row; r++) {
+					for (let c = 0; c < column; c++) {
+						const cell = {
+							r: r,
+							c: c,
+							v: {
+								v: `${r}${c}`,
+								ct: { fa: "General", t: "n" },
+								m: `${r}${c}`,
+							},
+						};
+						options.data[0].celldata.push(cell);
+					}
+				}
+			}
+
+			/**
+			 * @description 页面初始化相关工作
+			 */
 
 			$(function () {
 				/**
@@ -124,21 +231,32 @@
 				// 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
 				const gridkey = "705abf334c946bf5545ce04f586eb42e";
 
-				// 7. 配置协同，请打开下列三项配置，并确保配置正确的 gridKey
-				const options = Object.assign({}, commonOptions, {
-					// 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
-					requestHeaders:
-						currentBranch === "master-vue"
-							? {
-									"enable-pass-token": true, // 是否允许跳过 token 验证
-							  }
-							: {},
-					allowUpdate: true, // 配置协同功能
-					loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
-					updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
-				});
+				// 7. 明确是否需要协同功能
+				const isCollabration = false;
 
-				// 6. 创建表格
+				// 8. 是否需要携带其他 request headers
+				const requestHeaders = {
+					// "Custom-userid": userid,
+				};
+
+				// 9. 根据是否需要协同功能，动态获取配置项
+				const options = getOptions(
+					isCollabration,
+					requestHeaders,
+					serviceServer,
+					collabrationServer,
+					currentBranch,
+					userid,
+					username,
+					gridkey
+				);
+
+				/**
+				 * 性能优化测试
+				 */
+				// performanceTest(options);
+
+				// 10. 创建表格
 				luckysheet.create(options);
 			});
 		</script>
