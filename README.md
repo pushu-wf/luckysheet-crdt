@@ -8,6 +8,8 @@
 
 `online`: [https://luckysheet-crdt.netlify.app/](https://luckysheet-crdt.netlify.app/)
 
+---
+
 <p align="center">
   <img src='/public/result/result.gif' alt='Demonstration of collaborative editing' />
 </p>
@@ -18,7 +20,7 @@
 
 -   `master`: Stable version with optional database services and complete functionality
 -   `master-alpha`: Development version with optional database services and complete functionality
--   `master-vue`: Stable version with user system, file system, and database dependency
+-   `master-vue`: Stable version with user system, file system, **and database dependency**
 
 ## Repository
 
@@ -120,6 +122,68 @@ npm run db
     - Frontend service: `npm run dev`
     - Backend service: `npm run server`
 6. Open URL: `http://localhost:5000` | `http://localhost:9000` to experience collaborative functionality.
+
+## Frequently Asked Questions
+
+1. **Page shows `Collaboration service unavailable, currently in normal mode`**:
+
+```ts
+try {
+  const { data } = await fetch({
+      url: "/api/getWorkerBook",
+      method: "post",
+      data: { gridKey },
+   });
+}
+catch (error) {}
+
+If and only if the fetch request fails, it will enter the catch block,
+at which point it will prompt `Collaboration service unavailable, currently in normal mode`;
+Please check if the service is normal. Generally, there are the following possibilities:
+
+1. Service exception: Please ensure the server is running and the `/api/getWorkerBook` interface is active, returning the necessary initialization data correctly
+2. Database exception, please check the server-side log output to ensure the database service is functioning properly
+3. The database table structure is abnormal. Please ensure the data table structure corresponding to the initialized gridkey is correct
+```
+
+2. **Database data error**:
+
+```ts
+The only possible reason for this is that the application does not have related delete statements,
+It's not that I don't write them, but that everyone should expand based on their actual business needs.
+The following steps can restore:
+1. Delete all luckysheet_crdt data tables
+2. Execute npm run db to synchronize database tables
+3. Execute npm run server to start the service
+
+The above operations will create database tables, synchronize the latest model structure,
+and create gridkey-demo records in workerbooks and workersheets tables;
+If and only if these two tables have records, luckysheet can be rendered;
+
+Note! If there are no records in the two tables, it may also cause inability to collaborate (Question 2)
+Note! If the workersheets table has records but deleteFlag is true, it will also cause inability to render luckysheet
+```
+
+3. **Custom chart type creation**
+   Currently, VChart creates charts randomly as `pie charts` or `line charts`. If you want to implement custom chart type passing, you need to modify the chartmix related source code. Specific steps can be referenced as follows:
+
+<p align="center">
+  <img src='/public/result/changeChartType.png' alt="Change chart type" />
+</p>
+
+```ts
+1. Download source: https://gitee.com/mengshukeji/chartMix
+2. Modify src/utils/exportUtil.js createChart method, add chart type parameter
+3. Repackage and place the file into the project
+```
+
+4. **On the Relationship Between data and celldata**
+
+```js
+1. The data is initialized by converting from celldata. Subsequent updates to the table data will be reflected in this data field. No initialization settings are required
+2. TransTocellData: data=>celldata, convert two-dimensional array data to {r, c, v} format one-dimensional array
+3. TransToData: celldata=>data, celldata converts one-dimensional array data into two-dimensional array data
+```
 
 ## Deployment
 
@@ -637,66 +701,6 @@ This project is a branch of `luckysheet-crdt`, attached to `luckysheet-crdt`, an
   <img src='/public/result/master-vue-userinfo.png' alt="Master-Vue user info" />
   <img src='/public/result/master-vue-btns.png' alt="Master-Vue buttons" />
 </p>
-
-## Frequently Asked Questions
-
-1. **When importing files, it prompts `File format error`**:
-
-```ts
-Currently only xlsx format is supported. Please check if the file format is correct.
-```
-
-2. **Page shows `Collaboration service unavailable, currently in normal mode`**:
-
-```ts
-try {
-  const { data } = await fetch({
-      url: "/api/getWorkerBook",
-      method: "post",
-      data: { gridKey },
-   });
-}
-catch (error) {}
-
-If and only if the fetch request fails, it will enter the catch block,
-at which point it will prompt `Collaboration service unavailable, currently in normal mode`;
-Please check if the service is normal. Generally, there are the following possibilities:
-
-1. Service exception
-2. Database exception
-3. Database table structure exception
-```
-
-3. **Database data 混乱**:
-
-```ts
-The only possible reason for this is that the application does not have related delete statements,
-It's not that I don't write them, but that everyone should expand based on their actual business needs.
-The following steps can restore:
-1. Delete all luckysheet_crdt data tables
-2. Execute npm run db to synchronize database tables
-3. Execute npm run server to start the service
-
-The above operations will create database tables, synchronize the latest model structure,
-and create gridkey-demo records in workerbooks and workersheets tables;
-If and only if these two tables have records, luckysheet can be rendered;
-
-Note! If there are no records in the two tables, it may also cause inability to collaborate (Question 2)
-Note! If the workersheets table has records but deleteFlag is true, it will also cause inability to render luckysheet
-```
-
-4. **Custom chart type creation**
-   Currently, VChart creates charts randomly as `pie charts` or `line charts`. If you want to implement custom chart type passing, you need to modify the chartmix related source code. Specific steps can be referenced as follows:
-
-<p align="center">
-  <img src='/public/result/changeChartType.png' alt="Change chart type" />
-</p>
-
-```ts
-1. Download source: https://gitee.com/mengshukeji/chartMix
-2. Modify src/utils/exportUtil.js createChart method, add chart type parameter
-3. Repackage and place the file into the project
-```
 
 ## Open Source Contribution
 

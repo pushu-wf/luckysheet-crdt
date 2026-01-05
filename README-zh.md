@@ -8,6 +8,8 @@
 
 `在线体验地址`: [https://luckysheet-crdt.netlify.app/](https://luckysheet-crdt.netlify.app/)
 
+---
+
 <p align="center">
   <img src='./public/result/result.gif' alt='协同编辑演示' />
 </p>
@@ -18,7 +20,7 @@
 
 -   `master`: 稳定版，提供可选数据库服务，功能完整实现
 -   `master-alpha`: 开发版，提供可选数据库服务，功能完整实现
--   `master-vue`: 稳定版，提供用户系统、文件系统，功能完整实现，依赖数据库服务
+-   `master-vue`: 稳定版，提供用户系统、文件系统，功能完整实现，**依赖数据库服务**
 
 ## 仓库地址
 
@@ -120,6 +122,73 @@ npm run db
     - 前端服务：`npm run dev`
     - 后端服务：`npm run server`
 6. 打开网址：`http://localhost:5000` | `http://localhost:9000` 即可体验协同功能。
+
+
+
+## 常见问题
+
+1. **页面显示`协同服务不可用，当前为普通模式`**：
+
+```ts
+try {
+  const { data } = await fetch({
+      url: "/api/getWorkerBook",
+      method: "post",
+      data: { gridKey },
+   });
+}
+catch (error) {}
+
+当且仅当！ fetch 请求失败时，会进入 catch 块，
+此时会提示 `协同服务不可用，当前为普通模式`；
+请检查服务是否正常，一般有下列可能：
+
+1. 服务异常，请确保服务端存在并开启 /api/getWorkerBook 接口，正确返回初始化必要数据
+2. 数据库异常，请关注服务端日志输出，确保数据库服务正常
+3. 数据库表结构异常，请确保初始化的 gridkey 对应的数据表结构正确
+```
+
+2. **数据库数据混乱**：
+
+```ts
+造成该原因的唯一可能，就是应用没有相关的 delete 语句，
+不是我不写哈，而是大家根据自己的实际业务，进行拓展。
+下列步骤可恢复：
+1. 删除 luckysheet_crdt 所有数据表;
+2. 执行 npm run db 同步数据库表;
+3. 执行 npm run server 启动服务;
+
+上诉操作，会自己创建数据库表，同步最新的模型结构，
+并且创建一个 gridkey-demo 的 workerbooks、workersheets 记录；
+当且仅当，这两个表有记录的场景下，才能渲染 luckysheet；
+
+注意！如果两个表没有一条记录，也可能造成无法协同（问题2）
+注意！如果 workersheets 表有记录，但是 deleteFlag 为 true 的情况下，也会导致无法渲染 luckysheet；
+```
+
+3. **自定义创建图表类型**
+   目前 vchart 创建图表是随机的`饼图`|`折线图`，如果想实现自定义的图表类型传递，需要修改 chartmix 相关源码，具体步骤可参考如下：
+
+<p align="center">
+  <img src='./public/result/changeChartType.png' alt="更改图表类型" />
+</p>
+
+```ts
+1. 下载源码：https://gitee.com/mengshukeji/chartMix
+2. 修改 src/utils/exportUtil.js createChart 方法，添加图表类型参数
+3. 重新打包，将文件放置到项目中
+```
+
+4. **关于 data 与 celldata 的关系**
+
+```js
+1. data 初始化时从celldata转换而来，后续操作表格的数据更新，会更新到这个data字段中，初始化无需设置
+2. transToCellData: data => celldata ，data二维数组数据转化成 {r, c, v}格式一维数组
+3. transToData: celldata => data ，celldata 一维数组数据转化成二维数组数据
+```
+
+
+
 
 ## 项目部署
 
@@ -636,66 +705,6 @@ const options = {
   <img src='./public/result/master-vue-userinfo.png' alt="Master-Vue 用户信息" />
   <img src='./public/result/master-vue-btns.png' alt="Master-Vue 按钮" />
 </p>
-
-## 常见问题
-
-1. **导入文件时，提示 `文件格式错误`**：
-
-```ts
-目前仅支持 xlsx 格式，请检查文件格式是否正确。
-```
-
-2. **页面显示`协同服务不可用，当前为普通模式`**：
-
-```ts
-try {
-  const { data } = await fetch({
-      url: "/api/getWorkerBook",
-      method: "post",
-      data: { gridKey },
-   });
-}
-catch (error) {}
-
-当且仅当！ fetch 请求失败时，会进入 catch 块，
-此时会提示 `协同服务不可用，当前为普通模式`；
-请检查服务是否正常，一般有下列可能：
-
-1. 服务异常
-2. 数据库异常
-3. 数据库表结构异常
-```
-
-3. **数据库数据混乱**：
-
-```ts
-造成该原因的唯一可能，就是应用没有相关的 delete 语句，
-不是我不写哈，而是大家根据自己的实际业务，进行拓展。
-下列步骤可恢复：
-1. 删除 luckysheet_crdt 所有数据表;
-2. 执行 npm run db 同步数据库表;
-3. 执行 npm run server 启动服务;
-
-上诉操作，会自己创建数据库表，同步最新的模型结构，
-并且创建一个 gridkey-demo 的 workerbooks、workersheets 记录；
-当且仅当，这两个表有记录的场景下，才能渲染 luckysheet；
-
-注意！如果两个表没有一条记录，也可能造成无法协同（问题2）
-注意！如果 workersheets 表有记录，但是 deleteFlag 为 true 的情况下，也会导致无法渲染 luckysheet；
-```
-
-4. **自定义创建图表类型**
-   目前 vchart 创建图表是随机的`饼图`|`折线图`，如果想实现自定义的图表类型传递，需要修改 chartmix 相关源码，具体步骤可参考如下：
-
-<p align="center">
-  <img src='./public/result/changeChartType.png' alt="更改图表类型" />
-</p>
-
-```ts
-1. 下载源码：https://gitee.com/mengshukeji/chartMix
-2. 修改 src/utils/exportUtil.js createChart 方法，添加图表类型参数
-3. 重新打包，将文件放置到项目中
-```
 
 ## 开源贡献
 
