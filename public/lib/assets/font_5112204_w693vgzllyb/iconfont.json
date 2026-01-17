@@ -1,0 +1,37 @@
+{
+  "id": "5112204",
+  "name": "ddd",
+  "font_family": "iconfont",
+  "css_prefix_text": "luckysheet-icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2646076",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "6582343",
+      "name": "定位",
+      "font_class": "dingwei",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "6327877",
+      "name": "锁定",
+      "font_class": "suoding",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "6330045",
+      "name": "解锁",
+      "font_class": "jiesuo",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    }
+  ]
+}
