@@ -213,10 +213,10 @@
                 const username = encodeURIComponent(`用户_${userid}`);
 
                 // 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
-                const gridkey = "705abf334c946bf5545ce04f586eb42e";
+                const gridkey = "gridkey_demo";
 
                 // 7. 明确是否需要协同功能
-                const isCollabration = false;
+                const isCollabration = true;
 
                 // 8. 是否需要携带其他 request headers
                 const requestHeaders = {
