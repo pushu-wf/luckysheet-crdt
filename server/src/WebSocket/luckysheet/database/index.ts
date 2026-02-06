@@ -13,6 +13,7 @@ import { sh } from "./sh";
 import { na } from "./na";
 import { sha } from "./sha";
 import { shc } from "./shc";
+import { cp } from "./cp";
 
 /**
  * 处理协同数据存储: 更多操作请参考：  https://dream-num.github.io/LuckysheetDocs/zh/guide/operate.html
@@ -66,6 +67,7 @@ export function databaseHandler(data: string, gridKey: string) {
 	// else  if (t === "shs") shs(data); // 切换到指定 sheet 是前台操作，可不存储数据库
 	else if (t === "sh") sh(data);
 	else if (t === "na") na(data, gridKey);
+	else if (t === "cp") cp(data)
 }
 
 // 清除筛选
