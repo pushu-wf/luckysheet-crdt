@@ -37,6 +37,9 @@
                 // 打印像素比，设置越高，越清晰
                 printDevicePixelRatio: 4,
 
+                // 是否需要打印预览
+                printPreview: false,
+
                 // 图片显示方式
                 imageMode: "cell", // 'cell' | 'float'
 
@@ -216,7 +219,7 @@
                 const gridkey = "gridkey_demo";
 
                 // 7. 明确是否需要协同功能
-                const isCollabration = true;
+                const isCollabration = false;
 
                 // 8. 是否需要携带其他 request headers
                 const requestHeaders = {
