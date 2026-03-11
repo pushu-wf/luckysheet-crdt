@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5112204 */
-  src: url('iconfont.woff2?t=1768677323440') format('woff2'),
-       url('iconfont.woff?t=1768677323440') format('woff'),
-       url('iconfont.ttf?t=1768677323440') format('truetype');
+  src: url('iconfont.woff2?t=1772072200461') format('woff2'),
+       url('iconfont.woff?t=1772072200461') format('woff'),
+       url('iconfont.ttf?t=1772072200461') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.luckysheet-icon-daoru:before {
+  content: "\e616";
+}
+
+.luckysheet-icon-daochu:before {
+  content: "\e618";
+}
+
+.luckysheet-icon-kongjian:before {
+  content: "\e627";
 }
 
 .luckysheet-icon-shanchu:before {

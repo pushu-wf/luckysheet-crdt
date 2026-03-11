@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6244963",
+      "name": "导入",
+      "font_class": "daoru",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "6245125",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "16852592",
+      "name": "控件",
+      "font_class": "kongjian",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
       "icon_id": "2646076",
       "name": "删除",
       "font_class": "shanchu",
