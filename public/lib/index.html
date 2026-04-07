@@ -34,6 +34,97 @@
                 plugins: [{ name: "vchart" }, { name: "chart" }],
                 data: [sheetCell],
 
+                customFunctions: [
+                    {
+                        name: "ROUNDBANK",
+                        implementation: function () {
+                            if (arguments.length < this.m[0] || arguments.length > this.m[1]) {
+                                return formula.error.na;
+                            }
+
+                            for (var i = 0; i < arguments.length; i++) {
+                                var p = formula.errorParamCheck(this.p, arguments[i], i);
+
+                                if (!p[0]) {
+                                    return formula.error.v;
+                                }
+                            }
+
+                            try {
+                                var number = func_methods.getFirstValue(arguments[0]);
+                                if (valueIsError(number)) {
+                                    return number;
+                                }
+
+                                if (!isRealNum(number)) {
+                                    return formula.error.v;
+                                }
+
+                                number = parseFloat(number);
+
+                                var digits = func_methods.getFirstValue(arguments[1]);
+                                if (valueIsError(digits)) {
+                                    return digits;
+                                }
+
+                                if (!isRealNum(digits)) {
+                                    return formula.error.v;
+                                }
+
+                                digits = parseInt(digits);
+
+                                var factor = Math.pow(10, digits);
+                                var scaled = number * factor;
+                                var sign = scaled > 0 ? 1 : -1;
+                                var absScaled = Math.abs(scaled);
+                                var integerPart = Math.floor(absScaled);
+                                var decimalPart = absScaled - integerPart;
+
+                                if (decimalPart < 0.5) {
+                                    return (sign * integerPart) / factor;
+                                } else if (decimalPart > 0.5) {
+                                    return (sign * (integerPart + 1)) / factor;
+                                } else {
+                                    if (integerPart % 2 === 0) {
+                                        return (sign * integerPart) / factor;
+                                    } else {
+                                        return (sign * (integerPart + 1)) / factor;
+                                    }
+                                }
+                            } catch (e) {
+                                var err = e;
+                                err = formula.errorInfo(err);
+                                return [formula.error.v, err];
+                            }
+                        },
+                        description: {
+                            n: "ROUNDBANK",
+                            t: 0,
+                            d: "使用银行家舍入法（四舍六入五成双）将数字舍入到指定的位数。",
+                            a: "使用银行家舍入法将数字舍入到指定的位数。",
+                            m: [2, 2],
+                            p: [
+                                {
+                                    name: "值",
+                                    detail: "要进行银行家舍入的数字。",
+                                    example: "99.44",
+                                    require: "m",
+                                    repeat: "n",
+                                    type: "rangenumber",
+                                },
+                                {
+                                    name: "位数",
+                                    detail: "要进行舍入运算的位数。\n\n位数可以取负值，在这种情况下会将值的小数点左侧部分舍入到指定的位数。",
+                                    example: "1",
+                                    require: "m",
+                                    repeat: "n",
+                                    type: "rangenumber",
+                                },
+                            ],
+                        },
+                    },
+                ],
+
                 // 打印像素比，设置越高，越清晰
                 printDevicePixelRatio: 4,
 
