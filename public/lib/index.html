@@ -39,36 +39,36 @@
                         name: "ROUNDBANK",
                         implementation: function () {
                             if (arguments.length < this.m[0] || arguments.length > this.m[1]) {
-                                return formula.error.na;
+                                return luckysheet.formula.error.na;
                             }
 
                             for (var i = 0; i < arguments.length; i++) {
-                                var p = formula.errorParamCheck(this.p, arguments[i], i);
+                                var p = luckysheet.formula.errorParamCheck(this.p, arguments[i], i);
 
                                 if (!p[0]) {
-                                    return formula.error.v;
+                                    return luckysheet.formula.error.v;
                                 }
                             }
 
                             try {
-                                var number = func_methods.getFirstValue(arguments[0]);
-                                if (valueIsError(number)) {
+                                var number = luckysheet.func_methods.getFirstValue(arguments[0]);
+                                if (luckysheet.validate.valueIsError(number)) {
                                     return number;
                                 }
 
-                                if (!isRealNum(number)) {
-                                    return formula.error.v;
+                                if (!luckysheet.validate.isRealNum(number)) {
+                                    return luckysheet.formula.error.v;
                                 }
 
                                 number = parseFloat(number);
 
-                                var digits = func_methods.getFirstValue(arguments[1]);
-                                if (valueIsError(digits)) {
+                                var digits = luckysheet.func_methods.getFirstValue(arguments[1]);
+                                if (luckysheet.validate.valueIsError(digits)) {
                                     return digits;
                                 }
 
-                                if (!isRealNum(digits)) {
-                                    return formula.error.v;
+                                if (!luckysheet.validate.isRealNum(digits)) {
+                                    return luckysheet.formula.error.v;
                                 }
 
                                 digits = parseInt(digits);
@@ -93,8 +93,8 @@
                                 }
                             } catch (e) {
                                 var err = e;
-                                err = formula.errorInfo(err);
-                                return [formula.error.v, err];
+                                err = luckysheet.formula.errorInfo(err);
+                                return [luckysheet.formula.error.v, err];
                             }
                         },
                         description: {
