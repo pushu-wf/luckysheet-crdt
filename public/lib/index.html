@@ -24,192 +24,36 @@
     <body>
         <div id="luckysheet" style="margin: 0px; padding: 0px; position: absolute; width: 100%; height: 100%; left: 0px; top: 0px"></div>
 
+        <!-- Utils 工具类 -->
         <script>
-            // 公共配置项
-            const commonOptions = {
-                container: "luckysheet",
-                lang: "zh",
-                // showinfobar: false, // 隐藏信息栏
-                // showlogo: false, // 隐藏logo
-                plugins: [{ name: "vchart" }, { name: "chart" }],
-                data: [sheetCell],
+            // 动态配置选项
+            function dynamicOptions(server, useRandomUserId, gridkey, isCollabration, requestHeaders, commonOptions) {
+                let options = commonOptions;
 
-                customFunctions: [
-                    {
-                        name: "ROUNDBANK",
-                        implementation: function () {
-                            if (arguments.length < this.m[0] || arguments.length > this.m[1]) {
-                                return luckysheet.formula.error.na;
-                            }
+                // 1. 处理合并
+                options = Object.assign(options, { requestHeaders });
 
-                            for (var i = 0; i < arguments.length; i++) {
-                                var p = luckysheet.formula.errorParamCheck(this.p, arguments[i], i);
+                // 2. 如果不需要协同，则直接返回该对象即可
+                if (!isCollabration) return options;
 
-                                if (!p[0]) {
-                                    return luckysheet.formula.error.v;
-                                }
-                            }
+                // 3. 处理用户
+                const { userid, username, department, role } = getUserInfo(useRandomUserId);
 
-                            try {
-                                var number = luckysheet.func_methods.getFirstValue(arguments[0]);
-                                if (luckysheet.validate.valueIsError(number)) {
-                                    return number;
-                                }
+                // 解析 server
+                const { wsServer, serviceServer } = server;
 
-                                if (!luckysheet.validate.isRealNum(number)) {
-                                    return luckysheet.formula.error.v;
-                                }
+                // 处理协同
+                options.allowUpdate = true; // 配置协同功能
+                options.loadUrl = getLoadUrl(serviceServer, gridkey);
+                options.updateUrl = getUpdateUrl(wsServer, userid, username, gridkey); // 协同服务转发服务
+                // 如果配置了协同，请配置图片处理函数，避免base64图片过大导致图片无法显示
+                options.uploadImage = uploadImage(file, serviceServer);
+                options.imageUrlHandle = (url) => imageUrlHandle(url, serviceServer);
 
-                                number = parseFloat(number);
+                // 处理 cellProtectOptions
 
-                                var digits = luckysheet.func_methods.getFirstValue(arguments[1]);
-                                if (luckysheet.validate.valueIsError(digits)) {
-                                    return digits;
-                                }
-
-                                if (!luckysheet.validate.isRealNum(digits)) {
-                                    return luckysheet.formula.error.v;
-                                }
-
-                                digits = parseInt(digits);
-
-                                var factor = Math.pow(10, digits);
-                                var scaled = number * factor;
-                                var sign = scaled > 0 ? 1 : -1;
-                                var absScaled = Math.abs(scaled);
-                                var integerPart = Math.floor(absScaled);
-                                var decimalPart = absScaled - integerPart;
-
-                                if (decimalPart < 0.5) {
-                                    return (sign * integerPart) / factor;
-                                } else if (decimalPart > 0.5) {
-                                    return (sign * (integerPart + 1)) / factor;
-                                } else {
-                                    if (integerPart % 2 === 0) {
-                                        return (sign * integerPart) / factor;
-                                    } else {
-                                        return (sign * (integerPart + 1)) / factor;
-                                    }
-                                }
-                            } catch (e) {
-                                var err = e;
-                                err = luckysheet.formula.errorInfo(err);
-                                return [luckysheet.formula.error.v, err];
-                            }
-                        },
-                        description: {
-                            n: "ROUNDBANK",
-                            t: 0,
-                            d: "使用银行家舍入法（四舍六入五成双）将数字舍入到指定的位数。",
-                            a: "使用银行家舍入法将数字舍入到指定的位数。",
-                            m: [2, 2],
-                            p: [
-                                {
-                                    name: "值",
-                                    detail: "要进行银行家舍入的数字。",
-                                    example: "99.44",
-                                    require: "m",
-                                    repeat: "n",
-                                    type: "rangenumber",
-                                },
-                                {
-                                    name: "位数",
-                                    detail: "要进行舍入运算的位数。\n\n位数可以取负值，在这种情况下会将值的小数点左侧部分舍入到指定的位数。",
-                                    example: "1",
-                                    require: "m",
-                                    repeat: "n",
-                                    type: "rangenumber",
-                                },
-                            ],
-                        },
-                    },
-                ],
-
-                // 打印像素比，设置越高，越清晰
-                printDevicePixelRatio: 4,
-
-                // 是否需要打印预览
-                // printPreview: false,
-
-                // 图片显示方式
-                imageMode: "cell", // 'cell' | 'float'
-
-                // 自定义快捷键
-                customShortcutKeys: [
-                    {
-                        key: 83,
-                        ctrl: true,
-                        callback: (e) => {
-                            console.log("Ctrl S");
-                        },
-                    },
-                    {
-                        key: 80,
-                        ctrl: true,
-                        callback: (e) => {
-                            luckysheet.print({ mode: "sheet" });
-                        },
-                    },
-                ],
-
-                // 自定义右键菜单
-                cellRightClickConfig: {
-                    // copy: false,
-                    copyAs: false,
-                    // paste: false,
-                    hideColumn: false,
-                    columnWidth: false,
-                    clear: false,
-                    matrix: false,
-                    sort: false,
-                    filter: false,
-                    chart: true,
-                    image: true,
-                    link: false,
-                    data: false,
-                    cellFormat: false,
-                    customs: [
-                        {
-                            title: "test",
-                            onClick: function (clickEvent, event, params) {
-                                console.log("function test click", clickEvent, event, params);
-                            },
-                        },
-                    ],
-                },
-
-                // 项目菜单
-                menuHandler: {
-                    // 隐藏内置菜单
-                    // hideDefaultMenu: ['exportFile', 'importFile'],
-                    // 自定义
-                    customs: [
-                        // 分割线
-                        {
-                            order: 0,
-                            label: "自定义菜单",
-                            value: "newFile",
-                            callback: () => {
-                                console.log("==> 自定义菜单");
-                            },
-                        },
-                        {
-                            order: 0,
-                            value: "divider",
-                        },
-                    ],
-                },
-
-                // loading 样式
-                loading: {
-                    image: () => {
-                        return `<svg viewBox="25 25 50 50" class="circular">
-									<circle cx="50" cy="50" r="20" fill="none"></circle>
-									</svg>`;
-                    },
-                    imageClass: "loadingAnimation",
-                },
-            };
+                return options;
+            }
 
             // 处理协同图片上传
             async function uploadImage(file, serviceServer) {
@@ -245,45 +89,117 @@
             }
 
             // 动态获取 luadUrl
-            function getLoadUrl(serviceServer, currentBranch, gridkey) {
-                return `${serviceServer}${currentBranch === "master-alpha" ? "/" : "/luckysheet/"}loadSheetData?gridkey=${gridkey}`;
+            function getLoadUrl(serviceServer, gridkey) {
+                return `${serviceServer}/luckysheet/loadSheetData?gridkey=${gridkey}`;
             }
 
             // 动态获取 updateUrl
-            function getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey) {
-                return `${collabrationServer}
-							${currentBranch === "master-alpha" ? "?" : "/luckysheet?"}
-							type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
+            function getUpdateUrl(collabrationServer, userid, username, gridkey) {
+                return `${collabrationServer}/luckysheet?type=luckysheet&userid=${userid}&username=${username}&gridkey=${gridkey}`;
             }
 
-            // 根据协同与否，动态获取配置
-            function getOptions(isCollabration, requestHeaders = {}, serviceServer, collabrationServer, currentBranch, userid, username, gridkey) {
-                // 如果没有开启协同，则直接返回基础配置
-                if (!isCollabration) return Object.assign({}, commonOptions, { requestHeaders });
+            // 处理用户系统
+            function getUserInfo(useRandomUserId = true) {
+                const randomId = Math.random().toString(16).slice(2, 8);
+                const userid = `MVP_User_${randomId}`;
+                const username = userid;
 
-                return Object.assign({}, commonOptions, {
-                    // 如果是 master-vue 的话，还需要添加自定义请求头，请检查合并属性哈，不然容易遗漏属性
-                    requestHeaders:
-                        currentBranch === "master-vue"
-                            ? {
-                                  "enable-pass-token": true, // 是否允许跳过 token 验证
-                                  ...requestHeaders,
-                              }
-                            : requestHeaders,
-                    allowUpdate: true, // 配置协同功能
-                    loadUrl: getLoadUrl(serviceServer, currentBranch, gridkey),
-                    updateUrl: getUpdateUrl(collabrationServer, currentBranch, userid, username, gridkey), // 协同服务转发服务
+                // 如果使用随机ID 则直接返回随机值
+                if (useRandomUserId) {
+                    return { userid, username };
+                }
 
-                    // 如果配置了协同，请配置图片处理函数，避免base64图片过大导致图片无法显示
-                    uploadImage: (file) => uploadImage(file, serviceServer),
-                    imageUrlHandle: (url) => imageUrlHandle(url, serviceServer),
-                });
+                // 1. 如果系统存储有用户信息，则直接使用
+                let userInfo = sessionStorage.getItem("userInfo");
+                if (userInfo) return JSON.parse(userInfo);
+
+                // 3. 分配一个部门及角色
+                const departments = [
+                    { depName: "产品部", depId: "dep_001" },
+                    { depName: "开发部", depId: "dep_002" },
+                    { depName: "测试部", depId: "dep_003" },
+                    { depName: "运营部", depId: "dep_004" },
+                ];
+                const department = departments[Math.floor(Math.random() * departments.length)];
+
+                // 4. 随机生成一个角色
+                const roles = [
+                    { roleName: "部门经理", roleId: "role_001" },
+                    { roleName: "组长", roleId: "role_002" },
+                    { roleName: "组员", roleId: "role_003" },
+                ];
+                const role = roles[Math.floor(Math.random() * roles.length)];
+
+                // 5. 生成用户信息
+                userInfo = { userid, username, department, role };
+                // 6. 存储用户信息
+                sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+                return userInfo;
             }
+        </script>
+        <!-- 初始化执行方法 -->
+        <script>
+            // 公共配置项
+            const commonOptions = {
+                container: "luckysheet",
+                lang: "zh",
+                // plugins: [{ name: "vchart" }, { name: "chart" }],
+                data: [sheetCell],
+                // 打印像素比，设置越高，越清晰
+                printDevicePixelRatio: 4,
+                customShortcuts: [
+                    {
+                        ctrl: true,
+                        key: "p",
+                        callback: () => {
+                            console.log("打印");
+                        },
+                    },
+                ],
+                // row: 10,
+                // column: 10,
+                // showmenu:false,
+                // showlogo:false,
+                // loading 样式
+                loading: {
+                    image: () => `<svg viewBox="25 25 50 50" class="circular"><circle cx="50" cy="50" r="20" fill="none"></circle></svg>`,
+                    imageClass: "loadingAnimation",
+                },
+                cellProtectOptions: {
+                    // 配置当前用户信息(请注意：这个是当前初始化文档的用户信息)
+                    userInfo: {
+                        depId: "111000008",
+                        depName: "风险管理部",
+                        roleId: "1579417391486", //系统管理员
+                        roleName: "系统管理员",
+                        userId: "1521e7e8e970467ca99687c9e1095271",
+                    },
+
+                    getDepartmentOptions: async () => {
+                        return Promise.resolve([
+                            { label: "风险管理部", value: "111000008" },
+                            { label: "开发部", value: "111000006" },
+                        ]);
+                    },
+
+                    getUserOptions: async (departmentID) => {
+                        // 模拟不同部门返回不同用户
+                        const usersMap = {
+                            111000008: [
+                                { label: "张三", value: "user001" },
+                                { label: "李四", value: "user002" },
+                            ],
+                            111000006: [{ label: "王五", value: "user003" }],
+                        };
+                        return usersMap[departmentID] || [];
+                    },
+                },
+            };
 
             /**
              * @description 页面初始化相关工作
              */
-
             $(function () {
                 /**
                  * -------------------------------------------------------
@@ -292,33 +208,31 @@
                  */
 
                 // 1. 请明确协同服务地址
-                const collabrationServer = "ws://localhost:9000";
+                const wsServer = "ws://localhost:9000";
 
                 // 2. 请明确业务服务地址
                 const serviceServer = "http://localhost:9000";
 
-                // 3. 请明确 `luckysheet-crdt` 项目目前所在的分支，因为 master-alpha 与 master-vue 分支所在的服务端不尽相同，`master-vue` 分支需要校验 token
-                const currentBranch = "master-alpha"; // "master-vue" | "master-alpha"
+                // 3. 是否使用随机ID，如果是，则每次刷新页面都会生成一个新的 userid
+                // 如果为 false，则 userid 固定，使用 sessionStorage 存储
+                const useRandomUserId = true;
 
-                // 4. 定义 userid 内部 userid 可随机生成
-                const userid = Math.random().toString(16).slice(2, 8);
-
-                // 5. username 字段 仅用于显示 xxx正在编辑 (对中文进行编码传输，避免乱码)
-                const username = encodeURIComponent(`用户_${userid}`);
-
-                // 6. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
+                // 4. 这个是协同的文件 gridKey 请真实的设置为数据库的 key，不然会提示协同服务异常 是真实数据库表的 workerbooks gridKey 字段
                 const gridkey = "gridkey_demo";
 
-                // 7. 明确是否需要协同功能
+                // 5. 明确是否需要协同功能
                 const isCollabration = false;
 
-                // 8. 是否需要携带其他 request headers
+                // 6. 是否需要携带其他 request headers
                 const requestHeaders = {
                     // "Custom-userid": userid,
                 };
 
-                // 9. 根据是否需要协同功能，动态获取配置项
-                const options = getOptions(isCollabration, requestHeaders, serviceServer, collabrationServer, currentBranch, userid, username, gridkey);
+                // 7. 根据上诉条件，动态获取配置项
+                const server = { wsServer, serviceServer };
+
+                // 这个函数在 ./utils.js 中定义
+                const options = dynamicOptions(server, useRandomUserId, gridkey, isCollabration, requestHeaders, commonOptions);
 
                 // 10. 创建表格
                 luckysheet.create(options);

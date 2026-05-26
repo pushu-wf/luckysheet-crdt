@@ -423,7 +423,8 @@ async function parseProtect(worker_sheet_id: string, currentSheetData: WorkerShe
             result.push({ range: data.range });
         });
 
-        currentSheetData.cellProtectionConfig = result;
+        // 20260513 优化单元格保护功能
+        currentSheetData.cellProtectConfig = [];
         return Promise.resolve();
     } catch (error) {
         logger.error(error);
