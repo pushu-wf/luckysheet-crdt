@@ -54,7 +54,7 @@ type WorkerSheetItemType = {
     luckysheet_alternateformat_save_modelCustom?: []; //自定义交替颜色
     zoomRatio?: number; // 缩放比例
     showGridLines?: number; //是否显示网格线
-    cellProtectionConfig?: CellProtectionModelType[]; // 单元格保护
+    cellProtectConfig?: CellProtectionModelType[]; // 单元格保护
     // dataVerification: {}; //数据验证配置
     // pivotTable: {}; //数据透视表设置
     // filter_select: {}; //筛选范围
